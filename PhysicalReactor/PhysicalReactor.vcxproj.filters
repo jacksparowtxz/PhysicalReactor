@@ -16,6 +16,9 @@
     <Filter Include="头文件\Allocator">
       <UniqueIdentifier>{e3f2451c-fa6c-4573-8bed-ee13ed2b837f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\Jobsystem">
+      <UniqueIdentifier>{dcc2af01-1f8e-40d8-b563-a43d70ef9df4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -69,6 +72,27 @@
     <ClInclude Include="Allocator\MemoryUtil.h">
       <Filter>头文件\Allocator</Filter>
     </ClInclude>
+    <ClInclude Include="JobSystem\Delegate.h">
+      <Filter>头文件\Jobsystem</Filter>
+    </ClInclude>
+    <ClInclude Include="JobSystem\JobScheduler.h">
+      <Filter>头文件\Jobsystem</Filter>
+    </ClInclude>
+    <ClInclude Include="JobSystem\Number.h">
+      <Filter>头文件\Jobsystem</Filter>
+    </ClInclude>
+    <ClInclude Include="JobSystem\ParallelFor.h">
+      <Filter>头文件\Jobsystem</Filter>
+    </ClInclude>
+    <ClInclude Include="JobSystem\Random.h">
+      <Filter>头文件\Jobsystem</Filter>
+    </ClInclude>
+    <ClInclude Include="JobSystem\ThreadGroup.h">
+      <Filter>头文件\Jobsystem</Filter>
+    </ClInclude>
+    <ClInclude Include="JobSystem\WorkStealingQueue.h">
+      <Filter>头文件\Jobsystem</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -106,6 +130,15 @@
     </ClCompile>
     <ClCompile Include="Allocator\SmallBlockAllocator.cpp">
       <Filter>头文件\Allocator</Filter>
+    </ClCompile>
+    <ClCompile Include="JobSystem\JobScheduler.cpp">
+      <Filter>头文件\Jobsystem</Filter>
+    </ClCompile>
+    <ClCompile Include="JobSystem\Number.cpp">
+      <Filter>头文件\Jobsystem</Filter>
+    </ClCompile>
+    <ClCompile Include="JobSystem\ThreadGroup.cpp">
+      <Filter>头文件\Jobsystem</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

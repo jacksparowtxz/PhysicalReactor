@@ -160,6 +160,13 @@
     <ClInclude Include="Allocator\ProxyAllocator.h" />
     <ClInclude Include="Allocator\ScopeStack.h" />
     <ClInclude Include="Allocator\SmallBlockAllocator.h" />
+    <ClInclude Include="JobSystem\Delegate.h" />
+    <ClInclude Include="JobSystem\JobScheduler.h" />
+    <ClInclude Include="JobSystem\Number.h" />
+    <ClInclude Include="JobSystem\ParallelFor.h" />
+    <ClInclude Include="JobSystem\Random.h" />
+    <ClInclude Include="JobSystem\ThreadGroup.h" />
+    <ClInclude Include="JobSystem\WorkStealingQueue.h" />
     <ClInclude Include="PhysicalReactor.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -194,6 +201,15 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Allocator\SmallBlockAllocator.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="JobSystem\JobScheduler.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="JobSystem\Number.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="JobSystem\ThreadGroup.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="PhysicalReactor.cpp" />
