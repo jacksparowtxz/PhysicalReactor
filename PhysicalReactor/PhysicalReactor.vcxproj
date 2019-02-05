@@ -75,6 +75,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>D:\PhysicalReactor\PhysicalReactor;$(IncludePath)</IncludePath>
+    <ReferencePath>D:\PhysicalReactor\PhysicalReactor;$(ReferencePath)</ReferencePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -108,6 +110,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>d3d11.lib;D3DCompiler.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -160,6 +163,7 @@
     <ClInclude Include="Allocator\ProxyAllocator.h" />
     <ClInclude Include="Allocator\ScopeStack.h" />
     <ClInclude Include="Allocator\SmallBlockAllocator.h" />
+    <ClInclude Include="CommonInclude.h" />
     <ClInclude Include="JobSystem\Delegate.h" />
     <ClInclude Include="JobSystem\JobScheduler.h" />
     <ClInclude Include="JobSystem\Number.h" />
@@ -167,7 +171,15 @@
     <ClInclude Include="JobSystem\Random.h" />
     <ClInclude Include="JobSystem\ThreadGroup.h" />
     <ClInclude Include="JobSystem\WorkStealingQueue.h" />
+    <ClInclude Include="MiscHelper.h" />
     <ClInclude Include="PhysicalReactor.h" />
+    <ClInclude Include="Render\GraphicEnum.h" />
+    <ClInclude Include="Render\GraphicsDescriptors.h" />
+    <ClInclude Include="Render\GraphicsResource.h" />
+    <ClInclude Include="Render\RenderDevice.h" />
+    <ClInclude Include="Render\RenderDevice_DX11.h" />
+    <ClInclude Include="Render\Renderer.h" />
+    <ClInclude Include="Render\ResourceMapping.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -212,7 +224,24 @@
     <ClCompile Include="JobSystem\ThreadGroup.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="PhysicalReactor.cpp" />
+    <ClCompile Include="MiscHelper.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="PhysicalReactor.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Render\GraphicsResource.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Render\RenderDevice.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Render\RenderDevice_DX11.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Render\Renderer.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

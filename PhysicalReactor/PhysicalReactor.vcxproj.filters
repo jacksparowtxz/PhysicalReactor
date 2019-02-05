@@ -19,6 +19,9 @@
     <Filter Include="头文件\Jobsystem">
       <UniqueIdentifier>{dcc2af01-1f8e-40d8-b563-a43d70ef9df4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\Render">
+      <UniqueIdentifier>{acf789b8-61ba-40a2-8828-586a3def61f1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -93,6 +96,33 @@
     <ClInclude Include="JobSystem\WorkStealingQueue.h">
       <Filter>头文件\Jobsystem</Filter>
     </ClInclude>
+    <ClInclude Include="Render\GraphicsResource.h">
+      <Filter>头文件\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\GraphicEnum.h">
+      <Filter>头文件\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\GraphicsDescriptors.h">
+      <Filter>头文件\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonInclude.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\RenderDevice.h">
+      <Filter>头文件\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\RenderDevice_DX11.h">
+      <Filter>头文件\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\ResourceMapping.h">
+      <Filter>头文件\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="MiscHelper.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Renderer.h">
+      <Filter>头文件\Render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -139,6 +169,21 @@
     </ClCompile>
     <ClCompile Include="JobSystem\ThreadGroup.cpp">
       <Filter>头文件\Jobsystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\GraphicsResource.cpp">
+      <Filter>头文件\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\RenderDevice.cpp">
+      <Filter>头文件\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\RenderDevice_DX11.cpp">
+      <Filter>头文件\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="MiscHelper.cpp">
+      <Filter>头文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Renderer.cpp">
+      <Filter>头文件\Render</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
