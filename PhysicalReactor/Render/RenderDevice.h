@@ -8,6 +8,11 @@
 #include <memory>
 #include <winerror.h>
 
+#include <windows.h>
+#include <stdlib.h>
+#include <string.h>
+#include <tchar.h>
+
 namespace PRE
 {
 	class RenderDevice
@@ -41,8 +46,8 @@ namespace PRE
 		virtual HRESULT CreateTexture1D(const TextureDesc* pDesc, const SubresourceData* pInitialData, Texture1D**ppTexture1D) = 0;
 		virtual HRESULT CreateTexture2D(const TextureDesc* pDesc, const SubresourceData* pInitialData, Texture2D**ppTexture2D) = 0;
 		virtual HRESULT CreateTexture3D(const TextureDesc* pDesc, const SubresourceData* pInitialData, Texture3D**ppTexture3D) = 0;
-		//virtual HRESULT CreateInputLayout(const VertexLayoutDesc *pInputElementDescs, UINT NumElements, const void* pShaderBytecodeWithInputSignature, SIZE_T BytecodeLength, VertexLayout* pInputLayout) = 0;
-		virtual HRESULT CreateInputLayout(GraphicBlob* blob, VertexLayout* pInputLayout) = 0;
+
+		virtual HRESULT CreateInputLayout(const VertexLayoutDesc *pInputElementDescs, UINT NumElements, GraphicBlob* blob, VertexLayout *pInputLayout) = 0;
 		virtual HRESULT CreateVertexShader(WCHAR* filename,GraphicBlob* blob, VertexShader* pVertexShader) = 0;
 		virtual HRESULT CreatePixelShader(WCHAR* filename, GraphicBlob* blob,PixelShader* pPixelShader) = 0;
 		virtual HRESULT CreateGemotryShader(WCHAR* filename, GraphicBlob* blob, GeometryShader* pGeometryShader) = 0;
@@ -156,14 +161,14 @@ namespace PRE
 		virtual void BindRenderTargets(UINT NumViews, Texture2D* const *ppRenderTargets, Texture2D* depthStencilTexture, int arrayIndex = -1)=0;
 		virtual void ClearRenderTarget(Texture* pTexture, const FLOAT ColorRGBA[4], int arrayIndex = -1) = 0;
 		virtual void ClearDepthStencil(Texture2D* pTexture, UINT ClearFlags, FLOAT Depth, UINT8 Stencil, int arrayIndex=-1) = 0;
-		virtual void BindResource(GraphicPSO* pso, GPUResource* resource, int arrayIndex = -1) = 0;
-		virtual void BindResources(GraphicPSO* pso, GPUResource *const* resources) = 0;
+		virtual void BindResource(SHADERSTAGE stage, GPUResource* resource, int slot, int arrayIndex = -1) = 0;
+		virtual void BindResources(SHADERSTAGE stage, GPUResource *const* resources, int slot, int count) = 0;
 		virtual void BindUAV(SHADERSTAGE stage, GPUResource *resources, int slot, int arrayIndex = -1) = 0;
 		virtual void BindUAVS(SHADERSTAGE stage, GPUResource* const* resource, int slot, int count) = 0;
 		virtual void UnbindResources(int slot, int num) = 0;
 		virtual void UnbindUAVs(int slot, int num) = 0;
 		virtual void BindSampler(SHADERSTAGE stage, Sampler* sampler, ShaderReflection* sf) = 0;
-		virtual void BindConstantBuffer(GraphicPSO* pso, GPUBuffer* buffer) = 0;
+		virtual void BindConstantBuffer(SHADERSTAGE stage, GPUBuffer* buffer, int slot , const UINT *pFirstConstant,const UINT *pNumberConstant) = 0;
 		virtual void BindVertexBuffers(GPUBuffer* const *vertexBuffers, int slot, int count, const UINT* strides, const UINT*offsets) = 0;
 		virtual void BindIndexBuffer(GPUBuffer* indexBuffer, const INDEXBUFFER_FORMAT format, UINT offset) = 0;
 		virtual void BindStencilRef(UINT value) = 0;
@@ -198,7 +203,7 @@ namespace PRE
 		virtual void EventEnd() = 0;
 		virtual void SetMarker(const std::string &name) = 0;
 
-		virtual void GetShaderReflection(GraphicBlob* blob,ShaderReflection* sf,Allocator* alloc)=0;
+		//virtual void GetShaderReflection(GraphicBlob* blob,ShaderReflection* sf,Allocator* alloc)=0;
 
 
 		/*virtual void BindScissorRects(UINT numRects, const Rect* rect, uint32_t threadID) = 0;

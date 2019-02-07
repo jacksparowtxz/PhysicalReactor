@@ -258,8 +258,8 @@ namespace PRE
 
 	struct VertexLayout : public RenderDeviceChild
 	{
-		CPUHandle resouce=NUll_Handle;
-		std::vector<CPUHandle> desc;
+		CPUHandle resource =NUll_Handle;
+		std::vector<VertexLayoutDesc> desc;
 		VertexLayout();
 		~VertexLayout();
 	};

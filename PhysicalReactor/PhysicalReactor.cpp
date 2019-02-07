@@ -3,8 +3,11 @@
 
 #include "stdafx.h"
 #include "PhysicalReactor.h"
-
+#include "World/RenderWorld.h"
 #define MAX_LOADSTRING 100
+using namespace PRE;
+
+RenderWorld* rw;
 
 
 HINSTANCE hInst;                               
@@ -26,8 +29,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     UNREFERENCED_PARAMETER(lpCmdLine);
 
     // TODO: 在此处放置代码。
-
-   
+	
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
     LoadStringW(hInstance, IDC_PHYSICALREACTOR, szWindowClass, MAX_LOADSTRING);
     MyRegisterClass(hInstance);
@@ -50,9 +52,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 			DispatchMessage(&msg);
 		}
 		else {
-
-			//editor.Run();
-
+			
+			rw->Update();
 		}
 	}
 
@@ -89,7 +90,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
    HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
       CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
-
+   rw = new RenderWorld(hWnd);
    if (!hWnd)
    {
       return FALSE;

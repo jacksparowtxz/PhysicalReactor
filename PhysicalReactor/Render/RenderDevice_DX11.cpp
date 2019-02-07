@@ -1462,8 +1462,10 @@ RenderDevice_DX11::RenderDevice_DX11(HWND mainscreen,bool fullscreen, bool debug
 	}
 	if (FAILED(hr))
 	{
-		//qDebug("Failed to create the graphics device! ERROR:%X", hr);
-		//mainscreen->close();
+		MessageBox(NULL,
+			_T("Create Device failed!"),
+			_T("Windows Desktop Guided Tour"),
+			NULL);
 	}
 
 	IDXGIFactory2* DXGIFactory = nullptr;
@@ -1522,9 +1524,12 @@ RenderDevice_DX11::RenderDevice_DX11(HWND mainscreen,bool fullscreen, bool debug
 	
 	if (FAILED(hr))
 	{
-		//qDebug("Failed to create a swapchain for the graphics device!");
+		MessageBox(NULL,
+			_T("Create SwapChain failed!"),
+			_T("Windows Desktop Guided Tour"),
+			NULL);
 		SAFE_RELEASE(DXGIFactory);
-	//	mainscreen->close();
+	
      }
 	SAFE_RELEASE(DXGIFactory);
 	         
@@ -1563,8 +1568,11 @@ RenderDevice_DX11::RenderDevice_DX11(HWND mainscreen,bool fullscreen, bool debug
 	
 	if (FAILED(hr)) 
 	{
-	    //qDebug("BackBuffer creation Failed!", "Error!"); 
-	   // mainscreen->close();
+		MessageBox(NULL,
+			_T("Get BackBuffer failed!"),
+			_T("Windows Desktop Guided Tour"),
+			NULL);
+	  
     }  
 	
 	hr = device->CreateRenderTargetView(backbuffer, NULL, &renderTargetView);//
@@ -1587,11 +1595,6 @@ RenderDevice_DX11::RenderDevice_DX11(HWND mainscreen,bool fullscreen, bool debug
 	Basedevice->CreateTexture2D(&depthStencilDesc, NULL, &depthbuffer);
 	Basedevice->CreateDepthStencilView(depthbuffer, NULL, &DepthStecilView);
 
-	 	if (FAILED(hr)) 
-		{
-       // qDebug("BackBuffer creation Failed!", "Error!"); 
-		//mainscreen->close();
-	     }     
 }
 
 RenderDevice_DX11::~RenderDevice_DX11()
@@ -1714,7 +1717,6 @@ HRESULT RenderDevice_DX11::CreateBuffer(const GPUBufferDesc *pDesc, const Subres
 	ppBuffer->desc = *pDesc;
 	HRESULT hr = device->CreateBuffer(&desc, data,(ID3D11Buffer**)&ppBuffer->resource);
 	SAFE_DELETE_ARRAY(data);
-	//qDebug("ERROR:%X", hr);
 	assert(SUCCEEDED(hr) && "GPUBuffer creation failed!");
 	
 	if (SUCCEEDED(hr))
@@ -1885,11 +1887,6 @@ HRESULT RenderDevice_DX11::CreateTexture2D(const TextureDesc* pDesc, const Subre
  	CreateRenderTargetView(*ppTexture2D);
 	CreateShaderResourceView(*ppTexture2D);
 	CreateDepthStencilView(*ppTexture2D);
-
-	if ((*ppTexture2D)->SRV!=NUll_Handle)
-	{
-		//qDebug("Success");
-	}
 
 	if (desc.BindFlags & D3D11_BIND_UNORDERED_ACCESS)
 	{
@@ -2286,9 +2283,9 @@ HRESULT RenderDevice_DX11::CreateShaderResourceView(Texture3D* pTexture)
 		}
 
 		{
-			// Create full-resource SRV:
-			shaderResourceViewDesc.Texture3D.MostDetailedMip = 0; //from most detailed...
-			shaderResourceViewDesc.Texture3D.MipLevels = -1; //...to least detailed
+			
+			shaderResourceViewDesc.Texture3D.MostDetailedMip = 0; 
+			shaderResourceViewDesc.Texture3D.MipLevels = -1; 
 
 			hr = device->CreateShaderResourceView((ID3D11Resource*)pTexture->resource, &shaderResourceViewDesc, (ID3D11ShaderResourceView**)&pTexture->SRV);
 			assert(SUCCEEDED(hr) && "ShaderResourceView Creation failed!");
@@ -2320,7 +2317,7 @@ HRESULT RenderDevice_DX11::CreateRenderTargetView(Texture2D* pTexture)
 
 		if (pTexture->desc.MiscFlags & RESOURCE_MISC_TEXTURECUBE)
 		{
-			// TextureCube, TextureCubeArray...
+			
 			UINT slices = arraySize / 6;
 
 			renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DARRAY;
@@ -2328,7 +2325,7 @@ HRESULT RenderDevice_DX11::CreateRenderTargetView(Texture2D* pTexture)
 
 			if (pTexture->independentRTVCubemapFaces)
 			{
-				// independent faces
+				
 				for (UINT i = 0; i < arraySize; ++i)
 				{
 					renderTargetViewDesc.Texture2DArray.FirstArraySlice = i;
@@ -2341,7 +2338,7 @@ HRESULT RenderDevice_DX11::CreateRenderTargetView(Texture2D* pTexture)
 			}
 			else if (pTexture->independentRTVArraySlices)
 			{
-				// independent slices
+				
 				for (UINT i = 0; i < slices; ++i)
 				{
 					renderTargetViewDesc.Texture2DArray.FirstArraySlice = i * 6;
@@ -2354,7 +2351,7 @@ HRESULT RenderDevice_DX11::CreateRenderTargetView(Texture2D* pTexture)
 			}
 
 			{
-				// Create full-resource RTVs:
+				
 				renderTargetViewDesc.Texture2DArray.FirstArraySlice = 0;
 				renderTargetViewDesc.Texture2DArray.ArraySize = arraySize;
 
@@ -2364,10 +2361,10 @@ HRESULT RenderDevice_DX11::CreateRenderTargetView(Texture2D* pTexture)
 		}
 		else
 		{
-			// Texture2D, Texture2DArray...
+			
 			if (arraySize > 1 && pTexture->independentRTVArraySlices)
 			{
-				// Create subresource RTVs:
+				
 				for (UINT i = 0; i < arraySize; ++i)
 				{
 					if (multisampled)
@@ -2391,7 +2388,7 @@ HRESULT RenderDevice_DX11::CreateRenderTargetView(Texture2D* pTexture)
 			}
 
 			{
-				// Create the full-resource RTV:
+				
 				if (arraySize > 1)
 				{
 					if (multisampled)
@@ -2611,136 +2608,34 @@ HRESULT RenderDevice_DX11::CreateDepthStencilView(Texture2D* pTexture)
 	return hr;
 }
 
-HRESULT RenderDevice_DX11::CreateInputLayout(GraphicBlob* blob, VertexLayout *pInputLayout)
+HRESULT RenderDevice_DX11::CreateInputLayout(const VertexLayoutDesc *pInputElementDescs, UINT NumElements, GraphicBlob* blob, VertexLayout *pInputLayout)
 {
-	ID3D11ShaderReflection* pReflection = nullptr;
-	D3DReflect(((ID3D10Blob*)(blob->resourceDX))->GetBufferPointer(), ((ID3D10Blob*)(blob->resourceDX))->GetBufferSize(), IID_ID3D11ShaderReflection, (void**)&pReflection);
 	
-	UINT LastABO = 0;
-	D3D11_SHADER_DESC shaderdesc;
-	pReflection->GetDesc(&shaderdesc);
-	std::vector<D3D11_INPUT_ELEMENT_DESC> inputLayoutDesc;
-	for (UINT i=0;i<shaderdesc.InputParameters;++i)
-	{
-		UINT AlignByteOffset = 0;
-		D3D11_SIGNATURE_PARAMETER_DESC paramDesc;
-		pReflection->GetInputParameterDesc(i, &paramDesc);
+	pInputLayout->Register(this);
 
-		D3D11_INPUT_ELEMENT_DESC elementDesc;
-		elementDesc.SemanticName = paramDesc.SemanticName;
-		elementDesc.SemanticIndex = paramDesc.SemanticIndex;
-		elementDesc.InputSlot = 0;
-		elementDesc.AlignedByteOffset = NULL;
-		elementDesc.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-		elementDesc.InstanceDataStepRate = 0;
-
-		if (paramDesc.Mask == 1)
-		{
-			if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_UINT32)
-			{
-				elementDesc.Format = DXGI_FORMAT_R32_UINT;
-			}
-			else if(paramDesc.ComponentType==D3D_REGISTER_COMPONENT_SINT32)
-			{
-				elementDesc.Format=DXGI_FORMAT_R32_SINT;
-			}
-			else if(paramDesc.ComponentType==D3D_REGISTER_COMPONENT_FLOAT32)
-			{
-				elementDesc.Format = DXGI_FORMAT_R32_FLOAT;
-			}
-			if (i > 0)
-			{
-				AlignByteOffset = 4;
-			}
-		}
-		else if (paramDesc.Mask <= 3)
-		{
-			if (paramDesc.ComponentType==D3D_REGISTER_COMPONENT_UINT32)
-			{
-				elementDesc.Format = DXGI_FORMAT_R32G32_UINT;
-			}
-			else if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_SINT32)
-			{
-				elementDesc.Format = DXGI_FORMAT_R32G32_SINT;
-			}
-			else if (paramDesc.ComponentType==D3D_REGISTER_COMPONENT_FLOAT32)
-			{
-				elementDesc.Format = DXGI_FORMAT_R32G32_FLOAT;
-			}	
-			if (i > 0)
-			{
-				AlignByteOffset = 8;
-			}
-		}
-		else if (paramDesc.Mask <= 7)
-		{
-			if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_UINT32)
-			{
-				elementDesc.Format = DXGI_FORMAT_R32G32B32_UINT;
-			}
-			else if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_SINT32)
-			{
-				elementDesc.Format = DXGI_FORMAT_R32G32B32_SINT;
-			}
-			else if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_FLOAT32)
-			{
-				elementDesc.Format = DXGI_FORMAT_R32G32B32_FLOAT;
-			}
-			if (i > 0)
-			{
-				AlignByteOffset = 12;
-			}
-		}
-		else if (paramDesc.Mask <= 15)
-		{
-			if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_UINT32)
-			{
-				elementDesc.Format = DXGI_FORMAT_R32G32B32A32_UINT;
-			}
-			else if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_SINT32)
-			{
-				elementDesc.Format = DXGI_FORMAT_R32G32B32A32_SINT;
-			}
-			else if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_FLOAT32)
-			{
-				elementDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-			}
-			if (i > 0)
-			{
-				AlignByteOffset = 16;
-			}
-		}
-		LastABO += AlignByteOffset;
-		elementDesc.AlignedByteOffset = LastABO;
-		inputLayoutDesc.push_back(elementDesc);
-	}
-	
-	HRESULT hr = device->CreateInputLayout(inputLayoutDesc.data(), inputLayoutDesc.size(), ((ID3D10Blob*)(blob->resourceDX))->GetBufferPointer(), ((ID3D10Blob*)(blob->resourceDX))->GetBufferSize(), (ID3D11InputLayout**)&pInputLayout->resouce);
-	/*pInputLayout->Register(this);
-	
 	pInputLayout->desc.reserve((size_t)NumElements);
 
 	D3D11_INPUT_ELEMENT_DESC* desc = new D3D11_INPUT_ELEMENT_DESC[NumElements];
-	for (UINT i=0;i<NumElements;++i)
+	for (UINT i = 0; i < NumElements; ++i)
 	{
 		desc[i].SemanticName = pInputElementDescs[i].SemanticName;
 		desc[i].SemanticIndex = pInputElementDescs[i].SemanticIndex;
 		desc[i].Format = ConvertFormat(pInputElementDescs[i].Format);
 		desc[i].InputSlot = pInputElementDescs[i].InputSlot;
 		desc[i].AlignedByteOffset = pInputElementDescs[i].AlignedByteOffset;
-		if (desc[i].AlignedByteOffset==APPEND_ALIGNED_ELEMENT)
-		{
+		if (desc[i].AlignedByteOffset == APPEND_ALIGNED_ELEMENT)
 			desc[i].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
-		}
 		desc[i].InputSlotClass = ConvertInputClassification(pInputElementDescs[i].InputSlotClass);
 		desc[i].InstanceDataStepRate = pInputElementDescs[i].InstanceDataStepRate;
 
 		pInputLayout->desc.push_back(pInputElementDescs[i]);
 	}
 
-	HRESULT hr = device->CreateInputLayout(desc, NumElements, pShaderBytecodeWithInputSignature, BytecodeLength, &pInputLayout->resouce_DX11);
+	HRESULT hr = device->CreateInputLayout(desc, NumElements, ((ID3D10Blob*)(blob->resourceDX))->GetBufferPointer(), ((ID3D10Blob*)(blob->resourceDX))->GetBufferSize(), (ID3D11InputLayout**)&pInputLayout->resource);
 
-	SAFE_DELETE_ARRAY(desc);*/
+	SAFE_DELETE_ARRAY(desc);
+
+	return hr;
 
 	return hr;
 }
@@ -3125,9 +3020,9 @@ void RenderDevice_DX11::DestroyTexture3D(Texture3D* pTexture3D)
 
 void RenderDevice_DX11::DestroyInputLayout(VertexLayout *pInputLayout)
 {
-	if (pInputLayout->resouce != NUll_Handle)
+	if (pInputLayout->resource != NUll_Handle)
 	{
-		((ID3D11InputLayout*)pInputLayout->resouce)->Release();
+		((ID3D11InputLayout*)pInputLayout->resource)->Release();
 	}
 }
 
@@ -3375,7 +3270,7 @@ void RenderDevice_DX11::BindViewports(UINT NumViewports, const ViewPort* pViewpo
 		d3dViewPorts[i].MaxDepth = pViewports[i].MaxDepth;
 	}
 
-	deviceContexts[GRAPHICTHREAD_IMMERIATE]->RSSetViewports(NumViewports, d3dViewPorts);
+	deviceContexts[ThreadID]->RSSetViewports(NumViewports, d3dViewPorts);
 }
 
 void RenderDevice_DX11::BindRenderTargets(UINT NumViews, Texture2D* const *ppRenderTargets, Texture2D* depthStencilTexture, int arrayIndex/* = -1*/)
@@ -3421,7 +3316,7 @@ void RenderDevice_DX11::BindRenderTargets(UINT NumViews, Texture2D* const *ppRen
 	}
 	else
 	{
-		deviceContexts[GRAPHICTHREAD_IMMERIATE]->OMSetRenderTargets(NumViews, rendertargetViews, depthStencilView);
+		deviceContexts[ThreadID]->OMSetRenderTargets(NumViews, rendertargetViews, depthStencilView);
 	}
 
 }
@@ -3464,9 +3359,9 @@ void RenderDevice_DX11::ClearDepthStencil(Texture2D* pTexture, UINT ClearFlags, 
 	}
 }
 
-void RenderDevice_DX11::BindResource(GraphicPSO* pso, GPUResource* resource, int arrayIndex /*= -1*/)
+void RenderDevice_DX11::BindResource(SHADERSTAGE stage, GPUResource* resource, int slot, int arrayIndex /*= -1*/)
 {
-	/*if (resource != nullptr)
+	if (resource != nullptr)
 	{
 		ID3D11ShaderResourceView* SRV;
 
@@ -3480,127 +3375,67 @@ void RenderDevice_DX11::BindResource(GraphicPSO* pso, GPUResource* resource, int
 			SRV = (ID3D11ShaderResourceView*)resource->additionalSRVs[arrayIndex];
 		}
 
-		ShaderReflectionDX* sfdx = (ShaderReflectionDX*)sf;
-	    for (ShaderInputBindDescDX* psfdx: sfdx->ResourceBindings)
-	    {
-		      if (psfdx->Type== (D3D_SIT_TEXTURE|| D3D_SIT_STRUCTURED))
-		      {
-				  switch (stage)
-				  {
-				  case PRE::VS_STAGE:
-					  deviceContexts[ThreadID]->VSSetShaderResources(psfdx->BindPoint, 1, &SRV);
-					  break;
-				  case PRE::HS_STAGE:
-					  deviceContexts[ThreadID]->HSSetShaderResources(psfdx->BindPoint, 1, &SRV);
-					  break;
-				  case PRE::DS_STAGE:
-					  deviceContexts[ThreadID]->DSSetShaderResources(psfdx->BindPoint, 1, &SRV);
-					  break;
-				  case PRE::GS_STAGE:
-					  deviceContexts[ThreadID]->GSSetShaderResources(psfdx->BindPoint, 1, &SRV);
-					  break;
-				  case PRE::PS_STAGE:
-					  deviceContexts[ThreadID]->PSSetShaderResources(psfdx->BindPoint, 1, &SRV);
-					  break;
-				  case PRE::CS_STAGE:
-					  deviceContexts[ThreadID]->CSSetShaderResources(psfdx->BindPoint, 1, &SRV);
-					  break;
-				  default:
-					  assert(0);
-					  break;
-				  }
-		      }
-	    }
-	}*/
+		switch (stage)
+		{
+		case PRE::VS_STAGE:
+			deviceContexts[ThreadID]->VSSetShaderResources(slot, 1, &SRV);
+			break;
+		case PRE::HS_STAGE:
+			deviceContexts[ThreadID]->HSSetShaderResources(slot, 1, &SRV);
+			break;
+		case PRE::DS_STAGE:
+			deviceContexts[ThreadID]->DSSetShaderResources(slot, 1, &SRV);
+			break;
+		case PRE::GS_STAGE:
+			deviceContexts[ThreadID]->GSSetShaderResources(slot, 1, &SRV);
+			break;
+		case PRE::PS_STAGE:
+			deviceContexts[ThreadID]->PSSetShaderResources(slot, 1, &SRV);
+			break;
+		case PRE::CS_STAGE:
+			deviceContexts[ThreadID]->CSSetShaderResources(slot, 1, &SRV);
+			break;
+		default:
+			assert(0);
+			break;
+		}
+	}
 }
 
-void RenderDevice_DX11::BindResources(GraphicPSO* pso, GPUResource *const* resources)
+void RenderDevice_DX11::BindResources(SHADERSTAGE stage, GPUResource *const* resources, int slot, int count)
 {
-
+	assert(count <= 8);
+	ID3D11ShaderResourceView* srvs[8];
+	for (int i = 0; i < count; ++i)
+	{
+		srvs[i] = resources[i] != nullptr ? (ID3D11ShaderResourceView*)resources[i]->SRV : nullptr;
+	}
 	
-	ShaderReflection* vssf = (ShaderReflection*)(pso->desc.vs->sf);
-	ShaderReflectionDX* vssfdx = (ShaderReflectionDX*)(vssf->ResourceDX);
-	for (ShaderInputBindDescDX* psfdx : vssfdx->ResourceBindings)
+
+	switch (stage)
 	{
-		std::vector<ID3D11ShaderResourceView*> srvs;
-		for (unsigned int i = 0; i < psfdx->BindCount; ++i)
-		{
-			srvs[i] = resources[i] != nullptr ? (ID3D11ShaderResourceView*)resources[i]->SRV : nullptr;
-		}
-		if (psfdx->Type == D3D_SIT_TEXTURE || psfdx->Type == D3D_SIT_STRUCTURED)
-		{
-			deviceContexts[ThreadID]->VSSetShaderResources(psfdx->BindPoint, psfdx->BindCount, srvs.data());
-		}
+	case PRE::VS_STAGE:
+		deviceContexts[ThreadID]->VSSetShaderResources(slot, count, srvs);
+		break;
+	case PRE::HS_STAGE:
+		deviceContexts[ThreadID]->HSSetShaderResources(slot, count, srvs);
+		break;
+	case PRE::DS_STAGE:
+		deviceContexts[ThreadID]->DSSetShaderResources(slot, count, srvs);
+		break;
+	case PRE::GS_STAGE:
+		deviceContexts[ThreadID]->GSSetShaderResources(slot, count, srvs);
+		break;
+	case PRE::PS_STAGE:
+		deviceContexts[ThreadID]->PSSetShaderResources(slot, count, srvs);
+		break;
+	case PRE::CS_STAGE:
+		deviceContexts[ThreadID]->CSSetShaderResources(slot, count, srvs);
+		break;
+	default:
+		assert(0);
+		break;
 	}
-	ShaderReflection* hsfdx = (ShaderReflection*)(pso->desc.hs->sf);
-	ShaderReflectionDX* hssfdx = (ShaderReflectionDX*)(vssf->ResourceDX);
-	for (ShaderInputBindDescDX* hsfdx : hssfdx->ResourceBindings)
-	{
-		std::vector<ID3D11ShaderResourceView*> srvs;
-		for (unsigned int i = 0; i < hsfdx->BindCount; ++i)
-		{
-			srvs[i] = resources[i] != nullptr ? (ID3D11ShaderResourceView*)resources[i]->SRV : nullptr;
-		}
-		if (hsfdx->Type == D3D_SIT_TEXTURE || hsfdx->Type == D3D_SIT_STRUCTURED)
-		{
-			deviceContexts[ThreadID]->HSSetShaderResources(hsfdx->BindPoint, hsfdx->BindCount, srvs.data());
-		}
-	}
-	ShaderReflection* dsfdx = (ShaderReflection*)(pso->desc.ds->sf);
-	ShaderReflectionDX* dssfdx = (ShaderReflectionDX*)(vssf->ResourceDX);
-	for (ShaderInputBindDescDX* psfdx : dssfdx->ResourceBindings)
-	{
-		std::vector<ID3D11ShaderResourceView*> srvs;
-		for (unsigned int i = 0; i < psfdx->BindCount; ++i)
-		{
-			srvs[i] = resources[i] != nullptr ? (ID3D11ShaderResourceView*)resources[i]->SRV : nullptr;
-		}
-		if (psfdx->Type == D3D_SIT_TEXTURE || psfdx->Type == D3D_SIT_STRUCTURED)
-		{
-			deviceContexts[ThreadID]->DSSetShaderResources(psfdx->BindPoint, psfdx->BindCount, srvs.data());
-		}
-	}
-	ShaderReflection* gsfdx = (ShaderReflection*)(pso->desc.gs->sf);
-	ShaderReflectionDX* gssfdx = (ShaderReflectionDX*)(vssf->ResourceDX);
-	for (ShaderInputBindDescDX* psfdx : gssfdx->ResourceBindings)
-	{
-		std::vector<ID3D11ShaderResourceView*> srvs;
-		for (unsigned int i = 0; i < psfdx->BindCount; ++i)
-		{
-			srvs[i] = resources[i] != nullptr ? (ID3D11ShaderResourceView*)resources[i]->SRV : nullptr;
-		}
-		if (psfdx->Type == D3D_SIT_TEXTURE || psfdx->Type == D3D_SIT_STRUCTURED)
-		{
-			deviceContexts[ThreadID]->GSSetShaderResources(psfdx->BindPoint, psfdx->BindCount, srvs.data());
-		}
-	}
-	ShaderReflection* psfdx = (ShaderReflection*)(pso->desc.ps->sf);
-	ShaderReflectionDX* pssfdx = (ShaderReflectionDX*)(vssf->ResourceDX);
-	for (ShaderInputBindDescDX* psfdx : pssfdx->ResourceBindings)
-	{
-		std::vector<ID3D11ShaderResourceView*> srvs;
-		for (unsigned int i = 0; i < psfdx->BindCount; ++i)
-		{
-			srvs[i] = resources[i] != nullptr ? (ID3D11ShaderResourceView*)resources[i]->SRV : nullptr;
-		}
-		if (psfdx->Type == D3D_SIT_TEXTURE || psfdx->Type == D3D_SIT_STRUCTURED)
-		{
-			deviceContexts[ThreadID]->PSSetShaderResources(psfdx->BindPoint, psfdx->BindCount, srvs.data());
-		}
-	}
-	/*ShaderReflectionDX* cssfdx = (ShaderReflectionDX*)(pso->desc.cs->sf->ResourceDX);
-	for (ShaderInputBindDescDX* psfdx : cssfdx->ResourceBindings)
-	{
-		std::vector<ID3D11ShaderResourceView*> srvs;
-		for (int i = 0; i < psfdx->BindCount; ++i)
-		{
-			srvs[i] = resources[i] != nullptr ? (ID3D11ShaderResourceView*)resources[i]->SRV : nullptr;
-		}
-		if (psfdx->Type == (D3D_SIT_TEXTURE || D3D_SIT_STRUCTURED))
-		{
-			deviceContexts[ThreadID]->CSSetShaderResources(psfdx->BindPoint, psfdx->BindCount, srvs.data());
-		}
-	}*/
 }
 
 void RenderDevice_DX11::BindUAV(SHADERSTAGE stage, GPUResource * resources, int slot,int arrayIndex /*= -1*/)
@@ -3718,63 +3553,33 @@ void RenderDevice_DX11::BindSampler(SHADERSTAGE stage, Sampler* sampler, ShaderR
 
 }
 
-void RenderDevice_DX11::BindConstantBuffer(GraphicPSO* pso, GPUBuffer* buffer)
+void RenderDevice_DX11::BindConstantBuffer(SHADERSTAGE stage, GPUBuffer* buffer, int slot, const UINT *pFirstConstant, const UINT *pNumberConstant)
 {
 	ID3D11Buffer* res = buffer ? (ID3D11Buffer*)buffer->resource : nullptr;
-	ShaderReflection* vssf = (ShaderReflection*)(pso->desc.vs->sf);
-	ShaderReflectionDX* vssfdx = (ShaderReflectionDX*)(vssf->ResourceDX);
-	for (UINT i = 0; i < vssfdx->ConstantBuffers.size(); ++i)
+	switch (stage)
 	{
-		deviceContexts[ThreadID]->VSSetConstantBuffers1(vssfdx->ConstantBuffers[i]->BindPoint, 1, &res, &(vssfdx->ConstantBuffers[i]->pFirstContantsArray[i]), &(vssfdx->ConstantBuffers[i]->pContantsNumArray[i]));
-	ImmediatedeviceContext->VSSetConstantBuffers(0, 1, &res);
+	case PRE::VS_STAGE:
+		deviceContexts[ThreadID]->VSSetConstantBuffers(slot, 1, &res);
+		break;
+	case PRE::HS_STAGE:
+		deviceContexts[ThreadID]->HSSetConstantBuffers(slot, 1, &res);
+		break;
+	case PRE::DS_STAGE:
+		deviceContexts[ThreadID]->DSSetConstantBuffers(slot, 1, &res);
+		break;
+	case PRE::GS_STAGE:
+		deviceContexts[ThreadID]->GSSetConstantBuffers(slot, 1, &res);
+		break;
+	case PRE::PS_STAGE:
+		deviceContexts[ThreadID]->PSSetConstantBuffers(slot, 1, &res);
+		break;
+	case PRE::CS_STAGE:
+		deviceContexts[ThreadID]->CSSetConstantBuffers(slot, 1, &res);
+		break;
+	default:
+		assert(0);
+		break;
 	}
-	if (pso->desc.hs!=nullptr)
-	{
-		ShaderReflection* hssf = (ShaderReflection*)(pso->desc.hs->sf);
-		ShaderReflectionDX* hssfdx = (ShaderReflectionDX*)(hssf->ResourceDX);
-		for (UINT i = 0; i < hssfdx->ConstantBuffers.size(); ++i)
-		{
-			deviceContexts[ThreadID]->HSSetConstantBuffers1(hssfdx->ConstantBuffers[i]->BindPoint, 1, &res, &(hssfdx->ConstantBuffers[i]->pFirstContantsArray[i]), &(hssfdx->ConstantBuffers[i]->pContantsNumArray[i]));
-		}
-	}
-	if (pso->desc.ds!=nullptr)
-	{
-		ShaderReflection* dssf = (ShaderReflection*)(pso->desc.ds->sf);
-		ShaderReflectionDX* dssfdx = (ShaderReflectionDX*)(dssf->ResourceDX);
-		for (UINT i = 0; i < dssfdx->ConstantBuffers.size(); ++i)
-		{
-			deviceContexts[ThreadID]->DSSetConstantBuffers1(dssfdx->ConstantBuffers[i]->BindPoint, 1, &res, &(dssfdx->ConstantBuffers[i]->pFirstContantsArray[i]), &(dssfdx->ConstantBuffers[i]->pContantsNumArray[i]));
-		}
-	}
-	if (pso->desc.gs!=nullptr)
-	{
-		ShaderReflection* gssf = (ShaderReflection*)(pso->desc.gs->sf);
-		ShaderReflectionDX* gssfdx = (ShaderReflectionDX*)(gssf->ResourceDX);
-		for (UINT i = 0; i < gssfdx->ConstantBuffers.size(); ++i)
-		{
-			deviceContexts[ThreadID]->GSSetConstantBuffers1(gssfdx->ConstantBuffers[i]->BindPoint, 1, &res, &(gssfdx->ConstantBuffers[i]->pFirstContantsArray[i]), &(gssfdx->ConstantBuffers[i]->pContantsNumArray[i]));
-		}
-	}
-	if (pso->desc.ps!=nullptr)
-	{
-		ShaderReflection* pssf = (ShaderReflection*)(pso->desc.ps->sf);
-		ShaderReflectionDX* pssfdx = (ShaderReflectionDX*)(pssf->ResourceDX);
-		for (UINT i = 0; i < pssfdx->ConstantBuffers.size(); ++i)
-		{
-			deviceContexts[ThreadID]->PSGetConstantBuffers1(pssfdx->ConstantBuffers[i]->BindPoint, 1, &res, &(pssfdx->ConstantBuffers[i]->pFirstContantsArray[i]), &(pssfdx->ConstantBuffers[i]->pContantsNumArray[i]));
-		}
-	}
-/*
-	if (pso->desc.cs!=nullptr)
-	{
-		ShaderReflection* cssf = (ShaderReflection*)(pso->desc.vs->sf);
-		ShaderReflectionDX* pssfdx = (ShaderReflectionDX*)(vssf->ResourceDX);
-		for (UINT i = 0; i < sfdx->ConstantBuffers.size(); ++i)
-		{
-			deviceContexts[ThreadID]->CSGetConstantBuffers1(sfdx->ConstantBuffers[i]->BindPoint, 1, &res, &(sfdx->ConstantBuffers[i]->pFirstContantsArray[i]), &(sfdx->ConstantBuffers[i]->pContantsNumArray[i]));
-		}
-
-	}*/
 		
 }
 
@@ -3786,13 +3591,13 @@ void RenderDevice_DX11::BindVertexBuffers(GPUBuffer* const *vertexBuffers, int s
 	{
 		res[i] = vertexBuffers[i] != nullptr ? (ID3D11Buffer*)vertexBuffers[i]->resource : nullptr;
 	}
-	deviceContexts[ThreadID]->IASetVertexBuffers(static_cast<UINT>(slot), static_cast<UINT>(count),res,strides, (offsets != nullptr ? offsets : reinterpret_cast<const UINT*>(nullBlob)));
+	deviceContexts[0]->IASetVertexBuffers(static_cast<UINT>(slot), static_cast<UINT>(count),res,strides, (offsets != nullptr ? offsets : reinterpret_cast<const UINT*>(nullBlob)));
 }
 
 void RenderDevice_DX11::BindIndexBuffer(GPUBuffer* indexBuffer, const INDEXBUFFER_FORMAT format, UINT offset)
 {
 	ID3D11Buffer* res = indexBuffer != nullptr ? (ID3D11Buffer*)indexBuffer->resource : nullptr;
-	deviceContexts[ThreadID]->IASetIndexBuffer(res, (format == INDEXBUFFER_FORMAT::INDEXBUFFER_16BIT ? DXGI_FORMAT_R16_UINT : DXGI_FORMAT_R32_UINT),offset);
+	deviceContexts[0]->IASetIndexBuffer(res, (format == INDEXBUFFER_FORMAT::INDEXBUFFER_16BIT ? DXGI_FORMAT_R16_UINT : DXGI_FORMAT_R32_UINT),offset);
 }
 
 void RenderDevice_DX11::BindStencilRef(UINT value)
@@ -3812,32 +3617,27 @@ void RenderDevice_DX11::BindGraphicsPSO(GraphicPSO* pso)
 	ID3D11VertexShader* vs = desc.vs == nullptr ? nullptr : (ID3D11VertexShader*)desc.vs->resource;
 	if (vs !=nullptr)
 	{
-		deviceContexts[ThreadID]->VSSetShader(vs, nullptr, 0);
-		//prev_vs[ThreadID] = vs;
+		deviceContexts[0]->VSSetShader(vs, nullptr, 0);
 	}
 	ID3D11PixelShader* ps = desc.ps == nullptr ? nullptr : (ID3D11PixelShader*)desc.ps->resource;
 	if (ps != nullptr)
 	{
-		deviceContexts[ThreadID]->PSSetShader(ps, nullptr, 0);
-		//prev_ps[ThreadID] = ps;
+		deviceContexts[0]->PSSetShader(ps, nullptr, 0);
 	}
 	ID3D11HullShader* hs = desc.hs == nullptr ? nullptr : (ID3D11HullShader*)desc.hs->resource;
 	if (hs != nullptr)
 	{
 		deviceContexts[ThreadID]->HSSetShader(hs, nullptr, 0);
-		//prev_hs[ThreadID] = hs;
 	}
 	ID3D11DomainShader* ds = desc.ds == nullptr ? nullptr : (ID3D11DomainShader*)desc.ds->resource;
 	if (ds != nullptr)
 	{
 		deviceContexts[ThreadID]->DSSetShader(ds, nullptr, 0);
-		//prev_ds[ThreadID] = ds;
 	}
 	ID3D11GeometryShader* gs = desc.gs == nullptr ? nullptr : (ID3D11GeometryShader*)desc.gs->resource;
 	if (gs != nullptr)
 	{
 		deviceContexts[ThreadID]->GSSetShader(gs, nullptr, 0);
-		//prev_gs[ThreadID] = gs;
 	}
 
 	ID3D11BlendState* bs = desc.bs == nullptr ? nullptr : (ID3D11BlendState*)desc.bs->resource;
@@ -3845,34 +3645,26 @@ void RenderDevice_DX11::BindGraphicsPSO(GraphicPSO* pso)
 	{
 		const float fact[4] = { blendFactor[0].x, blendFactor[0].y, blendFactor[0].z, blendFactor[0].w };
 		deviceContexts[ThreadID]->OMSetBlendState(bs, fact, desc.sampleMask);
-		//prev_bs[ThreadID] = bs;
-		//prev_blendfactor[ThreadID] = blendFactor[ThreadID];
-		//prev_samplemask[ThreadID] = desc.sampleMask;
 	}
 
 	ID3D11RasterizerState* rs = desc.rs == nullptr ? nullptr : (ID3D11RasterizerState*)desc.rs->resource;
 	if (rs != nullptr)
 	{
 		deviceContexts[ThreadID]->RSSetState(rs);
-		//prev_rs[ThreadID] = rs;
 	}
 
 	ID3D11DepthStencilState* dss = desc.dss == nullptr ? nullptr : (ID3D11DepthStencilState*)desc.dss->resource;
 	if (dss != nullptr)
 	{
 		deviceContexts[ThreadID]->OMSetDepthStencilState(dss, stencilRef[0]);
-		//prev_dss[ThreadID] = dss;
-		//prev_stencilRef[ThreadID] = stencilRef[ThreadID];
 	}
 
-	ID3D11InputLayout* il = desc.VL == nullptr ? nullptr : (ID3D11InputLayout*)desc.VL->resouce;
+	ID3D11InputLayout* il = desc.VL == nullptr ? nullptr : (ID3D11InputLayout*)desc.VL->resource;
 	if (il != nullptr)
 	{
-		deviceContexts[ThreadID]->IASetInputLayout(il);
-		//prev_vl[ThreadID] = il;
+		deviceContexts[0]->IASetInputLayout(il);
 	}
 
-	/*if (prev_pt[ThreadID] != nullptr)*/
 	{
 		D3D11_PRIMITIVE_TOPOLOGY d3dType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 		switch (desc.PT)
@@ -3896,7 +3688,7 @@ void RenderDevice_DX11::BindGraphicsPSO(GraphicPSO* pso)
 			d3dType = D3D11_PRIMITIVE_TOPOLOGY_UNDEFINED;
 			break;
 		};
-		deviceContexts[ThreadID]->IASetPrimitiveTopology(d3dType);
+		deviceContexts[0]->IASetPrimitiveTopology(d3dType);
 	}
 }
 
@@ -3927,9 +3719,9 @@ void RenderDevice_DX11::Draw(int vertexCount, UINT startVertexLociotn)
 
 void RenderDevice_DX11::DrawIndexed(int Indexcount, UINT startVertexLocation, UINT baseVertexLocation)
 {
-	validate_raster_uavs(ThreadID);
+	validate_raster_uavs(0);
 
-	deviceContexts[ThreadID]->DrawIndexed(Indexcount, startVertexLocation, baseVertexLocation);
+	deviceContexts[0]->DrawIndexed(Indexcount, startVertexLocation, baseVertexLocation);
 }
 
 void RenderDevice_DX11::DrawInstanced(int vertexCount, int instanceCount, UINT startVertexLocation, UINT startInstanceLocation)
@@ -4001,7 +3793,7 @@ void RenderDevice_DX11::UpdateBuffer(GPUBuffer* buffer, const void* data, int da
 	}
 	else if (buffer->desc.BindFlags & BIND_CONSTANT_BUFFER || datasize < 0)
 	{
-		deviceContexts[ThreadID]->UpdateSubresource((ID3D11Resource*)buffer->resource, 0, nullptr, data, 0, 0);
+		deviceContexts[0]->UpdateSubresource((ID3D11Resource*)buffer->resource, 0, nullptr, data, 0, 0);
 	}
 	else
 	{
@@ -4191,6 +3983,7 @@ void RenderDevice_DX11::SetMarker(const std::string &name)
 	userDefinedAnnotations[ThreadID]->SetMarker(wstring(name.begin(), name.end()).c_str());
 }
 
+/*
 void  RenderDevice_DX11::GetShaderReflection(GraphicBlob* blob, ShaderReflection* sf, Allocator* alloc)
 {
 	ShaderReflectionDX* sfdx=allocatorFC::allocateNew<ShaderReflectionDX>(*alloc);
@@ -4200,7 +3993,6 @@ void  RenderDevice_DX11::GetShaderReflection(GraphicBlob* blob, ShaderReflection
 
 	if (hr)
 	{
-		//qDebug("Failed to create a ShaderReflection!");
 	}
     
 	D3D11_SHADER_DESC desc;
@@ -4286,7 +4078,7 @@ void  RenderDevice_DX11::GetShaderReflection(GraphicBlob* blob, ShaderReflection
 	}
 
 	sf->ResourceDX = (CPUHandle)sfdx;
-}
+}*/
       
 }
 

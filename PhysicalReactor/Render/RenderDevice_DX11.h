@@ -81,9 +81,8 @@ namespace PRE
 		virtual HRESULT CreateTexture1D(const TextureDesc* pDesc, const SubresourceData *pInitialData, Texture1D **ppTexture1D) override;
 		virtual HRESULT CreateTexture2D(const TextureDesc* pDesc, const SubresourceData *pInitialData, Texture2D **ppTexture2D) override;
 		virtual HRESULT CreateTexture3D(const TextureDesc* pDesc, const SubresourceData *pInitialData, Texture3D **ppTexture3D) override;
-		//virtual HRESULT CreateInputLayout(const VertexLayoutDesc *pInputElementDescs, UINT NumElements,
-				//const void *pShaderBytecodeWithInputSignature, SIZE_T BytecodeLength, VertexLayout *pInputLayout)override;
-		virtual HRESULT CreateInputLayout(GraphicBlob* blob, VertexLayout* pInputLayout)override;
+		
+		virtual HRESULT CreateInputLayout(const VertexLayoutDesc *pInputElementDescs, UINT NumElements, GraphicBlob* blob, VertexLayout *pInputLayout) override;
 		virtual HRESULT CreateVertexShader(WCHAR* filename, GraphicBlob* blob, VertexShader* pVertexShader)override;
 		virtual HRESULT CreatePixelShader(WCHAR* filename, GraphicBlob* blob, PixelShader* pPixelShader)override;
 		virtual HRESULT CreateGemotryShader(WCHAR* filename, GraphicBlob* blob, GeometryShader* pGeometryShader) override;
@@ -141,14 +140,14 @@ namespace PRE
 		virtual void BindRenderTargets(UINT NumViews, Texture2D* const *ppRenderTargets, Texture2D* depthStencilTexture,int arrayIndex = -1)override;
 		virtual void ClearRenderTarget(Texture* pTexture, const FLOAT ColorRGBA[4], int arrayIndex = -1)override;
 		virtual void ClearDepthStencil(Texture2D* pTexture, UINT ClearFlags, FLOAT Depth, UINT8 Stencil,  int arrayIndex = -1)override;
-		virtual void BindResource(GraphicPSO* pso, GPUResource* resource,int arrayIndex = -1)override;
-		virtual void BindResources(GraphicPSO* pso, GPUResource *const* resources)override;
+		virtual void BindResource(SHADERSTAGE stage, GPUResource* resource, int slot, int arrayIndex = -1) override;
+		virtual void BindResources(SHADERSTAGE stage, GPUResource *const* resources, int slot, int count)override;
 		virtual void BindUAV(SHADERSTAGE stage, GPUResource *resources, int slot,  int arrayIndex = -1)override;
 		virtual void BindUAVS(SHADERSTAGE stage, GPUResource* const* resource, int slot, int count)override;
 		virtual void UnbindResources(int slot, int num)override;
 		virtual void UnbindUAVs(int slot, int num)override;
 		virtual void BindSampler(SHADERSTAGE stage, Sampler* sampler, ShaderReflection* sf)override;
-		virtual void BindConstantBuffer(GraphicPSO* pso, GPUBuffer* buffer)override;
+		virtual void BindConstantBuffer(SHADERSTAGE stage, GPUBuffer* buffer, int slot, const UINT *pFirstConstant, const UINT *pNumberConstant)override;
 		virtual void BindVertexBuffers(GPUBuffer* const *vertexBuffers, int slot, int count, const UINT* strides, const UINT*offsets)override;
 		virtual void BindIndexBuffer(GPUBuffer* indexBuffer, const INDEXBUFFER_FORMAT format, UINT offset)override;
 		virtual void BindStencilRef(UINT value)override;
@@ -182,7 +181,7 @@ namespace PRE
 		virtual void EventBegin(const std::string& name)override;
 		virtual void EventEnd()override;
 		virtual void SetMarker(const std::string &name)override;
-		virtual void GetShaderReflection(GraphicBlob* blob, ShaderReflection* sf,Allocator* alloc) override;
+		//virtual void GetShaderReflection(GraphicBlob* blob, ShaderReflection* sf,Allocator* alloc) override;
 		private:
 			HRESULT CreateShaderResourceView(Texture1D* pTexture);
 			HRESULT CreateShaderResourceView(Texture2D* pTexture);

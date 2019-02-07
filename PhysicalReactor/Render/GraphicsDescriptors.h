@@ -408,7 +408,7 @@ namespace PRE
 
 	struct VertexLayoutDesc
 	{
-		char* SemanticName;
+		const char* SemanticName;
 		UINT SemanticIndex;
 		FORMAT Format;
 		UINT InputSlot;

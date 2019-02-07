@@ -22,6 +22,12 @@
     <Filter Include="头文件\Render">
       <UniqueIdentifier>{acf789b8-61ba-40a2-8828-586a3def61f1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\World">
+      <UniqueIdentifier>{a46adbaa-cc1f-4c93-acaf-db8878c17f8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Shader">
+      <UniqueIdentifier>{f3800c55-d8a1-4f79-921f-83991706dbfd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -123,6 +129,12 @@
     <ClInclude Include="Render\Renderer.h">
       <Filter>头文件\Render</Filter>
     </ClInclude>
+    <ClInclude Include="World\RenderWorld.h">
+      <Filter>头文件\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DrawKey.h">
+      <Filter>头文件\Render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -185,6 +197,9 @@
     <ClCompile Include="Render\Renderer.cpp">
       <Filter>头文件\Render</Filter>
     </ClCompile>
+    <ClCompile Include="World\RenderWorld.cpp">
+      <Filter>头文件\World</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="PhysicalReactor.rc">
@@ -198,5 +213,13 @@
     <Image Include="PhysicalReactor.ico">
       <Filter>资源文件</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="ps.hlsl">
+      <Filter>头文件\Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="vs.hlsl">
+      <Filter>头文件\Shader</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
