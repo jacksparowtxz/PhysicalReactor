@@ -3,9 +3,10 @@
 #include "Render/RenderDevice_DX11.h"
 
 
+
 namespace PRE
 {
-	RenderWorld::RenderWorld(HWND windows)//:mVertexBuffer(0),mIndexBuffer(0),vs(0),ps(0),pinputlayout(0),constbuffer(0),pso(0)
+	RenderWorld::RenderWorld(HWND windows, Allocator* allocator) :StaticmeshList(*allocator)//:mVertexBuffer(0),mIndexBuffer(0),vs(0),ps(0),pinputlayout(0),constbuffer(0),pso(0)
 	{
 		Renderer::renderdevice = new RenderDevice_DX11(windows,false,true);
 		/*GPUBufferDesc vertexdesc;

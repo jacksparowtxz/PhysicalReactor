@@ -3,11 +3,11 @@
 
 #include "stdafx.h"
 #include "PhysicalReactor.h"
-#include "World/RenderWorld.h"
+#include "World/GameWorld.h"
 #define MAX_LOADSTRING 100
 using namespace PRE;
 
-RenderWorld* rw;
+GameWorld* gw;
 
 
 HINSTANCE hInst;                               
@@ -53,7 +53,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		}
 		else {
 			
-			rw->Update();
 		}
 	}
 
@@ -90,7 +89,6 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
    HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
       CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
-   rw = new RenderWorld(hWnd);
    if (!hWnd)
    {
       return FALSE;

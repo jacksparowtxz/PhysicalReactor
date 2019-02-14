@@ -1,9 +1,12 @@
 #pragma once
 #include "Render/GraphicsResource.h"
+#include "Allocator/Allocator.h"
+#include "Container/vector.h"
+#include "Render/Renderable.h"
 
 
 
-
+using namespace PRE;
 namespace PRE
 {
 /*
@@ -22,12 +25,20 @@ namespace PRE
 	class RenderWorld
 	{
 	public:
-		RenderWorld(HWND windows);
+		RenderWorld(HWND windows,Allocator* allocator);
 
 		void BeginRender();
 		void RenderFrame();
 		void EndRender();
 		void Update();
+
+
+		Allocator* allocator;
+
+		Vector<StaticMesh*> StaticmeshList;
+
+		
+
 	/*	GPUBuffer* mVertexBuffer;
 		GPUBuffer* mIndexBuffer;
 

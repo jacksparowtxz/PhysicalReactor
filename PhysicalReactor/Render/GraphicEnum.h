@@ -48,7 +48,13 @@ enum SHADINGMODEL
 	SHADINGMODEL_EYE=9,
 };
 
-
+enum DecalBlendMode
+{
+	Decal_Translucent=1,
+	Decal_Stain=2,
+	Decal_Normal=3,
+	Decal_Emissive=4,
+};
 
 enum SHADERTYPE
 {

@@ -28,6 +28,12 @@
     <Filter Include="头文件\Shader">
       <UniqueIdentifier>{f3800c55-d8a1-4f79-921f-83991706dbfd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\MISC">
+      <UniqueIdentifier>{5dae1ad6-288d-464a-9c6d-4ff01b17a1f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Container">
+      <UniqueIdentifier>{0b05e315-c3c2-4957-ac18-fdd3e419c282}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -123,9 +129,6 @@
     <ClInclude Include="Render\ResourceMapping.h">
       <Filter>头文件\Render</Filter>
     </ClInclude>
-    <ClInclude Include="MiscHelper.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Render\Renderer.h">
       <Filter>头文件\Render</Filter>
     </ClInclude>
@@ -133,6 +136,48 @@
       <Filter>头文件\World</Filter>
     </ClInclude>
     <ClInclude Include="Render\DrawKey.h">
+      <Filter>头文件\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\StaticMesh.h">
+      <Filter>头文件\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Vertex.h">
+      <Filter>头文件\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Material.h">
+      <Filter>头文件\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="MISC\MiscHelper.h">
+      <Filter>头文件\MISC</Filter>
+    </ClInclude>
+    <ClInclude Include="MISC\Intersectables.h">
+      <Filter>头文件\MISC</Filter>
+    </ClInclude>
+    <ClInclude Include="MISC\Mathhelper.h">
+      <Filter>头文件\MISC</Filter>
+    </ClInclude>
+    <ClInclude Include="World\GameWorld.h">
+      <Filter>头文件\World</Filter>
+    </ClInclude>
+    <ClInclude Include="MISC\MeshLoad.h">
+      <Filter>头文件\MISC</Filter>
+    </ClInclude>
+    <ClInclude Include="MISC\Frustum.h">
+      <Filter>头文件\MISC</Filter>
+    </ClInclude>
+    <ClInclude Include="MISC\stb_image.h">
+      <Filter>头文件\MISC</Filter>
+    </ClInclude>
+    <ClInclude Include="MISC\stb_image_write.h">
+      <Filter>头文件\MISC</Filter>
+    </ClInclude>
+    <ClInclude Include="Container\vector.h">
+      <Filter>头文件\Container</Filter>
+    </ClInclude>
+    <ClInclude Include="Container\GameType.h">
+      <Filter>头文件\Container</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderable.h">
       <Filter>头文件\Render</Filter>
     </ClInclude>
   </ItemGroup>
@@ -191,14 +236,38 @@
     <ClCompile Include="Render\RenderDevice_DX11.cpp">
       <Filter>头文件\Render</Filter>
     </ClCompile>
-    <ClCompile Include="MiscHelper.cpp">
-      <Filter>头文件</Filter>
-    </ClCompile>
     <ClCompile Include="Render\Renderer.cpp">
       <Filter>头文件\Render</Filter>
     </ClCompile>
     <ClCompile Include="World\RenderWorld.cpp">
       <Filter>头文件\World</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\StaticMesh.cpp">
+      <Filter>头文件\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Vertex.cpp">
+      <Filter>头文件\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Material.cpp">
+      <Filter>头文件\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="MISC\MiscHelper.cpp">
+      <Filter>头文件\MISC</Filter>
+    </ClCompile>
+    <ClCompile Include="MISC\Intersectables.cpp">
+      <Filter>头文件\MISC</Filter>
+    </ClCompile>
+    <ClCompile Include="MISC\MathHelper.cpp">
+      <Filter>头文件\MISC</Filter>
+    </ClCompile>
+    <ClCompile Include="World\GameWorld.cpp">
+      <Filter>头文件\World</Filter>
+    </ClCompile>
+    <ClCompile Include="MISC\MeshLoad.cpp">
+      <Filter>头文件\MISC</Filter>
+    </ClCompile>
+    <ClCompile Include="MISC\Frustum.cpp">
+      <Filter>头文件\MISC</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

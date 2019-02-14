@@ -75,8 +75,9 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>D:\PhysicalReactor\PhysicalReactor;$(IncludePath)</IncludePath>
-    <ReferencePath>D:\PhysicalReactor\PhysicalReactor;$(ReferencePath)</ReferencePath>
+    <IncludePath>D:\PR\PhysicalReactor;D:\PR\PhysicalReactor\assimp;$(IncludePath)</IncludePath>
+    <ReferencePath>D:\PR\PhysicalReactor;D:\PR\PhysicalReactor\assimp;$(ReferencePath)</ReferencePath>
+    <LibraryPath>D:\PR\PhysicalReactor\assimp;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -112,7 +113,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d11.lib;D3DCompiler.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;D3DCompiler.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -167,6 +168,8 @@
     <ClInclude Include="Allocator\ScopeStack.h" />
     <ClInclude Include="Allocator\SmallBlockAllocator.h" />
     <ClInclude Include="CommonInclude.h" />
+    <ClInclude Include="Container\GameType.h" />
+    <ClInclude Include="Container\vector.h" />
     <ClInclude Include="JobSystem\Delegate.h" />
     <ClInclude Include="JobSystem\JobScheduler.h" />
     <ClInclude Include="JobSystem\Number.h" />
@@ -174,19 +177,30 @@
     <ClInclude Include="JobSystem\Random.h" />
     <ClInclude Include="JobSystem\ThreadGroup.h" />
     <ClInclude Include="JobSystem\WorkStealingQueue.h" />
-    <ClInclude Include="MiscHelper.h" />
+    <ClInclude Include="MISC\Frustum.h" />
+    <ClInclude Include="MISC\Intersectables.h" />
+    <ClInclude Include="MISC\Mathhelper.h" />
+    <ClInclude Include="MISC\MeshLoad.h" />
+    <ClInclude Include="MISC\MiscHelper.h" />
+    <ClInclude Include="MISC\stb_image.h" />
+    <ClInclude Include="MISC\stb_image_write.h" />
     <ClInclude Include="PhysicalReactor.h" />
+    <ClInclude Include="Renderable.h" />
     <ClInclude Include="Render\DrawKey.h" />
     <ClInclude Include="Render\GraphicEnum.h" />
     <ClInclude Include="Render\GraphicsDescriptors.h" />
     <ClInclude Include="Render\GraphicsResource.h" />
+    <ClInclude Include="Render\Material.h" />
     <ClInclude Include="Render\RenderDevice.h" />
     <ClInclude Include="Render\RenderDevice_DX11.h" />
     <ClInclude Include="Render\Renderer.h" />
     <ClInclude Include="Render\ResourceMapping.h" />
+    <ClInclude Include="Render\StaticMesh.h" />
+    <ClInclude Include="Render\Vertex.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="World\GameWorld.h" />
     <ClInclude Include="World\RenderWorld.h" />
   </ItemGroup>
   <ItemGroup>
@@ -242,10 +256,11 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="MiscHelper.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
+    <ClCompile Include="MISC\Frustum.cpp" />
+    <ClCompile Include="MISC\Intersectables.cpp" />
+    <ClCompile Include="MISC\MathHelper.cpp" />
+    <ClCompile Include="MISC\MeshLoad.cpp" />
+    <ClCompile Include="MISC\MiscHelper.cpp" />
     <ClCompile Include="PhysicalReactor.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
     </ClCompile>
@@ -253,6 +268,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Render\Material.cpp" />
     <ClCompile Include="Render\RenderDevice.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
@@ -265,12 +281,15 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Render\StaticMesh.cpp" />
+    <ClCompile Include="Render\Vertex.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="World\GameWorld.cpp" />
     <ClCompile Include="World\RenderWorld.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
