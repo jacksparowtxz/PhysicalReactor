@@ -180,6 +180,15 @@
     <ClInclude Include="Renderable.h">
       <Filter>头文件\Render</Filter>
     </ClInclude>
+    <ClInclude Include="Render\ShaderManager.h">
+      <Filter>头文件\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="MISC\json.hpp">
+      <Filter>头文件\MISC</Filter>
+    </ClInclude>
+    <ClInclude Include="MISC\tinyxml2.h">
+      <Filter>头文件\MISC</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -267,6 +276,12 @@
       <Filter>头文件\MISC</Filter>
     </ClCompile>
     <ClCompile Include="MISC\Frustum.cpp">
+      <Filter>头文件\MISC</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\ShaderManager.cpp">
+      <Filter>头文件\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="MISC\tinyxml2.cpp">
       <Filter>头文件\MISC</Filter>
     </ClCompile>
   </ItemGroup>

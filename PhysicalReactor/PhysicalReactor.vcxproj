@@ -179,11 +179,13 @@
     <ClInclude Include="JobSystem\WorkStealingQueue.h" />
     <ClInclude Include="MISC\Frustum.h" />
     <ClInclude Include="MISC\Intersectables.h" />
+    <ClInclude Include="MISC\json.hpp" />
     <ClInclude Include="MISC\Mathhelper.h" />
     <ClInclude Include="MISC\MeshLoad.h" />
     <ClInclude Include="MISC\MiscHelper.h" />
     <ClInclude Include="MISC\stb_image.h" />
     <ClInclude Include="MISC\stb_image_write.h" />
+    <ClInclude Include="MISC\tinyxml2.h" />
     <ClInclude Include="PhysicalReactor.h" />
     <ClInclude Include="Renderable.h" />
     <ClInclude Include="Render\DrawKey.h" />
@@ -195,6 +197,7 @@
     <ClInclude Include="Render\RenderDevice_DX11.h" />
     <ClInclude Include="Render\Renderer.h" />
     <ClInclude Include="Render\ResourceMapping.h" />
+    <ClInclude Include="Render\ShaderManager.h" />
     <ClInclude Include="Render\StaticMesh.h" />
     <ClInclude Include="Render\Vertex.h" />
     <ClInclude Include="Resource.h" />
@@ -261,6 +264,7 @@
     <ClCompile Include="MISC\MathHelper.cpp" />
     <ClCompile Include="MISC\MeshLoad.cpp" />
     <ClCompile Include="MISC\MiscHelper.cpp" />
+    <ClCompile Include="MISC\tinyxml2.cpp" />
     <ClCompile Include="PhysicalReactor.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
     </ClCompile>
@@ -281,6 +285,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Render\ShaderManager.cpp" />
     <ClCompile Include="Render\StaticMesh.cpp" />
     <ClCompile Include="Render\Vertex.cpp" />
     <ClCompile Include="stdafx.cpp">
