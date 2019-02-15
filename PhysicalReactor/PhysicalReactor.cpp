@@ -52,7 +52,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 			DispatchMessage(&msg);
 		}
 		else {
-			
+			gw->Render();
 		}
 	}
 
@@ -88,11 +88,14 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    hInst = hInstance;
 
    HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-      CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
+      0, 0, 3840, 2160, nullptr, nullptr, hInstance, nullptr);
    if (!hWnd)
    {
       return FALSE;
    }
+
+
+   gw = new GameWorld(hWnd);
 
    ShowWindow(hWnd, nCmdShow);
    UpdateWindow(hWnd);
@@ -103,6 +106,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+
     switch (message)
     {
     case WM_COMMAND:
@@ -115,13 +119,51 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
                 break;
             case IDM_EXIT:
-                DestroyWindow(hWnd);
+			{
+				DestroyWindow(hWnd);
+				gw->~GameWorld();
+			}
                 break;
             default:
                 return DefWindowProc(hWnd, message, wParam, lParam);
             }
         }
         break;
+	case WM_SIZE:
+	    {
+		    if (Renderer::GetDevice() != nullptr)
+		    {
+				int width = LOWORD(lParam);
+				int height = LOWORD(lParam);
+
+				gw->ReSize(width,height);
+		    }
+	    } 
+		break;
+	case WM_KEYDOWN:
+	    {
+		   switch (wParam)
+		   {
+		   case 0x87:
+			gw->MoveForward(1.0f);
+		   case 0x83:
+			gw->MoveForward(-1.0f);
+		   case 0x65:
+			gw->MoveRight(1.0f);
+		   case 0x68:
+			gw->MoveRight(-1.0f);
+		   default:
+			 break;
+		   }
+	    }
+		break;
+	case WM_MOUSEMOVE:
+	    {
+		  int x = LOWORD(lParam);
+		  int y = HIWORD(lParam);
+		  gw->CameraRotation(x, y);
+	    }
+		break;
     case WM_PAINT:
         {
             PAINTSTRUCT ps;

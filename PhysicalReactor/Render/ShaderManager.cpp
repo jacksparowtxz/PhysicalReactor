@@ -53,13 +53,13 @@ void ShaderManager::LoadShader(const std::string& pathfilename,SHADERSTAGE type)
 		VertexShader* vs =new VertexShader;
 		Renderer::GetDevice()->CreateVertexShader(wfilename, shaderblob, vs);
 		VSMap[filename]=vs;
+		CreateVertexLayout(filename,shaderblob);
 	}
 	break;
 	case PRE::HS_STAGE:
 	{
 		HullShader* hs = new HullShader;
 		Renderer::GetDevice()->CreateHullShader(wfilename, shaderblob, hs);
-		
 		HSMap[filename]=hs;
 	}
 	break;
@@ -196,9 +196,21 @@ void ShaderManager::CreateShader()
 
 }
 
+void ShaderManager::CreateVertexLayout(const std::string& filename,GraphicBlob* Graphicblob)
+{
+	 VertexLayout* vertexlayout = new VertexLayout;
+	const VertexLayoutDesc vertexDesc[] =
+	{
+		{ "POSITION", 0, FORMAT_R32G32B32_FLOAT, 0, 0, INPUT_PER_VERTEX_DATA, 0 },
+		{ "NORMAL", 0, FORMAT_R32G32B32_FLOAT, 0, 12, INPUT_PER_VERTEX_DATA, 0 },
+		{ "TANGENT", 0, FORMAT_R32G32B32_FLOAT, 0, 24, INPUT_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD", 0, FORMAT_R32G32_FLOAT, 0, 32, INPUT_PER_VERTEX_DATA, 0 },
+	};
+	Renderer::GetDevice()->CreateInputLayout(vertexDesc, ARRAYSIZE(vertexDesc), Graphicblob, vertexlayout);
+}
+
 PRE::VertexShader* ShaderManager::GetVertexShader(const std::string& filename)
 {
-	
 	return VSMap[filename];
 }
 

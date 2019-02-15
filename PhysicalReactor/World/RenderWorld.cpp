@@ -1,14 +1,16 @@
 #include "World/RenderWorld.h"
 #include "Render/Renderer.h"
 #include "Render/RenderDevice_DX11.h"
-
+#include "MISC/Mathhelper.h"
 
 
 namespace PRE
 {
 	RenderWorld::RenderWorld(HWND windows, Allocator* allocator) :StaticmeshList(*allocator)//:mVertexBuffer(0),mIndexBuffer(0),vs(0),ps(0),pinputlayout(0),constbuffer(0),pso(0)
 	{
-		Renderer::renderdevice = new RenderDevice_DX11(windows,false,true);
+		Initilize(windows,allocator);
+		
+
 		/*GPUBufferDesc vertexdesc;
 	    VertexPositionColor cubeVertices[] =
 		{
@@ -147,10 +149,7 @@ namespace PRE
 
 	void RenderWorld::BeginRender()
 	{
-	
 		Renderer::GetDevice()->PresentBegin();
-	
-	
 	}
 
 
@@ -181,11 +180,77 @@ namespace PRE
 		Renderer::GetDevice()->PresentEnd();*/
 	}
 
-	void RenderWorld::Update()
+	void RenderWorld::Update(float deltatime)
+	{
+		dt = deltatime;
+
+
+	}
+
+	void RenderWorld::ReSize(int width, int height)
+	{
+		Renderer::GetDevice()->SetResolution(width, height);
+		camera->SetLens(0.25f*MathHelper::Pi, width / height, 0.1f, 1000.0f);
+		camera->UpdateViewMatrix();
+	}
+
+	void RenderWorld::MoveForWard(float Direction)
+	{
+		camera->Walk(dt * 10 * Direction);
+	}
+
+	void RenderWorld::MoveRight(float Direction)
+	{
+       camera->Strafe(dt * 10 * Direction);
+	}
+
+	void RenderWorld::CameraRotation(int x, int y)
+	{
+		float dx = XMConvertToRadians(0.25f*static_cast<float>(x - mLastMousePos.x));
+		float dy = XMConvertToRadians(0.25f*static_cast<float>(y - mLastMousePos.y));
+
+		camera->Pitch(dy);
+		camera->RotateY(dx);
+		
+		mLastMousePos.x = x;
+		mLastMousePos.y = y;
+	}
+
+	void RenderWorld::RenderScene()
 	{
 		/*BeginRender();
 		RenderFrame();
 		EndRender();*/
+
+	}
+
+	void RenderWorld::Initilize(HWND windows, Allocator* allocator)
+	{
+		Renderer::renderdevice = new RenderDevice_DX11(windows, false, true);
+		Renderer::shadermanager = allocatorFC::allocateNew<ShaderManager>(*allocator);
+		Renderer::shadermanager->CreateShader();
+		camera = allocatorFC::allocateNew<Camera>(*allocator);
+		GPUBufferDesc constantdesc;
+		constantdesc.BindFlags = BIND_CONSTANT_BUFFER;
+		constantdesc.ByteWidth = sizeof(RenderConstantBuffer);
+		constantdesc.CPUAccessFlags = 0;
+		constantdesc.MiscFlags = 0;
+		constantdesc.Usage = USAGE_DEFAULT;
+		constantdesc.StructureByteStride = 0;
+		constbuffer = new GPUBuffer;
+		Renderer::GetDevice()->CreateBuffer(&constantdesc, nullptr, constbuffer);
+
+
+		RECT rect = RECT();
+		GetClientRect(windows, &rect);
+
+		int SCREENWIDTH = rect.right - rect.left;
+		int SCREENHEIGHT = rect.bottom - rect.top;
+
+		camera->SetLens(0.25f*MathHelper::Pi, SCREENWIDTH/SCREENHEIGHT, 0.1f, 1000.0f);
+
+		mLastMousePos.x = 0;
+		mLastMousePos.y = 0;
 	}
 
 }

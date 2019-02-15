@@ -177,9 +177,6 @@
     <ClInclude Include="Container\GameType.h">
       <Filter>头文件\Container</Filter>
     </ClInclude>
-    <ClInclude Include="Renderable.h">
-      <Filter>头文件\Render</Filter>
-    </ClInclude>
     <ClInclude Include="Render\ShaderManager.h">
       <Filter>头文件\Render</Filter>
     </ClInclude>
@@ -188,6 +185,15 @@
     </ClInclude>
     <ClInclude Include="MISC\tinyxml2.h">
       <Filter>头文件\MISC</Filter>
+    </ClInclude>
+    <ClInclude Include="MISC\Timer.h">
+      <Filter>头文件\MISC</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Renderable.h">
+      <Filter>头文件\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Camera.h">
+      <Filter>头文件\Render</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -283,6 +289,12 @@
     </ClCompile>
     <ClCompile Include="MISC\tinyxml2.cpp">
       <Filter>头文件\MISC</Filter>
+    </ClCompile>
+    <ClCompile Include="MISC\Timer.cpp">
+      <Filter>头文件\MISC</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Camera.cpp">
+      <Filter>头文件\Render</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

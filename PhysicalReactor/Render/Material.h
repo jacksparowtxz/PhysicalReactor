@@ -30,7 +30,6 @@ public:
 	SHADINGMODEL Shadingmodel;
 	BLENDMODE BlendMode;
 
-	BitSizeStruct<23> MaterialID;
 	string Materialname;
 
 	Texture2D* BaseColorMap;

@@ -1424,8 +1424,14 @@ RenderDevice_DX11::RenderDevice_DX11(HWND mainscreen,bool fullscreen, bool debug
 {
 	FULLSCREEN = fullscreen;
 
-	SCREENWIDTH =1920;
-	SCREENHEIGHT =1080;
+	
+
+	RECT rect = RECT();
+	GetClientRect(mainscreen, &rect);
+
+	SCREENWIDTH = rect.right-rect.left;
+	SCREENHEIGHT = rect.bottom - rect.top;
+
 
 
 	HRESULT hr = E_FAIL;

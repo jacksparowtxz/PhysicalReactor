@@ -27,6 +27,7 @@ public:
 	hash_map<string, VertexLayout*> VLMap;
 	void LoadShader(const std::string& pathfilename,SHADERSTAGE type);
 	void CreateShader();
+	void CreateVertexLayout(const std::string& filename,GraphicBlob* Graphicblob);
 	VertexShader* GetVertexShader(const std::string& filename);
 	PixelShader* GetPixelShader(const std::string& filename);
 	HullShader* GetHullShader(const std::string& filename);

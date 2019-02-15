@@ -1,8 +1,8 @@
 #pragma once
 #include "CommonInclude.h"
-#include "GraphicEnum.h"
-#include "RenderDevice.h"
-
+#include "Render/GraphicEnum.h"
+#include "Render/RenderDevice.h"
+#include "Render/ShaderManager.h"
 
 
 
@@ -20,6 +20,7 @@ public:
 		return nullptr;
 	}
 	static void CloseDevice();
+	static ShaderManager* shadermanager;
 };
 
 

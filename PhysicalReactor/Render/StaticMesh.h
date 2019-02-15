@@ -77,7 +77,7 @@ public:
 	string directory;
 	AABB* aabb;
 	vector<SubMesh*> Meshs;
-	
+	VertexLayout* vertexlayout;
 
 	StaticMesh();
 	~StaticMesh();
