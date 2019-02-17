@@ -207,6 +207,7 @@ void ShaderManager::CreateVertexLayout(const std::string& filename,GraphicBlob* 
 		{ "TEXCOORD", 0, FORMAT_R32G32_FLOAT, 0, 32, INPUT_PER_VERTEX_DATA, 0 },
 	};
 	Renderer::GetDevice()->CreateInputLayout(vertexDesc, ARRAYSIZE(vertexDesc), Graphicblob, vertexlayout);
+	VLMap[filename] = vertexlayout;
 }
 
 PRE::VertexShader* ShaderManager::GetVertexShader(const std::string& filename)
@@ -246,8 +247,9 @@ PRE::VertexLayout* ShaderManager::GetVertexLayout(const std::string& filename)
 
 PRE::GraphicPSO* ShaderManager::GetPSO(Material* material, GraphicPSO* pso)
 {
-	pso->desc.vs = VSMap["VS.hlsl"];
-	pso->desc.ps = PSMap["PS.hlsl"];
+	pso->desc.vs = VSMap["vs.hlsl"];
+	pso->desc.ps = PSMap["ps.hlsl"];
+	pso->desc.VL = VLMap["vs.hlsl"];
 	return pso;
 }
 

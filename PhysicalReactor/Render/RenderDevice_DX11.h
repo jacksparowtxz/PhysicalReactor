@@ -43,9 +43,9 @@ namespace PRE
 		ID3D11DeviceContext * BasedeviceContexts=nullptr;
 		ID3D11CommandList *commandlists[JobScheduler::NumWorker] = {};
 		ID3DUserDefinedAnnotation* userDefinedAnnotations[JobScheduler::NumWorker] = {};
-		ID3D11Device2* device = nullptr;//
-		ID3D11DeviceContext2 *ImmediatedeviceContext = nullptr;
-		ID3D11DeviceContext2 *deviceContexts[JobScheduler::NumWorker] = {};//
+		ID3D11Device3* device = nullptr;//
+		ID3D11DeviceContext3 *ImmediatedeviceContext = nullptr;
+		ID3D11DeviceContext3 *deviceContexts[JobScheduler::NumWorker] = {};//
 		UINT stencilRef[JobScheduler::NumWorker];
 		XMFLOAT4 blendFactor[JobScheduler::NumWorker];
 
@@ -67,7 +67,7 @@ namespace PRE
 		uint8_t raster_uavs_slot[JobScheduler::NumWorker] = {};
 		uint8_t raster_uavs_count[JobScheduler::NumWorker] = {};
 		void validate_raster_uavs(uint64_t threadID);
-
+		void CreateRenderTargetAndDepthStencil();
 
 	public:
 		RenderDevice_DX11(HWND mainscreen,bool fullscreen = false, bool debuglayer = false);

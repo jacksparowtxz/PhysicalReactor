@@ -2,7 +2,12 @@
 #include "Render/Renderer.h"
 #include "Render/RenderDevice_DX11.h"
 #include "MISC/Mathhelper.h"
+#include "JobSystem/ParallelFor.h"
+#include "JobSystem/JobScheduler.h"
 
+#include <functional>
+
+using namespace std;
 
 namespace PRE
 {
@@ -150,41 +155,49 @@ namespace PRE
 	void RenderWorld::BeginRender()
 	{
 		Renderer::GetDevice()->PresentBegin();
+		Renderer::GetDevice()->SetResolution(3840, 2160);
+		Renderer::GetDevice()->UpdateBuffer(constbuffer, &m_constantBufferData);
 	}
 
 
 	void RenderWorld::RenderFrame()
 	{
-	   
-		/*Renderer::GetDevice()->SetResolution(1920, 1080);
-		Renderer::GetDevice()->UpdateBuffer(constbuffer, &m_constantBufferData);
-		Renderer::GetDevice()->BindGraphicsPSO(pso);
-
-
-
-
-
-		Renderer::GetDevice()->BindConstantBuffer(pso, constbuffer);
-		UINT stride = sizeof(VertexPositionColor);
-		UINT offset = 0;
-		Renderer::GetDevice()->BindVertexBuffers(&mVertexBuffer, 0, 1, &stride, &offset);
-		Renderer::GetDevice()->BindIndexBuffer(mIndexBuffer, INDEXBUFFER_16BIT, 0);
-		Renderer::GetDevice()->DrawIndexed(36, 0, 0);*/
-
+		function<void(StaticMesh*, uint32_t, void*)> RenderStaticMesh;
+		auto lambda = [&, this](StaticMesh* sm, uint32_t size, void* ExtraData) {
+			UINT pFisrtConstant1 = 0;
+			UINT pNumberConstant1 = 16;
+			GraphicPSO* pso = (GraphicPSO*)ExtraData;
+			Renderer::GetDevice()->BindGraphicsPSO(pso);
+			Renderer::GetDevice()->BindConstantBuffer(VS_STAGE, constbuffer, 0, &pFisrtConstant1, &pNumberConstant1);
+			UINT pFisrtConstant2 = 256;
+			UINT pNumberConstant2 = 32;
+			Renderer::GetDevice()->BindConstantBuffer(VS_STAGE, constbuffer, 0, &pFisrtConstant2, &pNumberConstant2);
+			XMStoreFloat4x4(&m_constantBufferData.model, XMMatrixTranspose(XMMatrixRotationY(90.f)));
+			for (SubMesh* submesh:sm->Meshs)
+			{
+				UINT stride = sizeof(Vertex);
+				UINT offset = 0;
+				Renderer::GetDevice()->BindVertexBuffers(&submesh->mVertexBuffer, 0, 1, &stride, &offset);
+				Renderer::GetDevice()->BindIndexBuffer(submesh->mIndexBuffer, INDEXBUFFER_16BIT, 0);
+				Renderer::GetDevice()->DrawIndexed(submesh->Indices.size(), 0, 0);
+			}
+		};
+		RenderStaticMesh = lambda;
+		JobScheduler::Wait(parallel_for(*StaticmeshList.data, StaticmeshList.Size(), RenderStaticMesh));
 	}
 
 	void RenderWorld::EndRender()
 	{
-		/*Renderer::GetDevice()->FinishComanlist();
+		Renderer::GetDevice()->FinishComanlist();
 		Renderer::GetDevice()->ExcuteDeferredContexts();
-		Renderer::GetDevice()->PresentEnd();*/
+		Renderer::GetDevice()->PresentEnd();
 	}
 
 	void RenderWorld::Update(float deltatime)
 	{
 		dt = deltatime;
-
-
+		XMStoreFloat4x4(&m_constantBufferData.projection, camera->Proj());
+		XMStoreFloat4x4(&m_constantBufferData.view, camera->View());
 	}
 
 	void RenderWorld::ReSize(int width, int height)
@@ -216,12 +229,16 @@ namespace PRE
 		mLastMousePos.y = y;
 	}
 
+	void RenderWorld::AddStaticMesh(StaticMesh* sm)
+	{
+		StaticmeshList.Push_Back(sm);
+	}
+
 	void RenderWorld::RenderScene()
 	{
-		/*BeginRender();
+		BeginRender();
 		RenderFrame();
-		EndRender();*/
-
+		EndRender();
 	}
 
 	void RenderWorld::Initilize(HWND windows, Allocator* allocator)

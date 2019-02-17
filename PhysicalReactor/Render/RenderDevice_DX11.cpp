@@ -1474,10 +1474,10 @@ RenderDevice_DX11::RenderDevice_DX11(HWND mainscreen,bool fullscreen, bool debug
 			NULL);
 	}
 
-	IDXGIFactory2* DXGIFactory = nullptr;
+	IDXGIFactory3* DXGIFactory = nullptr;
 	{
-		IDXGIDevice2* DXGIDevice = nullptr;
-	     HRESULT hr = Basedevice->QueryInterface(__uuidof(IDXGIDevice2), reinterpret_cast<void**>(&DXGIDevice));
+		IDXGIDevice3* DXGIDevice = nullptr;
+	     HRESULT hr = Basedevice->QueryInterface(__uuidof(IDXGIDevice3), reinterpret_cast<void**>(&DXGIDevice));
 	
 		if (SUCCEEDED(hr))
 		{
@@ -1486,20 +1486,20 @@ RenderDevice_DX11::RenderDevice_DX11(HWND mainscreen,bool fullscreen, bool debug
 			HRESULT	hr1 = DXGIDevice->GetAdapter(&adapter);
 			if (SUCCEEDED(hr1))
 			{
-				hr1 =adapter->GetParent(__uuidof(IDXGIFactory2), reinterpret_cast<void**>(&DXGIFactory));
+				hr1 =adapter->GetParent(__uuidof(IDXGIFactory3), reinterpret_cast<void**>(&DXGIFactory));
 				SAFE_RELEASE(adapter);
 			}
 			SAFE_RELEASE(DXGIDevice);
 		}
 	}
 
-	 hr = DXGIFactory->QueryInterface(__uuidof(IDXGIFactory2), reinterpret_cast<void**>(&DXGIFactory));
+	 hr = DXGIFactory->QueryInterface(__uuidof(IDXGIFactory3), reinterpret_cast<void**>(&DXGIFactory));
 	if (DXGIFactory)
 	{
-		hr = Basedevice->QueryInterface(__uuidof(ID3D11Device2), reinterpret_cast<void**>(&device));
+		hr = Basedevice->QueryInterface(__uuidof(ID3D11Device3), reinterpret_cast<void**>(&device));
 		if (SUCCEEDED(hr))
 		{
-		   hr=BasedeviceContexts->QueryInterface(__uuidof(ID3D11DeviceContext2), reinterpret_cast<void**>(&ImmediatedeviceContext));
+		   hr=BasedeviceContexts->QueryInterface(__uuidof(ID3D11DeviceContext3), reinterpret_cast<void**>(&ImmediatedeviceContext));
 		}
 	}
 
@@ -1559,7 +1559,7 @@ RenderDevice_DX11::RenderDevice_DX11(HWND mainscreen,bool fullscreen, bool debug
 		MULTITHREAD_RENDERING = true;
 		for (int i=0;i<JobScheduler::NumWorker;i++)
 		{
- 				hr = device->CreateDeferredContext2(0, &deviceContexts[i]);
+ 				hr = device->CreateDeferredContext3(0, &deviceContexts[i]);
  				//hr = deviceContexts[i]->QueryInterface(__uuidof(userDefinedAnnotations[i]), reinterpret_cast<void**>(&userDefinedAnnotations[i]));
 		}
 	}
@@ -1569,37 +1569,9 @@ RenderDevice_DX11::RenderDevice_DX11(HWND mainscreen,bool fullscreen, bool debug
 	}
 
 
-	backbuffer = NULL;
-	hr = swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backbuffer);
-	
-	if (FAILED(hr)) 
-	{
-		MessageBox(NULL,
-			_T("Get BackBuffer failed!"),
-			_T("Windows Desktop Guided Tour"),
-			NULL);
-	  
-    }  
-	
-	hr = device->CreateRenderTargetView(backbuffer, NULL, &renderTargetView);//
-	FAILED(hr);
-	SAFE_RELEASE(backbuffer);
+	CreateRenderTargetAndDepthStencil();
 
-	D3D11_TEXTURE2D_DESC depthStencilDesc;
-	depthStencilDesc.Width = SCREENWIDTH;
-	depthStencilDesc.Height = SCREENHEIGHT;
-	depthStencilDesc.MipLevels = 1;
-	depthStencilDesc.ArraySize = 1;
-	depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	depthStencilDesc.SampleDesc.Count = 1;
-	depthStencilDesc.SampleDesc.Quality = 0;
-	depthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
-	depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-	depthStencilDesc.CPUAccessFlags = 0;
-	depthStencilDesc.MiscFlags = 0;
-
-	Basedevice->CreateTexture2D(&depthStencilDesc, NULL, &depthbuffer);
-	Basedevice->CreateDepthStencilView(depthbuffer, NULL, &DepthStecilView);
+	
 
 }
 
@@ -1639,49 +1611,28 @@ void RenderDevice_DX11::SetResolution(int width, int height)
 	ScreenViewport.MinDepth = 0.0f;
 	ScreenViewport.MaxDepth = 1.0f;
 
-	for (int i=0;i<8;i++)
+	for (int i = 0; i < 8; i++)
 	{
 		deviceContexts[i]->RSSetViewports(1, &ScreenViewport);
 	}
-	
 
-
-	/*
-		SCREENWIDTH = width;
+	if (SCREENHEIGHT != height||SCREENWIDTH!=width)
+	{
 		SCREENHEIGHT = height;
+		SCREENWIDTH = width;
 
 		SAFE_RELEASE(backbuffer);
 		SAFE_RELEASE(renderTargetView);
-		//swapChain->ResizeBuffers(2, width, height, ConvertFormat(GetBackBufferFormat()), 0);
-		swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backbuffer);
-	     device->CreateRenderTargetView(backbuffer, NULL, &renderTargetView);
-		SAFE_RELEASE(backbuffer);
-		RESOLUTIONCHANGED = true;
-
-		D3D11_TEXTURE2D_DESC DepthStencilDesc;
-		DepthStencilDesc.Width = width;
-		DepthStencilDesc.Height = height;
-		DepthStencilDesc.MipLevels = 1;
-		DepthStencilDesc.ArraySize = 1;
-		DepthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-
-		DepthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
-		DepthStencilDesc.BindFlags =D3D11_BIND_DEPTH_STENCIL;
-		DepthStencilDesc.CPUAccessFlags = 0;
-		DepthStencilDesc.MiscFlags = 0;
-		DepthStencilDesc.SampleDesc.Count = 1;
-		DepthStencilDesc.SampleDesc.Quality = 0;
-		ID3D11Texture2D* DeepthStencilBuffer;
-		device->CreateTexture2D(&DepthStencilDesc, 0, &DeepthStencilBuffer); 
-		
-		device->CreateDepthStencilView(DeepthStencilBuffer, 0, &DepthStecilView);*/
-
-		for (int i=0;i<8;i++)
-		{
-			deviceContexts[i]->OMSetRenderTargets(1, &renderTargetView, DepthStecilView);
-		}
-			
+		HRESULT hr = swapChain->ResizeBuffers(GetBackBufferCount(), width, height, ConvertFormat(GetBackBufferFormat()), 0);
+		assert(SUCCEEDED(hr));
+	}
 	
+	CreateRenderTargetAndDepthStencil();
+
+	for (int i = 0; i < 8; i++)
+	{
+		deviceContexts[i]->OMSetRenderTargets(1, &renderTargetView, DepthStecilView);
+	}
 }
 	
 Texture2D RenderDevice_DX11::GetBackBuffer()
@@ -3144,26 +3095,13 @@ void RenderDevice_DX11::PresentBegin()
 	const float color[4] = { 1.f, 1.0f, 1.000000000f, 1.000000000f };
 	ImmediatedeviceContext->ClearRenderTargetView(renderTargetView, color);
 	ImmediatedeviceContext->ClearDepthStencilView(DepthStecilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-
-
-
-	/*viewport.Width = (FLOAT)SCREENWIDTH;
-	viewport.Height = (FLOAT)SCREENHEIGHT;
-	viewport.MinDepth = 0.0f;
-	viewport.MaxDepth = 1.0f;
-	viewport.TopLeftX = 0;
-	viewport.TopLeftY = 0;
-
-	BindViewports(1, &viewport, GRAPHICTHREAD_IMMERIATE);
-	deviceContexts[GRAPHICTHREAD_IMMERIATE]->OMSetRenderTargets(1, &renderTargetView, 0);
-	float ClearColor[4] = { 1.0f,1.0f,1.0f,1.f };
-	deviceContexts[GRAPHICTHREAD_IMMERIATE];*/
 }
 
 
 void RenderDevice_DX11::PresentEnd()
 {
-	swapChain->Present(VSYNC, 0);
+	DXGI_PRESENT_PARAMETERS parameters = { 0 };
+	swapChain->Present1(VSYNC, 0,&parameters);
 
 /*
 	deviceContexts[GRAPHICTHREAD_IMMERIATE]->OMSetRenderTargets(0, nullptr, nullptr);
@@ -3246,6 +3184,48 @@ void RenderDevice_DX11::validate_raster_uavs(uint64_t ThreadID)
 	}*/
 }
 
+
+void RenderDevice_DX11::CreateRenderTargetAndDepthStencil()
+{
+	SAFE_RELEASE(backbuffer);
+	SAFE_RELEASE(renderTargetView);
+
+	HRESULT hr;
+
+	hr = swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backbuffer);
+	if (FAILED(hr))
+	{
+		MessageBox(NULL,
+			_T("Get SwapChain failed!"),
+			_T("Windows Desktop Guided Tour"),
+			NULL);
+	}
+
+	hr=device->CreateRenderTargetView(backbuffer, NULL, &renderTargetView);
+	if (FAILED(hr))
+	{
+		MessageBox(NULL,
+			_T("Create RenderTarget failed!"),
+			_T("Windows Desktop Guided Tour"),
+			NULL);
+	}
+	SAFE_RELEASE(backbuffer);
+	D3D11_TEXTURE2D_DESC depthStencilDesc;
+	depthStencilDesc.Width = SCREENWIDTH;
+	depthStencilDesc.Height = SCREENHEIGHT;
+	depthStencilDesc.MipLevels = 1;
+	depthStencilDesc.ArraySize = 1;
+	depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	depthStencilDesc.SampleDesc.Count = 1;
+	depthStencilDesc.SampleDesc.Quality = 0;
+	depthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
+	depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	depthStencilDesc.CPUAccessFlags = 0;
+	depthStencilDesc.MiscFlags = 0;
+
+	Basedevice->CreateTexture2D(&depthStencilDesc, NULL, &depthbuffer);
+	Basedevice->CreateDepthStencilView(depthbuffer, NULL, &DepthStecilView);
+}
 
 void RenderDevice_DX11::BindScissorRects(UINT numRects, const Rect* rect)
 {
@@ -3565,22 +3545,22 @@ void RenderDevice_DX11::BindConstantBuffer(SHADERSTAGE stage, GPUBuffer* buffer,
 	switch (stage)
 	{
 	case PRE::VS_STAGE:
-		deviceContexts[ThreadID]->VSSetConstantBuffers(slot, 1, &res);
+		deviceContexts[ThreadID]->VSSetConstantBuffers1(slot, 1, &res,pFirstConstant,pNumberConstant);
 		break;
 	case PRE::HS_STAGE:
-		deviceContexts[ThreadID]->HSSetConstantBuffers(slot, 1, &res);
+		deviceContexts[ThreadID]->HSSetConstantBuffers1(slot, 1, &res, pFirstConstant, pNumberConstant);
 		break;
 	case PRE::DS_STAGE:
-		deviceContexts[ThreadID]->DSSetConstantBuffers(slot, 1, &res);
+		deviceContexts[ThreadID]->DSSetConstantBuffers1(slot, 1, &res, pFirstConstant, pNumberConstant);
 		break;
 	case PRE::GS_STAGE:
-		deviceContexts[ThreadID]->GSSetConstantBuffers(slot, 1, &res);
+		deviceContexts[ThreadID]->GSSetConstantBuffers1(slot, 1, &res, pFirstConstant, pNumberConstant);
 		break;
 	case PRE::PS_STAGE:
-		deviceContexts[ThreadID]->PSSetConstantBuffers(slot, 1, &res);
+		deviceContexts[ThreadID]->PSSetConstantBuffers1(slot, 1, &res, pFirstConstant, pNumberConstant);
 		break;
 	case PRE::CS_STAGE:
-		deviceContexts[ThreadID]->CSSetConstantBuffers(slot, 1, &res);
+		deviceContexts[ThreadID]->CSSetConstantBuffers1(slot, 1, &res, pFirstConstant, pNumberConstant);
 		break;
 	default:
 		assert(0);

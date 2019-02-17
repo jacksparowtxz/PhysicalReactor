@@ -37,6 +37,7 @@ namespace PRE
 		void MoveForWard(float Direction);
 		void MoveRight(float Direction);
 		void CameraRotation(int x, int y);
+		void AddStaticMesh(StaticMesh* sm);
 		Allocator* allocator;
 
 		Vector<StaticMesh*> StaticmeshList;

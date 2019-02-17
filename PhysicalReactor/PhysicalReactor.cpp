@@ -136,10 +136,57 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				int width = LOWORD(lParam);
 				int height = LOWORD(lParam);
 
-				gw->ReSize(width,height);
+				if (wParam==SIZE_MINIMIZED)
+				{
+					gw->GamePause();
+					gw->GameMinize(true);
+					gw->GameMaxize(false);
+				}
+				else if (wParam == SIZE_MAXIMIZED)
+				{
+					gw->GameResume();
+					gw->GameMinize(false);
+					gw->GameMaxize(true);
+					gw->ReSize(width, height);
+				}
+				else if (wParam == SIZE_RESTORED)
+				{
+					if (gw->GetMinize())
+					{
+						gw->GameResume();
+						gw->GameMinize(false);
+						gw->ReSize(width, height);
+					}
+					else if (gw->GetMaxize())
+					{
+						gw->GameResume();
+						gw->GameMaxize(false);
+						gw->ReSize(width, height);
+					}
+				}
+				else
+				{
+					gw->ReSize(width, height);
+				}
+				
 		    }
 	    } 
 		break;
+	case WM_ENTERSIZEMOVE:
+	     {
+		    gw->GamePause();
+			gw->GameTimeStop();
+	     }
+		 break;
+	case WM_EXITSIZEMOVE:
+	    {
+		   int width = LOWORD(lParam);
+		   int height = LOWORD(lParam);
+		    
+		    gw->GameResume();
+			gw->GameTimeStart();
+			gw->ReSize(width, height);
+	    }
 	case WM_KEYDOWN:
 	    {
 		   switch (wParam)
