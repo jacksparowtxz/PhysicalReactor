@@ -26,7 +26,7 @@ namespace PRE
 	{
 	public:
 		RenderWorld(HWND windows,Allocator* allocator);
-
+		~RenderWorld();
 		void BeginRender();
 		void RenderFrame();
 		void EndRender();
@@ -47,6 +47,7 @@ namespace PRE
 		Camera *camera;
 		POINT mLastMousePos;
 		float dt;
+		GraphicPSO* PSO;
 	/*	GPUBuffer* mVertexBuffer;
 		GPUBuffer* mIndexBuffer;
 

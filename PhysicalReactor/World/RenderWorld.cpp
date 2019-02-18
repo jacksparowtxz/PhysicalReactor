@@ -14,7 +14,7 @@ namespace PRE
 	RenderWorld::RenderWorld(HWND windows, Allocator* allocator) :StaticmeshList(*allocator)//:mVertexBuffer(0),mIndexBuffer(0),vs(0),ps(0),pinputlayout(0),constbuffer(0),pso(0)
 	{
 		Initilize(windows,allocator);
-		
+		JobScheduler::Initialize();
 
 		/*GPUBufferDesc vertexdesc;
 	    VertexPositionColor cubeVertices[] =
@@ -152,6 +152,13 @@ namespace PRE
 	}
 
 
+	RenderWorld::~RenderWorld()
+	{
+		allocatorFC::deallocateDelete<GraphicPSO>(*allocator, PSO);
+		allocatorFC::deallocateDelete<Camera>(*allocator, camera);
+		allocatorFC::deallocateDelete<ShaderManager>(*allocator, Renderer::shadermanager);
+	}
+
 	void RenderWorld::BeginRender()
 	{
 		Renderer::GetDevice()->PresentBegin();
@@ -162,6 +169,7 @@ namespace PRE
 
 	void RenderWorld::RenderFrame()
 	{
+
 		function<void(StaticMesh*, uint32_t, void*)> RenderStaticMesh;
 		auto lambda = [&, this](StaticMesh* sm, uint32_t size, void* ExtraData) {
 			UINT pFisrtConstant1 = 0;
@@ -183,7 +191,10 @@ namespace PRE
 			}
 		};
 		RenderStaticMesh = lambda;
-		JobScheduler::Wait(parallel_for(*StaticmeshList.data, StaticmeshList.Size(), RenderStaticMesh));
+		Renderer::shadermanager->GetPSO(nullptr, PSO);
+		JobScheduler::Wait(parallel_for(*StaticmeshList.data, StaticmeshList.Size(), RenderStaticMesh,(void*)PSO));
+
+
 	}
 
 	void RenderWorld::EndRender()
@@ -268,6 +279,8 @@ namespace PRE
 
 		mLastMousePos.x = 0;
 		mLastMousePos.y = 0;
+
+		PSO = allocatorFC::allocateNew<GraphicPSO>(*allocator);
 	}
 
 }

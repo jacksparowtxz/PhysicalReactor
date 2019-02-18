@@ -4,7 +4,7 @@
 
 #include <sstream>
 
-
+#include <functional>
 
 #include <d3dcompiler.h>
 #pragma comment(lib,"d3d11.lib")
@@ -3160,10 +3160,18 @@ void RenderDevice_DX11::ExcuteDeferredContexts()
 
 void RenderDevice_DX11::FinishComanlist()
 {
-		for (int i=0;i<8;i++)
+	/*	for (int i=0;i<8;i++)
 		{
 			deviceContexts[i]->FinishCommandList(false, &commandlists[i]);
-		}
+		}*/
+		std::function<void(ID3D11DeviceContext3*, uint32_t , void*)> fc;
+		auto lambda = [&](ID3D11DeviceContext3* devicecon, uint32_t size, void* extradata) {
+
+			
+			devicecon[ThreadID].FinishCommandList(false, &commandlists[ThreadID]);
+		};
+		fc = lambda;
+		JobScheduler::Wait(parallel_for(*deviceContexts, JobScheduler::NumWorker, fc));
 }
 
 void RenderDevice_DX11::validate_raster_uavs(uint64_t ThreadID)
@@ -3577,13 +3585,13 @@ void RenderDevice_DX11::BindVertexBuffers(GPUBuffer* const *vertexBuffers, int s
 	{
 		res[i] = vertexBuffers[i] != nullptr ? (ID3D11Buffer*)vertexBuffers[i]->resource : nullptr;
 	}
-	deviceContexts[0]->IASetVertexBuffers(static_cast<UINT>(slot), static_cast<UINT>(count),res,strides, (offsets != nullptr ? offsets : reinterpret_cast<const UINT*>(nullBlob)));
+	deviceContexts[ThreadID]->IASetVertexBuffers(static_cast<UINT>(slot), static_cast<UINT>(count),res,strides, (offsets != nullptr ? offsets : reinterpret_cast<const UINT*>(nullBlob)));
 }
 
 void RenderDevice_DX11::BindIndexBuffer(GPUBuffer* indexBuffer, const INDEXBUFFER_FORMAT format, UINT offset)
 {
 	ID3D11Buffer* res = indexBuffer != nullptr ? (ID3D11Buffer*)indexBuffer->resource : nullptr;
-	deviceContexts[0]->IASetIndexBuffer(res, (format == INDEXBUFFER_FORMAT::INDEXBUFFER_16BIT ? DXGI_FORMAT_R16_UINT : DXGI_FORMAT_R32_UINT),offset);
+	deviceContexts[ThreadID]->IASetIndexBuffer(res, (format == INDEXBUFFER_FORMAT::INDEXBUFFER_16BIT ? DXGI_FORMAT_R16_UINT : DXGI_FORMAT_R32_UINT),offset);
 }
 
 void RenderDevice_DX11::BindStencilRef(UINT value)
@@ -3603,12 +3611,12 @@ void RenderDevice_DX11::BindGraphicsPSO(GraphicPSO* pso)
 	ID3D11VertexShader* vs = desc.vs == nullptr ? nullptr : (ID3D11VertexShader*)desc.vs->resource;
 	if (vs !=nullptr)
 	{
-		deviceContexts[0]->VSSetShader(vs, nullptr, 0);
+		deviceContexts[ThreadID]->VSSetShader(vs, nullptr, 0);
 	}
 	ID3D11PixelShader* ps = desc.ps == nullptr ? nullptr : (ID3D11PixelShader*)desc.ps->resource;
 	if (ps != nullptr)
 	{
-		deviceContexts[0]->PSSetShader(ps, nullptr, 0);
+		deviceContexts[ThreadID]->PSSetShader(ps, nullptr, 0);
 	}
 	ID3D11HullShader* hs = desc.hs == nullptr ? nullptr : (ID3D11HullShader*)desc.hs->resource;
 	if (hs != nullptr)
@@ -3648,7 +3656,7 @@ void RenderDevice_DX11::BindGraphicsPSO(GraphicPSO* pso)
 	ID3D11InputLayout* il = desc.VL == nullptr ? nullptr : (ID3D11InputLayout*)desc.VL->resource;
 	if (il != nullptr)
 	{
-		deviceContexts[0]->IASetInputLayout(il);
+		deviceContexts[ThreadID]->IASetInputLayout(il);
 	}
 
 	{
@@ -3674,7 +3682,7 @@ void RenderDevice_DX11::BindGraphicsPSO(GraphicPSO* pso)
 			d3dType = D3D11_PRIMITIVE_TOPOLOGY_UNDEFINED;
 			break;
 		};
-		deviceContexts[0]->IASetPrimitiveTopology(d3dType);
+		deviceContexts[ThreadID]->IASetPrimitiveTopology(d3dType);
 	}
 }
 
@@ -3707,7 +3715,7 @@ void RenderDevice_DX11::DrawIndexed(int Indexcount, UINT startVertexLocation, UI
 {
 	validate_raster_uavs(0);
 
-	deviceContexts[0]->DrawIndexed(Indexcount, startVertexLocation, baseVertexLocation);
+	deviceContexts[ThreadID]->DrawIndexed(Indexcount, startVertexLocation, baseVertexLocation);
 }
 
 void RenderDevice_DX11::DrawInstanced(int vertexCount, int instanceCount, UINT startVertexLocation, UINT startInstanceLocation)
@@ -3779,7 +3787,7 @@ void RenderDevice_DX11::UpdateBuffer(GPUBuffer* buffer, const void* data, int da
 	}
 	else if (buffer->desc.BindFlags & BIND_CONSTANT_BUFFER || datasize < 0)
 	{
-		deviceContexts[0]->UpdateSubresource((ID3D11Resource*)buffer->resource, 0, nullptr, data, 0, 0);
+		deviceContexts[ThreadID]->UpdateSubresource((ID3D11Resource*)buffer->resource, 0, nullptr, data, 0, 0);
 	}
 	else
 	{

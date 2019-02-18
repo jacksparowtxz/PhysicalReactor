@@ -51,9 +51,7 @@ public:
 		job->function = function;
 		job->parent = parent;
 		job->unfinishedJobs = 1;
-
-		//std::memcpy(&job->data, &data, sizeof(JobData));
-   new (job->data)JobData(data.data, data.count, data.function, data.extraData, data.splitter);
+        new (job->data)JobData(data.data, data.count, data.function, data.extraData, data.splitter);
 	return job;
 	}
 

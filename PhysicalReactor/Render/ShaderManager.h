@@ -35,5 +35,5 @@ public:
 	GeometryShader* GetGeoShader(const std::string& filename);
 	ComputerShader* GetComputerShader(const std::string& filename);
 	VertexLayout* GetVertexLayout(const std::string& filename);
-	GraphicPSO* GetPSO(Material* material,GraphicPSO* PSO);
+	void GetPSO(Material* material,GraphicPSO* PSO);
 };

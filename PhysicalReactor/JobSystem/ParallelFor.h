@@ -28,7 +28,7 @@ namespace PRE {
 		DataType* data;
 		void* extraData;
 		uint32_t count;
-		std::function<void(DataType*, uint32_t, void*)>  function;
+		std::function<void(DataType*, uint32_t, void*)> function;
 		SplitterType splitter;
 	};
 

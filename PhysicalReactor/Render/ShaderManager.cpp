@@ -245,11 +245,10 @@ PRE::VertexLayout* ShaderManager::GetVertexLayout(const std::string& filename)
 	return VLMap[filename];
 }
 
-PRE::GraphicPSO* ShaderManager::GetPSO(Material* material, GraphicPSO* pso)
+void ShaderManager::GetPSO(Material* material, GraphicPSO* pso)
 {
 	pso->desc.vs = VSMap["vs.hlsl"];
 	pso->desc.ps = PSMap["ps.hlsl"];
 	pso->desc.VL = VLMap["vs.hlsl"];
-	return pso;
 }
 
