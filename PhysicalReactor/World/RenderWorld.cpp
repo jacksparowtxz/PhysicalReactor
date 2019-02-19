@@ -32,10 +32,6 @@ namespace PRE
 	{
 		Renderer::GetDevice()->PresentBegin();
 		Renderer::GetDevice()->SetResolution(1920,1080);
-		for (uint32_t i = 0; i < 9; i++)
-		{
-			Renderer::GetDevice()->UpdateBuffer(constbuffer, m_constantBufferData[i]);
-		}
 	}
 
 
@@ -43,6 +39,8 @@ namespace PRE
 	{
 		function<void(StaticMesh*, uint32_t, void*)> RenderStaticMesh;
 		auto lambda = [&, this](StaticMesh* sm, uint32_t size, void* ExtraData) {
+
+			Renderer::GetDevice()->UpdateBuffer(constbuffer, m_constantBufferData[ThreadID]);
 			UINT pFisrtConstant1 = 0;
 			UINT pNumberConstant1 = 16;
 			GraphicPSO* pso = (GraphicPSO*)ExtraData;
@@ -70,7 +68,7 @@ namespace PRE
 
 	void RenderWorld::EndRender()
 	{
-		WaitForMultipleObjects(9,Handle,TRUE,INFINITY);
+		WaitForMultipleObjects(9L,Handle,TRUE,INFINITY);
 		Renderer::GetDevice()->ExcuteDeferredContexts();
 		Renderer::GetDevice()->PresentEnd();
 	}
@@ -89,7 +87,7 @@ namespace PRE
 	void RenderWorld::ReSize(int width, int height)
 	{
 		Renderer::GetDevice()->SetResolution(width, height);
-		camera->SetLens(0.45f*MathHelper::Pi, width / height, 0.1f, 2000.0f);
+		camera->SetLens(0.45f*MathHelper::Pi, (float)(width / height), 0.1f, 2000.0f);
 		//camera->UpdateViewMatrix();
 	}
 
@@ -150,8 +148,8 @@ namespace PRE
 		int SCREENWIDTH = rect.right - rect.left;
 		int SCREENHEIGHT = rect.bottom - rect.top;
 
-		camera->SetPosition(0.0f, 2.0f, -15.0f);
-		camera->SetLens(0.4f*MathHelper::Pi, SCREENWIDTH/SCREENHEIGHT, 0.1f, 2000.0f);
+		camera->SetPosition(0.0f, 20.0f, -15.0f);
+		camera->SetLens(0.4f*MathHelper::Pi, (float)(SCREENWIDTH/SCREENHEIGHT), 0.1f, 2000.0f);
 		
 		mLastMousePos.x = 0;
 		mLastMousePos.y = 0;

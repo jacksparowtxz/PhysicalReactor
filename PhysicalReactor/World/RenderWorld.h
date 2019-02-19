@@ -13,6 +13,13 @@ namespace PRE
 
 	struct RenderConstantBuffer
 	{
+		RenderConstantBuffer()
+		{
+			DirectX::XMStoreFloat4x4(&model, XMMatrixIdentity());
+			DirectX::XMStoreFloat4x4(&view, XMMatrixIdentity());
+			DirectX::XMStoreFloat4x4(&projection, XMMatrixIdentity());
+		}
+
 		DirectX::XMFLOAT4X4 model;
 		//DirectX::XMFLOAT4X4 padding1;
 		//DirectX::XMFLOAT4X4 padding2;

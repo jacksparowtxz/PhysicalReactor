@@ -3701,7 +3701,7 @@ void RenderDevice_DX11::Draw(int vertexCount, UINT startVertexLociotn)
 	deviceContexts[ThreadID]->Draw(vertexCount, startVertexLociotn);
 }
 
-void RenderDevice_DX11::DrawIndexed(int Indexcount, UINT startVertexLocation, UINT baseVertexLocation)
+void RenderDevice_DX11::DrawIndexed(size_t Indexcount, UINT startVertexLocation, UINT baseVertexLocation)
 {
 	validate_raster_uavs(0);
 
