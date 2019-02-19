@@ -11,7 +11,7 @@ using namespace std;
 
 namespace PRE
 {
-	RenderWorld::RenderWorld(HWND windows, Allocator* allocator) :StaticmeshList(*allocator)
+	RenderWorld::RenderWorld(HWND windows, Allocator* Inallocator, DynamicLinearAllocator* allocator1) :allocator(Inallocator),StaticmeshList(*allocator1)
 	{
 		Initilize(windows,allocator);
 		
@@ -31,7 +31,7 @@ namespace PRE
 	void RenderWorld::BeginRender()
 	{
 		Renderer::GetDevice()->PresentBegin();
-		Renderer::GetDevice()->SetResolution(3840, 2160);
+		Renderer::GetDevice()->SetResolution(1920,1080);
 		for (uint32_t i = 0; i < 9; i++)
 		{
 			Renderer::GetDevice()->UpdateBuffer(constbuffer, m_constantBufferData[i]);
@@ -47,11 +47,11 @@ namespace PRE
 			UINT pNumberConstant1 = 16;
 			GraphicPSO* pso = (GraphicPSO*)ExtraData;
 			Renderer::GetDevice()->BindGraphicsPSO(pso);
-			Renderer::GetDevice()->BindConstantBuffer(VS_STAGE, constbuffer, 0, &pFisrtConstant1, &pNumberConstant1);
-			UINT pFisrtConstant2 = 256;
+			Renderer::GetDevice()->BindConstantBuffer(VS_STAGE, constbuffer, 0, nullptr, nullptr);
+			/*UINT pFisrtConstant2 = 256;
 			UINT pNumberConstant2 = 32;
-			Renderer::GetDevice()->BindConstantBuffer(VS_STAGE, constbuffer, 0, &pFisrtConstant2, &pNumberConstant2);
-			XMStoreFloat4x4(&m_constantBufferData[ThreadID]->model, XMMatrixTranspose(XMMatrixRotationY(90.f)));
+			Renderer::GetDevice()->BindConstantBuffer(VS_STAGE, constbuffer, 0, &pFisrtConstant2, &pNumberConstant2);*/
+			DirectX::XMStoreFloat4x4(&m_constantBufferData[ThreadID]->model, XMMatrixIdentity());
 			for (SubMesh* submesh:sm->Meshs)
 			{
 				UINT stride = sizeof(Vertex);
@@ -78,18 +78,19 @@ namespace PRE
 	void RenderWorld::Update(float deltatime)
 	{
 		dt = deltatime;
+		camera->UpdateViewMatrix();
 		for (uint32_t i=0;i<9;++i)
 		{
-			XMStoreFloat4x4(&m_constantBufferData[i]->projection, camera->Proj());
-			XMStoreFloat4x4(&m_constantBufferData[i]->view, camera->View());
+			DirectX::XMStoreFloat4x4(&m_constantBufferData[i]->projection, camera->Proj());
+			DirectX::XMStoreFloat4x4(&m_constantBufferData[i]->view, camera->View());
 		}
 	}
 
 	void RenderWorld::ReSize(int width, int height)
 	{
 		Renderer::GetDevice()->SetResolution(width, height);
-		camera->SetLens(0.25f*MathHelper::Pi, width / height, 0.1f, 1000.0f);
-		camera->UpdateViewMatrix();
+		camera->SetLens(0.45f*MathHelper::Pi, width / height, 0.1f, 2000.0f);
+		//camera->UpdateViewMatrix();
 	}
 
 	void RenderWorld::MoveForWard(float Direction)
@@ -149,17 +150,18 @@ namespace PRE
 		int SCREENWIDTH = rect.right - rect.left;
 		int SCREENHEIGHT = rect.bottom - rect.top;
 
-		camera->SetLens(0.25f*MathHelper::Pi, SCREENWIDTH/SCREENHEIGHT, 0.1f, 1000.0f);
-
+		camera->SetPosition(0.0f, 2.0f, -15.0f);
+		camera->SetLens(0.4f*MathHelper::Pi, SCREENWIDTH/SCREENHEIGHT, 0.1f, 2000.0f);
+		
 		mLastMousePos.x = 0;
 		mLastMousePos.y = 0;
 
 		PSO = allocatorFC::allocateNew<GraphicPSO>(*allocator);
 
 		JobScheduler::Initialize();
-		*m_constantBufferData = allocatorFC::allocateArray<RenderConstantBuffer>(*allocator, 9);
 		for (uint32_t i = 0; i < 9; ++i)
 		{
+			m_constantBufferData[i] = allocatorFC::allocateNew<RenderConstantBuffer>(*allocator);
 			Handle[i] = CreateEvent(NULL, FALSE, TRUE, NULL);
 		}
 	}

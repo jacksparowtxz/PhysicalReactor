@@ -31,7 +31,7 @@ inline T &construct(void *p, Allocator& /*a*/, Int2Type<false>)
 template <typename T> 
 inline T &construct(void *p, Allocator& a)
 { 
-	return construct<T>(p, a, IS_ALLOCATOR_AWARE_TYPE(T)() );
+	return construct<T>(p, a, IS_ALLOCATOR_AWARE_TYPE(T)());
 }
 
 

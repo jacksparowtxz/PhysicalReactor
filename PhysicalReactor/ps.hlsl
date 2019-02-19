@@ -2,10 +2,10 @@
 struct PixelShaderInput
 {
     float4 PosH : SV_POSITION;
-    float3 PosW : POSITION;
+    /*float3 PosW : POSITION;
     float3 NormalW : NORMAL;
     float3 TangentW : TANGENT;
-    float2 Tex : TEXCOORD;
+    float2 Tex : TEXCOORD;*/
 };
 
 // (内插)颜色数据的传递函数。

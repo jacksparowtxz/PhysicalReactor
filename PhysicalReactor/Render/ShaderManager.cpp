@@ -130,6 +130,7 @@ void ShaderManager::CreateShader()
 			for (auto i:shadernames)
 			{
 				LoadShader(i, VS_STAGE);
+				shadernames.clear();
 			}
 		}
 		else if(type=="PS/")
@@ -142,6 +143,7 @@ void ShaderManager::CreateShader()
 			for (auto i : shadernames)
 			{
 				LoadShader(i, PS_STAGE);
+				shadernames.clear();
 			}
 		}
 		else if (type == "HS/")
@@ -154,6 +156,7 @@ void ShaderManager::CreateShader()
 			for (auto i : shadernames)
 			{
 				LoadShader(i, HS_STAGE);
+				shadernames.clear();
 			}
 		}
 		else if (type == "GS/")
@@ -166,6 +169,7 @@ void ShaderManager::CreateShader()
 			for (auto i : shadernames)
 			{
 				LoadShader(i, GS_STAGE);
+				shadernames.clear();
 			}
 		}
 		else if (type == "DS/")
@@ -178,6 +182,7 @@ void ShaderManager::CreateShader()
 			for (auto i : shadernames)
 			{
 				LoadShader(i, DS_STAGE);
+				shadernames.clear();
 			}
 		}
 		else if (type == "CS/")
@@ -190,6 +195,7 @@ void ShaderManager::CreateShader()
 			for (auto i : shadernames)
 			{
 				LoadShader(i, CS_STAGE);
+				shadernames.clear();
 			}
 		}
 	}

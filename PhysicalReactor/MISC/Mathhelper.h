@@ -204,7 +204,7 @@ namespace PRE
 
 		T left, top, right, bottom;
 	};
-	typedef sRect1<float> Rect;
+	typedef sRect1<float> sRect;
 };
 
 

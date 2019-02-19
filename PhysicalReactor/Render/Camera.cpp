@@ -9,7 +9,8 @@ namespace PRE {
 		mLook(0.0f, 0.0f, 1.0f),
 		mAngleX(0.0f),
 		mAngleY(0.0f),
-		mAngleZ(0.0f)
+		mAngleZ(0.0f),
+		type(ProjectionType::Perspective)
 	{
 		
 		

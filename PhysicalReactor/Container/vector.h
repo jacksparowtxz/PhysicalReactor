@@ -1,6 +1,7 @@
 #pragma once
-#include "Allocator/Allocator.h"
 #include "Container/GameType.h"
+#include "Allocator/Allocator.h"
+
 
 #include <xutility>
 namespace PRE
@@ -24,6 +25,7 @@ namespace PRE
 		{
 			
 		}
+
 		Vector(const Vector<T>& ohs):
 			allocator(ohs.allocator),
 			mCapacity(ohs.mCapacity),

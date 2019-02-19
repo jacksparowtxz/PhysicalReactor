@@ -11,8 +11,8 @@ GameWorld::GameWorld(HWND hwnd)
 	ASSERT(Main_Allocator != nullptr);
 	RenderAllocator = allocatorFC::allocateNew<ProxyAllocator>(*Main_Allocator, *Main_Allocator);
 	ASSERT(RenderAllocator != nullptr);
-
-	renderworld = allocatorFC::allocateNew<RenderWorld>(*RenderAllocator, hwnd, RenderAllocator);
+	dynamiclinearallocator = allocatorFC::allocateNew<DynamicLinearAllocator>(*Main_Allocator, *Main_Allocator, 512 * 1024, 32);
+	renderworld = allocatorFC::allocateNew<RenderWorld>(*RenderAllocator, hwnd, RenderAllocator,dynamiclinearallocator);
 
 
 	MesnImport = allocatorFC::allocateNew<GameMeshImport>(*Main_Allocator);

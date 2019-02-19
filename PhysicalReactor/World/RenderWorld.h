@@ -1,6 +1,7 @@
 #pragma once
 #include "Render/GraphicsResource.h"
 #include "Allocator/Allocator.h"
+#include "Allocator/DynamicLinearAllocator.h"
 #include "Container/vector.h"
 #include "Render/Renderable.h"
 #include "Render/Camera.h"
@@ -13,9 +14,9 @@ namespace PRE
 	struct RenderConstantBuffer
 	{
 		DirectX::XMFLOAT4X4 model;
-		DirectX::XMFLOAT4X4 padding;
-		DirectX::XMFLOAT4X4 padding;
-		DirectX::XMFLOAT4X4 padding;
+		//DirectX::XMFLOAT4X4 padding1;
+		//DirectX::XMFLOAT4X4 padding2;
+		//DirectX::XMFLOAT4X4 padding3;
 		DirectX::XMFLOAT4X4 view;
 		DirectX::XMFLOAT4X4 projection;
 	};
@@ -28,7 +29,7 @@ namespace PRE
 	class RenderWorld
 	{
 	public:
-		RenderWorld(HWND windows,Allocator* allocator);
+		RenderWorld(HWND windows,Allocator* Inallocator, DynamicLinearAllocator* allocator1);
 		~RenderWorld();
 		void BeginRender();
 		void RenderFrame();

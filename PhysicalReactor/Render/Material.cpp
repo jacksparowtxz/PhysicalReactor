@@ -79,20 +79,20 @@ void Material::Init()
 RENDERTYPE Material::GetRenderType() const
 {
 	 
- 
+	return RENDERTYPE::RENDERTYPE_SURFACE;
 
 }
 
 SHADINGMODEL Material::GetShadingMode() const
 {
 
-
+	return SHADINGMODEL::SHADINGMODEL_DEFAULTUNLIT;
 }
 
 BLENDMODE Material::GetBlendMode() const
 {
 
-
+	return BLENDMODE::BLEND_OPAQUE;
 }
 
 
