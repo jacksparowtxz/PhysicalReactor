@@ -4,17 +4,11 @@
 
 #define ALLOCATOR_AWARE typedef int allocator_aware
 
-using namespace PRE;
+
 
 namespace PRE
 {
 
-
-enum ComponentType
-{
-	MESH,
-	LIGHT
-};
 
 template <int v>
 struct Int2Type { enum { value = v }; };
@@ -37,7 +31,7 @@ inline T &construct(void *p, Allocator& /*a*/, Int2Type<false>)
 template <typename T> 
 inline T &construct(void *p, Allocator& a)
 { 
-	return construct<T>(p, a, IS_ALLOCATOR_AWARE_TYPE(T)());
+	return construct<T>(p, a, IS_ALLOCATOR_AWARE_TYPE(T)() );
 }
 
 
@@ -58,24 +52,6 @@ struct is_allocator_aware {
 };
 
 #define IS_ALLOCATOR_AWARE(T) is_allocator_aware<T>::value
-
-
-
-
-#define INSTANCE_ID(name)   \
-     struct name            \
- 	{                       \
-         unsigned int index;\
-	};                       \
-    inline bool is_valid(name instance)\
-   {                                    \
-         return instance.index != UINT32_MAX;\
-   }                                       
-
-INSTANCE_ID(MeshInstance);
-INSTANCE_ID(TransformInstance);
-INSTANCE_ID(LightInstance);
-
 
 
 template<typename T>

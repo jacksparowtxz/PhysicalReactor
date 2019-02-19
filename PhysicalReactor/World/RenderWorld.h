@@ -4,7 +4,7 @@
 #include "Container/vector.h"
 #include "Render/Renderable.h"
 #include "Render/Camera.h"
-
+#include<windows.h>
 
 using namespace PRE;
 namespace PRE
@@ -13,6 +13,9 @@ namespace PRE
 	struct RenderConstantBuffer
 	{
 		DirectX::XMFLOAT4X4 model;
+		DirectX::XMFLOAT4X4 padding;
+		DirectX::XMFLOAT4X4 padding;
+		DirectX::XMFLOAT4X4 padding;
 		DirectX::XMFLOAT4X4 view;
 		DirectX::XMFLOAT4X4 projection;
 	};
@@ -42,22 +45,12 @@ namespace PRE
 
 		Vector<StaticMesh*> StaticmeshList;
 
-		RenderConstantBuffer m_constantBufferData;
+		RenderConstantBuffer* m_constantBufferData[9];
 		GPUBuffer* constbuffer;
 		Camera *camera;
 		POINT mLastMousePos;
 		float dt;
 		GraphicPSO* PSO;
-	/*	GPUBuffer* mVertexBuffer;
-		GPUBuffer* mIndexBuffer;
-
-		VertexShader* vs;
-		PixelShader* ps;
-
-		VertexLayout *pinputlayout;
-		
-		
-		GraphicPSO* pso;*/
-
+		HANDLE Handle[9];
 	};
 }

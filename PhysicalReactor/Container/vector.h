@@ -1,7 +1,8 @@
 #pragma once
 #include "Allocator/Allocator.h"
+#include "Container/GameType.h"
 
-
+#include <xutility>
 namespace PRE
 {
 	template<typename T>
@@ -23,14 +24,14 @@ namespace PRE
 		{
 			
 		}
-		Vector(const Vector<T>& other):
-			allocator(other.allocator),
-			mCapacity(other.mCapacity),
-			mSize(other.mSize),
-			,data(other.mCapacity > 0 ? (T*)other.allocator->allocate(sizeof(T)*other._capacity, __alignof(T)) : nullptr)
+		Vector(const Vector<T>& ohs):
+			allocator(ohs.allocator),
+			mCapacity(ohs.mCapacity),
+			mSize(ohs.mSize),
+			,data(ohs.mCapacity > 0 ? (T*)ohs.allocator->allocate(sizeof(T)*ohs._capacity, __alignof(T)) : nullptr)
 		{
 		     
-			std::copy(other.data, other.data + size, data);
+			std::copy(ohs.data, ohs.data + size, data);
 		
 		}
 		~Vector()
@@ -155,7 +156,7 @@ namespace PRE
 				 Grow(0);
 		     }
 
-			 HaloTypes::construct<T>(data + mSize, *allocator, IS_ALLOCATOR_AWARE_TYPE(T)());
+			 PRE::construct<T>(data + mSize, *allocator, IS_ALLOCATOR_AWARE_TYPE(T)());
 			 data[mSize] = item;
 			 return mSize++;
 

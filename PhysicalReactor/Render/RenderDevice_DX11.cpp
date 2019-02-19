@@ -3160,18 +3160,9 @@ void RenderDevice_DX11::ExcuteDeferredContexts()
 
 void RenderDevice_DX11::FinishComanlist()
 {
-	/*	for (int i=0;i<8;i++)
-		{
-			deviceContexts[i]->FinishCommandList(false, &commandlists[i]);
-		}*/
-		std::function<void(ID3D11DeviceContext3*, uint32_t , void*)> fc;
-		auto lambda = [&](ID3D11DeviceContext3* devicecon, uint32_t size, void* extradata) {
 
-			
-			devicecon[ThreadID].FinishCommandList(false, &commandlists[ThreadID]);
-		};
-		fc = lambda;
-		JobScheduler::Wait(parallel_for(*deviceContexts, JobScheduler::NumWorker, fc));
+	deviceContexts[ThreadID]->FinishCommandList(false, &commandlists[ThreadID]);
+	
 }
 
 void RenderDevice_DX11::validate_raster_uavs(uint64_t ThreadID)

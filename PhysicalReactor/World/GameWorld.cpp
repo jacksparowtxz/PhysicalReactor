@@ -14,7 +14,6 @@ GameWorld::GameWorld(HWND hwnd)
 
 	renderworld = allocatorFC::allocateNew<RenderWorld>(*RenderAllocator, hwnd, RenderAllocator);
 
-	gametimer = allocatorFC::allocateNew<Timer>(*Main_Allocator);
 
 	MesnImport = allocatorFC::allocateNew<GameMeshImport>(*Main_Allocator);
 
@@ -27,6 +26,9 @@ GameWorld::GameWorld(HWND hwnd)
 	bGamePause = false;
 	bMinized = false;
 	bMaximized = false;
+
+	Import("RE/SciFiHelmet.gltf");
+	Import("RE/nanosuit.obj");
 }
 
 void GameWorld::Update(double deltatime)
@@ -42,16 +44,6 @@ void GameWorld::Render()
 	}
 }
 
-
-void GameWorld::GameTimeStart()
-{
-	gametimer->Start();
-}
-
-void GameWorld::GameTimeStop()
-{
-	gametimer->Stop();
-}
 
 void GameWorld::GamePause()
 {

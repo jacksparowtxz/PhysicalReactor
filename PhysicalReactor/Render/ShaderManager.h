@@ -4,7 +4,7 @@
 #include "Render/GraphicsResource.h"
 #include "Render/GraphicsDescriptors.h"
 #include "Render/Material.h"
-#include <hash_map>
+#include <unordered_map>
 #include <string>
 
 using namespace std;
@@ -18,13 +18,13 @@ public:
 	ShaderManager();
 	~ShaderManager();
 	
-	hash_map<string, VertexShader*> VSMap;
-	hash_map<string, PixelShader*> PSMap;
-	hash_map<string, GeometryShader*> GSMap;
-	hash_map<string, HullShader*> HSMap;
-	hash_map<string, DomainShader*> DSMap;
-	hash_map<string, ComputerShader*> CSMap;
-	hash_map<string, VertexLayout*> VLMap;
+	unordered_map<string, VertexShader*> VSMap;
+	unordered_map<string, PixelShader*> PSMap;
+	unordered_map<string, GeometryShader*> GSMap;
+	unordered_map<string, HullShader*> HSMap;
+	unordered_map<string, DomainShader*> DSMap;
+	unordered_map<string, ComputerShader*> CSMap;
+	unordered_map<string, VertexLayout*> VLMap;
 	void LoadShader(const std::string& pathfilename,SHADERSTAGE type);
 	void CreateShader();
 	void CreateVertexLayout(const std::string& filename,GraphicBlob* Graphicblob);

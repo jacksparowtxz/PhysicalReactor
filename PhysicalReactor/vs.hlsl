@@ -19,10 +19,10 @@ struct VertexShaderInput
 struct PixelShaderInput
 {
 	float4 PosH     : SV_POSITION;
-	float3 PosW     : POSITION;
-	float3 NormalW  : NORMAL;
-	float3 TangentW : TANGENT;
-	float2 Tex      : TEXCOORD;
+	//float3 PosW     : POSITION;
+	//float3 NormalW  : NORMAL;
+	//float3 TangentW : TANGENT;
+	//float2 Tex      : TEXCOORD;
 };
 
 // 用于在 GPU 上执行顶点处理的简单着色器。
@@ -35,7 +35,7 @@ PixelShaderInput main(VertexShaderInput input)
 	pos = mul(pos, model);
 	pos = mul(pos, view);
 	pos = mul(pos, projection);
-	output.PosW = pos;
+	output.PosH = pos;
 
 	return output;
 }

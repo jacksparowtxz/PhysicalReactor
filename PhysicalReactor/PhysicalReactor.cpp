@@ -4,11 +4,12 @@
 #include "stdafx.h"
 #include "PhysicalReactor.h"
 #include "World/GameWorld.h"
+#include "MISC/Timer.h"
 #define MAX_LOADSTRING 100
 using namespace PRE;
 
 GameWorld* gw;
-
+Timer *gametimer;
 
 HINSTANCE hInst;                               
 WCHAR szTitle[MAX_LOADSTRING];                  
@@ -43,7 +44,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_PHYSICALREACTOR));
 
 	MSG msg = {0};
-
+	gametimer->Reset();
 
 	while (msg.message != WM_QUIT)
 	{
@@ -52,6 +53,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 			DispatchMessage(&msg);
 		}
 		else {
+
+			gametimer->Tick();
+
+			gw->Update(gametimer->GetDeltaTime());
 			gw->Render();
 		}
 	}
@@ -88,7 +93,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    hInst = hInstance;
 
    HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-      0, 0, 3840, 2160, nullptr, nullptr, hInstance, nullptr);
+      0, 0, 1920, 1080, nullptr, nullptr, hInstance, nullptr);
    if (!hWnd)
    {
       return FALSE;
@@ -96,7 +101,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
 
    gw = new GameWorld(hWnd);
-
+   gametimer = new Timer;
    ShowWindow(hWnd, nCmdShow);
    UpdateWindow(hWnd);
 
@@ -122,6 +127,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			{
 				DestroyWindow(hWnd);
 				gw->~GameWorld();
+				gametimer->~Timer();
 			}
                 break;
             default:
@@ -175,7 +181,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_ENTERSIZEMOVE:
 	     {
 		    gw->GamePause();
-			gw->GameTimeStop();
+			gametimer->Stop();
 	     }
 		 break;
 	case WM_EXITSIZEMOVE:
@@ -184,7 +190,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		   int height = LOWORD(lParam);
 		    
 		    gw->GameResume();
-			gw->GameTimeStart();
+			gametimer->Start();
 			gw->ReSize(width, height);
 	    }
 	case WM_KEYDOWN:

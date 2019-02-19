@@ -4,7 +4,6 @@
 #include"Allocator/DynamicLinearAllocator.h"
 #include"Allocator/FreeListAllocator.h"
 #include "World/RenderWorld.h"
-#include "MISC/Timer.h"
 #include "MISC/MeshLoad.h"
 #include "Render/Renderable.h"
 
@@ -21,7 +20,7 @@ public:
 	void* memory;
 	const char* title;
 	RenderWorld* renderworld;
-	Timer *gametimer;
+	
 	GameMeshImport* MesnImport;
 	bool bGamePause;
 	bool bMinized;
@@ -29,8 +28,7 @@ public:
 	GameWorld(HWND hwnd);
 	void Update(double deltatime);
 	void Render();
-	void GameTimeStart();
-	void GameTimeStop();
+
 	void GamePause();
 	void GameResume();
 	void ReSize(int width, int height);
