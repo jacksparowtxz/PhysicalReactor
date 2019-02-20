@@ -47,7 +47,7 @@ struct SubMesh
 
 		GPUBufferDesc IndexBuffer;
 		IndexBuffer.BindFlags = BIND_INDEX_BUFFER;
-		IndexBuffer.ByteWidth = sizeof(uint32_t)*Indices.size();
+		IndexBuffer.ByteWidth = sizeof(UINT)*Indices.size();
 		IndexBuffer.CPUAccessFlags = 0;
 		IndexBuffer.MiscFlags = 0;
 		IndexBuffer.StructureByteStride = 0;

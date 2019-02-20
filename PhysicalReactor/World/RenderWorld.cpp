@@ -42,7 +42,14 @@ namespace PRE
 			Renderer::GetDevice()->UpdateBuffer(constbuffer, m_constantBufferData[ThreadID]);
 			UINT pFisrtConstant1 = 0;
 			UINT pNumberConstant1 = 16;
-			
+			for (SubMesh* submesh : sm->Meshs)
+			{
+				UINT stride = sizeof(Vertex);
+				UINT offset = 0;
+				Renderer::GetDevice()->BindVertexBuffers(&submesh->mVertexBuffer, 0, 1, &stride, &offset);
+				Renderer::GetDevice()->BindIndexBuffer(submesh->mIndexBuffer, INDEXBUFFER_32BIT, 0);
+				
+			}
 			GraphicPSO* pso = (GraphicPSO*)ExtraData;
 			Renderer::GetDevice()->BindGraphicsPSO(pso);
 			Renderer::GetDevice()->BindConstantBuffer(VS_STAGE, constbuffer, 0, nullptr, nullptr);
@@ -50,14 +57,7 @@ namespace PRE
 			UINT pNumberConstant2 = 32;
 			Renderer::GetDevice()->BindConstantBuffer(VS_STAGE, constbuffer, 0, &pFisrtConstant2, &pNumberConstant2);*/
 			DirectX::XMStoreFloat4x4(&m_constantBufferData[ThreadID]->model, XMMatrixTranspose(XMMatrixRotationY(90.f)));
-			for (SubMesh* submesh : sm->Meshs)
-			{
-				UINT stride = sizeof(Vertex);
-				UINT offset = 0;
-				Renderer::GetDevice()->BindVertexBuffers(&submesh->mVertexBuffer, 0, 1, &stride, &offset);
-				Renderer::GetDevice()->BindIndexBuffer(submesh->mIndexBuffer, INDEXBUFFER_16BIT, 0);
-				Renderer::GetDevice()->DrawIndexed(submesh->Indices.size(), 0, 0);
-			}
+			Renderer::GetDevice()->DrawIndexed(36, 0, 0);
 			Renderer::GetDevice()->FinishComanlist();
 			SetEvent(Handle[ThreadID]);
 		};
@@ -79,15 +79,15 @@ namespace PRE
 		camera->UpdateViewMatrix();
 		for (uint32_t i=0;i<9;++i)
 		{
-			DirectX::XMStoreFloat4x4(&m_constantBufferData[i]->projection, camera->Proj());
-			DirectX::XMStoreFloat4x4(&m_constantBufferData[i]->view, camera->View());
+			DirectX::XMStoreFloat4x4(&m_constantBufferData[i]->projection, XMMatrixTranspose(camera->Proj()));
+			DirectX::XMStoreFloat4x4(&m_constantBufferData[i]->view, XMMatrixTranspose(camera->View()));
 		}
 	}
 
 	void RenderWorld::ReSize(int width, int height)
 	{
 		Renderer::GetDevice()->SetResolution(width, height);
-		camera->SetLens(0.45f*MathHelper::Pi, (float)(width / height), 0.1f, 5000.0f);
+		camera->SetLens(0.45f*MathHelper::Pi, (float)(width / height), 0.01f, 1000.0f);
 	}
 
 	void RenderWorld::MoveForWard(float Direction)
@@ -157,8 +157,8 @@ namespace PRE
 		int SCREENWIDTH = rect.right - rect.left;
 		int SCREENHEIGHT = rect.bottom - rect.top;
 
-		camera->SetPosition(4000.0f, 600.0f, -50.0f);
-		camera->SetLens(0.45f*MathHelper::Pi, (float)(SCREENWIDTH/SCREENHEIGHT), 0.1f, 5000.0f);
+		camera->SetPosition(0.0f, 30.0f, -300.0f);
+		camera->SetLens(0.45f*MathHelper::Pi, (float)(SCREENWIDTH/SCREENHEIGHT), 0.01f, 1000.0f);
 		
 		mLastMousePos.x = 0;
 		mLastMousePos.y = 0;

@@ -56,7 +56,7 @@ void GameMeshImport::ProcessNode(aiNode* node, const aiScene* scene, StaticMesh*
 void GameMeshImport::ProcessMesh(aiMesh* mesh, const aiScene* scene, StaticMesh *loadmesh)
 {
 	vector<Vertex> Vertices;
-	vector<uint32_t> indices;
+	vector<UINT> indices;
 
 	for (uint32_t i=0;i<mesh->mNumVertices;i++)
 	{
