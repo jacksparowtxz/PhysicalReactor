@@ -23,12 +23,10 @@ GameWorld::GameWorld(HWND hwnd)
 	memcpy(tmp, tmptitle, sizeof(char)*titlelength);
 	title = tmp;
 
-	bGamePause = false;
-	bMinized = false;
-	bMaximized = false;
+	
 
-	Import("RE/SciFiHelmet.gltf");
-	Import("RE/nanosuit.obj");
+	Import("RE/Cube.gltf");
+	//Import("RE/nanosuit.obj");
 }
 
 void GameWorld::Update(double deltatime)
@@ -38,22 +36,12 @@ void GameWorld::Update(double deltatime)
 
 void GameWorld::Render()
 {
-	if (!bGamePause)
-	{
-		renderworld->RenderScene();
-	}
+	
+	renderworld->RenderScene();
+
 }
 
 
-void GameWorld::GamePause()
-{
-	bGamePause = true;
-}
-
-void GameWorld::GameResume()
-{
-	bGamePause = false;
-}
 
 void GameWorld::ReSize(int width, int height)
 {
@@ -70,31 +58,20 @@ void GameWorld::MoveRight(float Direction)
 	renderworld->MoveRight(Direction);
 }
 
-void GameWorld::CameraRotation(int x, int y)
+void GameWorld::CameraRotation(WPARAM btnState,int x, int y)
 {
-	renderworld->CameraRotation(x, y);
+	renderworld->CameraRotation(btnState,x, y);
 }
 
-void GameWorld::GameMinize(bool min)
+void GameWorld::MouseButtonDown(HWND windows, int x, int y)
 {
-	bMinized = min;
+	renderworld->SetMousePosition(windows,x, y);
 }
 
-void GameWorld::GameMaxize(bool max)
+void GameWorld::MouseButtonUp()
 {
-	bMaximized = max;
+	ReleaseCapture();
 }
-
-bool GameWorld::GetMinize()
-{
-	return bMinized;
-}
-
-bool GameWorld::GetMaxize()
-{
-	return bMaximized;
-}
-
 
 
 void GameWorld::Import(std::string path)
@@ -110,6 +87,7 @@ GameWorld::~GameWorld()
 	{
 		if (RenderAllocator != nullptr)
 		{
+			allocatorFC::deallocateDelete(*RenderAllocator, renderworld);
 			allocatorFC::deallocateDelete(*Main_Allocator, RenderAllocator);
 		}
 		allocatorFC::deallocateArray(*Main_Allocator, (char*)title);

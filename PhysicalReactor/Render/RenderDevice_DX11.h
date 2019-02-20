@@ -159,7 +159,7 @@ namespace PRE
 		virtual void BindRasterizerState(RasterizerState RSstate) override;
 		virtual void BindComputerPSO(ComputerPSO* pso)override;
 		virtual void Draw(int vertexCount, UINT startVertexLociotn)override;
-		virtual void DrawIndexed(size_t Indexcount, UINT startVertexLocation, UINT baseVertexLocation)override;
+		virtual void DrawIndexed(UINT Indexcount, UINT startVertexLocation, UINT baseVertexLocation)override;
 		virtual void DrawInstanced(int vertexCount, int instanceCount, UINT startVertexLocation, UINT startInstanceLocation)override;
 		virtual void DrawIndexedInstanced(int indexCount, int instanceCount, UINT startIndexLocation, UINT baseVertexLocation, UINT startInstanced)override;
 		virtual void DrawInstancedIndirect(GPUBuffer* args, UINT args_offset)override;

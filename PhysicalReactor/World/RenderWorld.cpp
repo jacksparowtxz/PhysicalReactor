@@ -20,12 +20,11 @@ namespace PRE
 
 	RenderWorld::~RenderWorld()
 	{
+		JobScheduler::Shutdown();
 		allocatorFC::deallocateDelete<GraphicPSO>(*allocator, PSO);
 		allocatorFC::deallocateDelete<Camera>(*allocator, camera);
 		allocatorFC::deallocateDelete<ShaderManager>(*allocator, Renderer::shadermanager);
 		allocatorFC::deallocateArray<RenderConstantBuffer>(*allocator,*m_constantBufferData);
-		JobScheduler::Shutdown();
-
 	}
 
 	void RenderWorld::BeginRender()
@@ -43,14 +42,15 @@ namespace PRE
 			Renderer::GetDevice()->UpdateBuffer(constbuffer, m_constantBufferData[ThreadID]);
 			UINT pFisrtConstant1 = 0;
 			UINT pNumberConstant1 = 16;
+			
 			GraphicPSO* pso = (GraphicPSO*)ExtraData;
 			Renderer::GetDevice()->BindGraphicsPSO(pso);
 			Renderer::GetDevice()->BindConstantBuffer(VS_STAGE, constbuffer, 0, nullptr, nullptr);
 			/*UINT pFisrtConstant2 = 256;
 			UINT pNumberConstant2 = 32;
 			Renderer::GetDevice()->BindConstantBuffer(VS_STAGE, constbuffer, 0, &pFisrtConstant2, &pNumberConstant2);*/
-			DirectX::XMStoreFloat4x4(&m_constantBufferData[ThreadID]->model, XMMatrixIdentity());
-			for (SubMesh* submesh:sm->Meshs)
+			DirectX::XMStoreFloat4x4(&m_constantBufferData[ThreadID]->model, XMMatrixTranspose(XMMatrixRotationY(90.f)));
+			for (SubMesh* submesh : sm->Meshs)
 			{
 				UINT stride = sizeof(Vertex);
 				UINT offset = 0;
@@ -73,7 +73,7 @@ namespace PRE
 		Renderer::GetDevice()->PresentEnd();
 	}
 
-	void RenderWorld::Update(float deltatime)
+	void RenderWorld::Update(double deltatime)
 	{
 		dt = deltatime;
 		camera->UpdateViewMatrix();
@@ -87,30 +87,39 @@ namespace PRE
 	void RenderWorld::ReSize(int width, int height)
 	{
 		Renderer::GetDevice()->SetResolution(width, height);
-		camera->SetLens(0.45f*MathHelper::Pi, (float)(width / height), 0.1f, 2000.0f);
-		//camera->UpdateViewMatrix();
+		camera->SetLens(0.45f*MathHelper::Pi, (float)(width / height), 0.1f, 5000.0f);
 	}
 
 	void RenderWorld::MoveForWard(float Direction)
 	{
-		camera->Walk(dt * 10 * Direction);
+		camera->Walk(dt * 1000 * Direction);
 	}
 
 	void RenderWorld::MoveRight(float Direction)
 	{
-       camera->Strafe(dt * 10 * Direction);
+       camera->Strafe(dt * 1000 * Direction);
 	}
 
-	void RenderWorld::CameraRotation(int x, int y)
+	void RenderWorld::CameraRotation(WPARAM btnState,int x, int y)
 	{
-		float dx = XMConvertToRadians(0.25f*static_cast<float>(x - mLastMousePos.x));
-		float dy = XMConvertToRadians(0.25f*static_cast<float>(y - mLastMousePos.y));
+		if ((btnState&MK_LBUTTON) != 0)
+		{
+			float dx = XMConvertToRadians(0.25f*static_cast<float>(x - mLastMousePos.x));
+			float dy = XMConvertToRadians(0.25f*static_cast<float>(y - mLastMousePos.y));
 
-		camera->Pitch(dy);
-		camera->RotateY(dx);
-		
+			camera->Pitch(dy);
+			camera->RotateY(dx);
+		}
 		mLastMousePos.x = x;
 		mLastMousePos.y = y;
+	}
+
+	void RenderWorld::SetMousePosition(HWND windows,int x, int y)
+	{
+		mLastMousePos.x = x;
+		mLastMousePos.y = y;
+
+		SetCapture(windows);
 	}
 
 	void RenderWorld::AddStaticMesh(StaticMesh* sm)
@@ -148,8 +157,8 @@ namespace PRE
 		int SCREENWIDTH = rect.right - rect.left;
 		int SCREENHEIGHT = rect.bottom - rect.top;
 
-		camera->SetPosition(0.0f, 20.0f, -15.0f);
-		camera->SetLens(0.4f*MathHelper::Pi, (float)(SCREENWIDTH/SCREENHEIGHT), 0.1f, 2000.0f);
+		camera->SetPosition(4000.0f, 600.0f, -50.0f);
+		camera->SetLens(0.45f*MathHelper::Pi, (float)(SCREENWIDTH/SCREENHEIGHT), 0.1f, 5000.0f);
 		
 		mLastMousePos.x = 0;
 		mLastMousePos.y = 0;

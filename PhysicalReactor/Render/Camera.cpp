@@ -177,12 +177,8 @@ namespace PRE {
 	{
 		return XMMatrixMultiply(View(), Proj());
 	}
+	
 
-	XMMATRIX Camera::World() const
-	{
-		XMMATRIX WorldMatrix= XMMatrixTranslation(mPosition.x, mPosition.y, mPosition.z)*XMMatrixRotationX(mAngleX)*XMMatrixRotationY(mAngleY)*XMMatrixRotationZ(mAngleZ)*XMMatrixScaling(1.0f, 1.0f, 1.0f);
-		return WorldMatrix;
-	}
 
 	void Camera::Strafe(float d)
 	{

@@ -24,23 +24,18 @@ public:
 	RenderWorld* renderworld;
 	
 	GameMeshImport* MesnImport;
-	bool bGamePause;
-	bool bMinized;
-	bool bMaximized;
+
 	GameWorld(HWND hwnd);
 	void Update(double deltatime);
 	void Render();
 
-	void GamePause();
-	void GameResume();
+
 	void ReSize(int width, int height);
 	void MoveForward(float Direction);
 	void MoveRight(float Direction);
-	void CameraRotation(int x,int y);
-	void GameMinize(bool min);
-	void GameMaxize(bool max);
-	bool GetMinize();
-	bool GetMaxize();
+	void CameraRotation(WPARAM btnState,int x,int y);
+	void MouseButtonDown(HWND windows, int x, int y);
+	void MouseButtonUp();
 	
 	void Import(std::string path);
 	~GameWorld();

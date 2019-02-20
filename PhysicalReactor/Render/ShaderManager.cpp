@@ -210,7 +210,7 @@ void ShaderManager::CreateVertexLayout(const std::string& filename,GraphicBlob* 
 		{ "POSITION", 0, FORMAT_R32G32B32_FLOAT, 0, 0, INPUT_PER_VERTEX_DATA, 0 },
 		{ "NORMAL", 0, FORMAT_R32G32B32_FLOAT, 0, 12, INPUT_PER_VERTEX_DATA, 0 },
 		{ "TANGENT", 0, FORMAT_R32G32B32_FLOAT, 0, 24, INPUT_PER_VERTEX_DATA, 0 },
-		{ "TEXCOORD", 0, FORMAT_R32G32_FLOAT, 0, 32, INPUT_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD", 0, FORMAT_R32G32_FLOAT, 0, 36, INPUT_PER_VERTEX_DATA, 0 },
 	};
 	Renderer::GetDevice()->CreateInputLayout(vertexDesc, ARRAYSIZE(vertexDesc), Graphicblob, vertexlayout);
 	VLMap[filename] = vertexlayout;

@@ -10,6 +10,10 @@ using namespace PRE;
 
 GameWorld* gw;
 Timer *gametimer;
+bool GamePause = false;
+bool WindowsMin = false;
+bool WindowsMax = false;
+bool Resizing = false;
 
 HINSTANCE hInst;                               
 WCHAR szTitle[MAX_LOADSTRING];                  
@@ -53,11 +57,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 			DispatchMessage(&msg);
 		}
 		else {
-
-			gametimer->Tick();
-
-			gw->Update(gametimer->GetDeltaTime());
-			gw->Render();
+			if (!GamePause)
+			{
+				gametimer->Tick();
+				gw->Update(gametimer->GetDeltaTime());
+				gw->Render();
+			}
 		}
 	}
 
@@ -125,9 +130,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 break;
             case IDM_EXIT:
 			{
-				DestroyWindow(hWnd);
 				gw->~GameWorld();
 				gametimer->~Timer();
+				DestroyWindow(hWnd);
 			}
                 break;
             default:
@@ -135,6 +140,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             }
         }
         break;
+	case WM_ACTIVATE:
+		if (LOWORD(wParam) == WA_INACTIVE)
+		{
+			GamePause = true;
+			gametimer->Stop();
+		}
+		else
+		{
+			GamePause = false;
+			gametimer->Start();
+		}
+		break;
 	case WM_SIZE:
 	    {
 		    if (Renderer::GetDevice() != nullptr)
@@ -144,29 +161,29 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 				if (wParam==SIZE_MINIMIZED)
 				{
-					gw->GamePause();
-					gw->GameMinize(true);
-					gw->GameMaxize(false);
+					GamePause = true;
+					WindowsMin = true;
+					WindowsMax = false;
 				}
 				else if (wParam == SIZE_MAXIMIZED)
 				{
-					gw->GameResume();
-					gw->GameMinize(false);
-					gw->GameMaxize(true);
+					GamePause = false;
+					WindowsMin = false;
+					WindowsMax = true;
 					gw->ReSize(width, height);
 				}
 				else if (wParam == SIZE_RESTORED)
 				{
-					if (gw->GetMinize())
+					if (WindowsMin)
 					{
-						gw->GameResume();
-						gw->GameMinize(false);
+						GamePause = false;
+						WindowsMin = false;
 						gw->ReSize(width, height);
 					}
-					else if (gw->GetMaxize())
+					else if (WindowsMax)
 					{
-						gw->GameResume();
-						gw->GameMaxize(false);
+						GamePause = false;
+						WindowsMax = false;
 						gw->ReSize(width, height);
 					}
 				}
@@ -180,7 +197,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 	case WM_ENTERSIZEMOVE:
 	     {
-		    gw->GamePause();
+		    GamePause = true;
+			Resizing = true;
 			gametimer->Stop();
 	     }
 		 break;
@@ -188,8 +206,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	    {
 		   int width = LOWORD(lParam);
 		   int height = LOWORD(lParam);
-		    
-		    gw->GameResume();
+		    GamePause = false;
+			Resizing = false;
 			gametimer->Start();
 			gw->ReSize(width, height);
 	    }
@@ -197,24 +215,37 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	    {
 		   switch (wParam)
 		   {
-		   case 0x87:
+		   case 87:
 			gw->MoveForward(1.0f);
-		   case 0x83:
+			break;
+		   case 83:
 			gw->MoveForward(-1.0f);
-		   case 0x65:
+			break;
+		   case 65:
 			gw->MoveRight(1.0f);
-		   case 0x68:
+			break;
+		   case 68:
 			gw->MoveRight(-1.0f);
+			break;
 		   default:
 			 break;
 		   }
 	    }
 		break;
+	case WM_RBUTTONDOWN:
+	    {
+		   gw->MouseButtonDown(hWnd,LOWORD(lParam), HIWORD(lParam));
+	    }
+		break;
+	case WM_RBUTTONUP:
+	   {
+		   gw->MouseButtonUp();
+	   }
 	case WM_MOUSEMOVE:
 	    {
 		  int x = LOWORD(lParam);
 		  int y = HIWORD(lParam);
-		  gw->CameraRotation(x, y);
+		  gw->CameraRotation(wParam,x, y);
 	    }
 		break;
     case WM_PAINT:

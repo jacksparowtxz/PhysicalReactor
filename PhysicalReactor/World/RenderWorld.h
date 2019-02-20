@@ -41,13 +41,14 @@ namespace PRE
 		void BeginRender();
 		void RenderFrame();
 		void EndRender();
-		void Update(float deltatime);
+		void Update(double deltatime);
 		void RenderScene();
 		void Initilize(HWND windows, Allocator* allocator);
 		void ReSize(int width, int height);
 		void MoveForWard(float Direction);
 		void MoveRight(float Direction);
-		void CameraRotation(int x, int y);
+		void CameraRotation(WPARAM btnState,int x, int y);
+		void SetMousePosition(HWND windows,int x, int y);
 		void AddStaticMesh(StaticMesh* sm);
 		Allocator* allocator;
 
@@ -57,7 +58,7 @@ namespace PRE
 		GPUBuffer* constbuffer;
 		Camera *camera;
 		POINT mLastMousePos;
-		float dt;
+		double dt;
 		GraphicPSO* PSO;
 		HANDLE Handle[9];
 	};

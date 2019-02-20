@@ -42,12 +42,12 @@ void GameMeshImport::Import(std::string pFile, StaticMesh* loadmesh)
 
 void GameMeshImport::ProcessNode(aiNode* node, const aiScene* scene, StaticMesh* loadmesh)
 {
-	for (int i=0;i<node->mNumMeshes;i++)
+	for (uint32_t i=0;i<node->mNumMeshes;i++)
 	{
 		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
 		ProcessMesh(mesh, scene, loadmesh);
 	}
-	for (int i=0;i<node->mNumChildren;i++)
+	for (uint32_t i=0;i<node->mNumChildren;i++)
 	{
 		ProcessNode(node->mChildren[i], scene,loadmesh);
 	}
@@ -58,7 +58,7 @@ void GameMeshImport::ProcessMesh(aiMesh* mesh, const aiScene* scene, StaticMesh 
 	vector<Vertex> Vertices;
 	vector<uint32_t> indices;
 
-	for (int i=0;i<mesh->mNumVertices;i++)
+	for (uint32_t i=0;i<mesh->mNumVertices;i++)
 	{
 		Vertex vertex;
 		XMFLOAT3 vector;
@@ -100,10 +100,10 @@ void GameMeshImport::ProcessMesh(aiMesh* mesh, const aiScene* scene, StaticMesh 
 		}
 		Vertices.push_back(std::move(vertex));
 	}
-	for (int i = 0; i < mesh->mNumFaces; i++)
+	for (uint32_t i = 0; i < mesh->mNumFaces; i++)
 	{
 		aiFace face = mesh->mFaces[i];
-		for (int j = 0; j < face.mNumIndices; j++)
+		for (uint32_t j = 0; j < face.mNumIndices; j++)
 		{
 			indices.push_back(std::move(face.mIndices[j]));
 		}
@@ -194,7 +194,7 @@ void GameMeshImport::ProcessMesh(aiMesh* mesh, const aiScene* scene, StaticMesh 
 std::vector<Texture2D*> GameMeshImport::loadMaterialTexture(aiMaterial* mat, aiTextureType type, std::string name)
 {
 	vector<Texture2D*> textures;
-	for (int i = 0; i < mat->GetTextureCount(type); i++)
+	for (uint32_t i = 0; i < mat->GetTextureCount(type); i++)
 	{
 		aiString str;
 		mat->GetTexture(type, i, &str);

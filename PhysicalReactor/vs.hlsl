@@ -2,9 +2,10 @@
 cbuffer ModelViewProjectionConstantBuffer : register(b0)
 {
 	matrix model;
-	matrix view;
-	matrix projection;
+    matrix view;
+    matrix projection;
 };
+
 
 // 用作顶点着色器输入的每个顶点的数据。
 struct VertexShaderInput

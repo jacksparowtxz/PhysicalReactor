@@ -54,7 +54,6 @@ public:
 	XMMATRIX View()const;
 	XMMATRIX Proj()const;
 	XMMATRIX ViewProj()const;
-	XMMATRIX World() const;
 	// Strafe/Walk the camera a distance d.
 	void Strafe(float d);
 	void Walk(float d);
