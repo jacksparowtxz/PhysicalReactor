@@ -40,24 +40,24 @@ namespace PRE
 		auto lambda = [&, this](StaticMesh* sm, uint32_t size, void* ExtraData) {
 
 			Renderer::GetDevice()->UpdateBuffer(constbuffer, m_constantBufferData[ThreadID]);
+			
+			GraphicPSO* pso = (GraphicPSO*)ExtraData;
+			Renderer::GetDevice()->BindGraphicsPSO(pso);
 			UINT pFisrtConstant1 = 0;
 			UINT pNumberConstant1 = 16;
+			Renderer::GetDevice()->BindConstantBuffer(VS_STAGE, constbuffer, 0, &pFisrtConstant1, &pNumberConstant1);
+			UINT pFisrtConstant2 = 16;
+			UINT pNumberConstant2 = 32;
+			Renderer::GetDevice()->BindConstantBuffer(VS_STAGE, constbuffer, 0, &pFisrtConstant2, &pNumberConstant2);
+			DirectX::XMStoreFloat4x4(&m_constantBufferData[ThreadID]->model, XMMatrixTranspose(XMMatrixRotationY(90.f)));
 			for (SubMesh* submesh : sm->Meshs)
 			{
 				UINT stride = sizeof(Vertex);
 				UINT offset = 0;
 				Renderer::GetDevice()->BindVertexBuffers(&submesh->mVertexBuffer, 0, 1, &stride, &offset);
 				Renderer::GetDevice()->BindIndexBuffer(submesh->mIndexBuffer, INDEXBUFFER_32BIT, 0);
-				
+				Renderer::GetDevice()->DrawIndexed(submesh->Indices.size(), 0, 0);
 			}
-			GraphicPSO* pso = (GraphicPSO*)ExtraData;
-			Renderer::GetDevice()->BindGraphicsPSO(pso);
-			Renderer::GetDevice()->BindConstantBuffer(VS_STAGE, constbuffer, 0, nullptr, nullptr);
-			/*UINT pFisrtConstant2 = 256;
-			UINT pNumberConstant2 = 32;
-			Renderer::GetDevice()->BindConstantBuffer(VS_STAGE, constbuffer, 0, &pFisrtConstant2, &pNumberConstant2);*/
-			DirectX::XMStoreFloat4x4(&m_constantBufferData[ThreadID]->model, XMMatrixTranspose(XMMatrixRotationY(90.f)));
-			Renderer::GetDevice()->DrawIndexed(36, 0, 0);
 			Renderer::GetDevice()->FinishComanlist();
 			SetEvent(Handle[ThreadID]);
 		};
@@ -92,12 +92,12 @@ namespace PRE
 
 	void RenderWorld::MoveForWard(float Direction)
 	{
-		camera->Walk(dt * 1000 * Direction);
+		camera->Walk(dt * 10 * Direction);
 	}
 
 	void RenderWorld::MoveRight(float Direction)
 	{
-       camera->Strafe(dt * 1000 * Direction);
+       camera->Strafe(dt * 10 * Direction);
 	}
 
 	void RenderWorld::CameraRotation(WPARAM btnState,int x, int y)

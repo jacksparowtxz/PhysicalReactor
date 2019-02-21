@@ -21,9 +21,10 @@ namespace PRE
 		}
 
 		DirectX::XMFLOAT4X4 model;
-		//DirectX::XMFLOAT4X4 padding1;
-		//DirectX::XMFLOAT4X4 padding2;
-		//DirectX::XMFLOAT4X4 padding3;
+		DirectX::XMFLOAT4X4 padding1;
+		DirectX::XMFLOAT4X4 padding2;
+		DirectX::XMFLOAT4X4 padding3;
+
 		DirectX::XMFLOAT4X4 view;
 		DirectX::XMFLOAT4X4 projection;
 	};

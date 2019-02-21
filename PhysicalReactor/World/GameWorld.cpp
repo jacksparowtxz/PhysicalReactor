@@ -25,7 +25,7 @@ GameWorld::GameWorld(HWND hwnd)
 
 	
 
-	Import("RE/Cube.gltf");
+	Import("RE/SciFiHelmet.gltf");
 	//Import("RE/nanosuit.obj");
 }
 

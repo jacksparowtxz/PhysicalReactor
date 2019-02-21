@@ -42,31 +42,31 @@ namespace PRE
 		ID3D11Texture2D* depthbuffer = nullptr;
 		ViewPort viewport;
 		ID3D11DeviceContext * BasedeviceContexts=nullptr;
-		ID3D11CommandList *commandlists[JobScheduler::NumWorker] = {};
-		ID3DUserDefinedAnnotation* userDefinedAnnotations[JobScheduler::NumWorker] = {};
+		ID3D11CommandList *commandlists[JobScheduler::NumThreads] = {};
+		ID3DUserDefinedAnnotation* userDefinedAnnotations[JobScheduler::NumThreads] = {};
 		ID3D11Device3* device = nullptr;//
 		ID3D11DeviceContext3 *ImmediatedeviceContext = nullptr;
-		ID3D11DeviceContext3 *deviceContexts[JobScheduler::NumWorker] = {};//
-		UINT stencilRef[JobScheduler::NumWorker];
-		XMFLOAT4 blendFactor[JobScheduler::NumWorker];
+		ID3D11DeviceContext3 *deviceContexts[JobScheduler::NumThreads] = {};//
+		UINT stencilRef[JobScheduler::NumThreads];
+		XMFLOAT4 blendFactor[JobScheduler::NumThreads];
 
-		ID3D11VertexShader* prev_vs[JobScheduler::NumWorker] = {};
-		ID3D11PixelShader* prev_ps[JobScheduler::NumWorker] = {};
-		ID3D11HullShader* prev_hs[JobScheduler::NumWorker] = {};
-		ID3D11DomainShader* prev_ds[JobScheduler::NumWorker] = {};
-		ID3D11GeometryShader* prev_gs[JobScheduler::NumWorker] = {};
-		XMFLOAT4 prev_blendfactor[JobScheduler::NumWorker] = {};
-		UINT prev_samplemask[JobScheduler::NumWorker] = {};
-		ID3D11BlendState* prev_bs[JobScheduler::NumWorker] = {};
-		ID3D11RasterizerState* prev_rs[JobScheduler::NumWorker] = {};
-		UINT prev_stencilRef[JobScheduler::NumWorker] = {};
-		ID3D11DepthStencilState* prev_dss[JobScheduler::NumWorker] = {};
-		ID3D11InputLayout* prev_vl[JobScheduler::NumWorker] = {};
-		PRIMITIVEOPOLOGY prev_pt[JobScheduler::NumWorker] = {};
+		ID3D11VertexShader* prev_vs[JobScheduler::NumThreads] = {};
+		ID3D11PixelShader* prev_ps[JobScheduler::NumThreads] = {};
+		ID3D11HullShader* prev_hs[JobScheduler::NumThreads] = {};
+		ID3D11DomainShader* prev_ds[JobScheduler::NumThreads] = {};
+		ID3D11GeometryShader* prev_gs[JobScheduler::NumThreads] = {};
+		XMFLOAT4 prev_blendfactor[JobScheduler::NumThreads] = {};
+		UINT prev_samplemask[JobScheduler::NumThreads] = {};
+		ID3D11BlendState* prev_bs[JobScheduler::NumThreads] = {};
+		ID3D11RasterizerState* prev_rs[JobScheduler::NumThreads] = {};
+		UINT prev_stencilRef[JobScheduler::NumThreads] = {};
+		ID3D11DepthStencilState* prev_dss[JobScheduler::NumThreads] = {};
+		ID3D11InputLayout* prev_vl[JobScheduler::NumThreads] = {};
+		PRIMITIVEOPOLOGY prev_pt[JobScheduler::NumThreads] = {};
 
-		ID3D11UnorderedAccessView* raster_uavs[JobScheduler::NumWorker][8] = {};
-		uint8_t raster_uavs_slot[JobScheduler::NumWorker] = {};
-		uint8_t raster_uavs_count[JobScheduler::NumWorker] = {};
+		ID3D11UnorderedAccessView* raster_uavs[JobScheduler::NumThreads][9] = {};
+		uint8_t raster_uavs_slot[JobScheduler::NumThreads] = {};
+		uint8_t raster_uavs_count[JobScheduler::NumThreads] = {};
 		void validate_raster_uavs(uint64_t threadID);
 		void CreateRenderTargetAndDepthStencil();
 

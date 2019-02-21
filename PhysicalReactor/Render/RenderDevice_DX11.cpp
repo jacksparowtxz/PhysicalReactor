@@ -1435,7 +1435,7 @@ RenderDevice_DX11::RenderDevice_DX11(HWND mainscreen,bool fullscreen, bool debug
 
 
 	HRESULT hr = E_FAIL;
-	for (int i=0;i<JobScheduler::NumWorker;i++)
+	for (int i=0;i<JobScheduler::NumThreads;i++)
 	{
 		SAFE_INITIL(commandlists[i]);
 		SAFE_INITIL(deviceContexts[i]);
@@ -1557,7 +1557,7 @@ RenderDevice_DX11::RenderDevice_DX11(HWND mainscreen,bool fullscreen, bool debug
 	if (threadingFeature.DriverConcurrentCreates && threadingFeature.DriverCommandLists)
 	{
 		MULTITHREAD_RENDERING = true;
-		for (int i=0;i<JobScheduler::NumWorker;i++)
+		for (int i=0;i<JobScheduler::NumThreads;i++)
 		{
  				hr = device->CreateDeferredContext3(0, &deviceContexts[i]);
  				//hr = deviceContexts[i]->QueryInterface(__uuidof(userDefinedAnnotations[i]), reinterpret_cast<void**>(&userDefinedAnnotations[i]));
@@ -1582,7 +1582,7 @@ RenderDevice_DX11::~RenderDevice_DX11()
     SAFE_RELEASE(renderTargetView);
     SAFE_RELEASE(swapChain);
 
-	for (int i=0;i<JobScheduler::NumWorker;i++)
+	for (int i=0;i<JobScheduler::NumThreads;i++)
 	{
 		SAFE_RELEASE(commandlists[i]);
 	}
@@ -1611,7 +1611,7 @@ void RenderDevice_DX11::SetResolution(int width, int height)
 	ScreenViewport.MinDepth = 0.0f;
 	ScreenViewport.MaxDepth = 1.0f;
 
-	for (int i = 0; i < 8; i++)
+	for (int i = 0; i < JobScheduler::NumThreads; i++)
 	{
 		deviceContexts[i]->RSSetViewports(1, &ScreenViewport);
 	}
@@ -1630,7 +1630,7 @@ void RenderDevice_DX11::SetResolution(int width, int height)
 	
 	
 
-	for (int i = 0; i < 8; i++)
+	for (int i = 0; i < JobScheduler::NumThreads; i++)
 	{
 		deviceContexts[i]->OMSetRenderTargets(1, &renderTargetView, DepthStecilView);
 	}
@@ -3146,11 +3146,12 @@ void RenderDevice_DX11::PresentEnd()
 
 void RenderDevice_DX11::ExcuteDeferredContexts()
 {
-		for (int i=0;i<8;i++)
+		for (int i=0;i<9;i++)
 		{
 			if (commandlists[i]!=nullptr)
 			{
 				ImmediatedeviceContext->ExecuteCommandList(commandlists[i], false);
+				commandlists[i] = nullptr;
 			}
 			
 		}
