@@ -54,8 +54,22 @@ enum DecalBlendMode
 	Decal_Stain=2,
 	Decal_Normal=3,
 	Decal_Emissive=4,
+	Decal_DBuffer_Translucent_Color_Normal_Rougness=5,
+	Decal_DBuffer_Translucent_Color=6,
+	Decal_DBuffer_Translucent_Color_Normal=7,
+	Decal_DBuffer_Translucent_Color_Rougness=8,
+	Decal_DBuffer_Translucent_Normal=9,
+	Decal_DBuffer_Translucent_Normal_Rougness=10,
+	Decal_DBuffer_Rougness=11,
+	Decal_Volumetric_Distance_Function=12,
 };
 
+enum Tessellation
+{
+	No_Tessellation=0,
+    Flat_Tessellation=1,
+	PN_Tessellation=2,
+};
 enum SHADERTYPE
 {
 	SHADERTYPE_TEXTURE,

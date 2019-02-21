@@ -29,7 +29,8 @@ public:
 	RENDERTYPE MaterialType;
 	SHADINGMODEL Shadingmodel;
 	BLENDMODE BlendMode;
-
+	DecalBlendMode decalblendmode;
+	Tessellation tessellation;
 	string Materialname;
 
 	Texture2D* BaseColorMap;

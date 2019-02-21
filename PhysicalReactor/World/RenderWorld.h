@@ -51,6 +51,7 @@ namespace PRE
 		void CameraRotation(WPARAM btnState,int x, int y);
 		void SetMousePosition(HWND windows,int x, int y);
 		void AddStaticMesh(StaticMesh* sm);
+		void RenderMaterial(SHADERSTAGE stage,SubMesh* submesh);
 		Allocator* allocator;
 
 		Vector<StaticMesh*> StaticmeshList;
@@ -60,7 +61,6 @@ namespace PRE
 		Camera *camera;
 		POINT mLastMousePos;
 		double dt;
-		GraphicPSO* PSO;
 		HANDLE Handle[9];
 	};
 }

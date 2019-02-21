@@ -21,10 +21,13 @@ namespace PRE
 	RenderWorld::~RenderWorld()
 	{
 		JobScheduler::Shutdown();
-		allocatorFC::deallocateDelete<GraphicPSO>(*allocator, PSO);
 		allocatorFC::deallocateDelete<Camera>(*allocator, camera);
 		allocatorFC::deallocateDelete<ShaderManager>(*allocator, Renderer::shadermanager);
-		allocatorFC::deallocateArray<RenderConstantBuffer>(*allocator,*m_constantBufferData);
+		for (uint32_t i = 0; i < 9; i++)
+		{
+			allocatorFC::deallocateDelete<RenderConstantBuffer>(*allocator, m_constantBufferData[i]);
+		}
+		
 	}
 
 	void RenderWorld::BeginRender()
@@ -41,19 +44,21 @@ namespace PRE
 
 			Renderer::GetDevice()->UpdateBuffer(constbuffer, m_constantBufferData[ThreadID]);
 			
-			GraphicPSO* pso = (GraphicPSO*)ExtraData;
-			Renderer::GetDevice()->BindGraphicsPSO(pso);
+			GraphicPSO PSO;
+			Renderer::shadermanager->GetPSO(nullptr, &PSO);
+			Renderer::GetDevice()->BindGraphicsPSO(&PSO);
 			UINT pFisrtConstant1 = 0;
 			UINT pNumberConstant1 = 16;
 			Renderer::GetDevice()->BindConstantBuffer(VS_STAGE, constbuffer, 0, &pFisrtConstant1, &pNumberConstant1);
 			UINT pFisrtConstant2 = 16;
 			UINT pNumberConstant2 = 32;
-			Renderer::GetDevice()->BindConstantBuffer(VS_STAGE, constbuffer, 0, &pFisrtConstant2, &pNumberConstant2);
+			Renderer::GetDevice()->BindConstantBuffer(VS_STAGE, constbuffer, 1, &pFisrtConstant2, &pNumberConstant2);
 			DirectX::XMStoreFloat4x4(&m_constantBufferData[ThreadID]->model, XMMatrixTranspose(XMMatrixRotationY(90.f)));
 			for (SubMesh* submesh : sm->Meshs)
 			{
 				UINT stride = sizeof(Vertex);
 				UINT offset = 0;
+				
 				Renderer::GetDevice()->BindVertexBuffers(&submesh->mVertexBuffer, 0, 1, &stride, &offset);
 				Renderer::GetDevice()->BindIndexBuffer(submesh->mIndexBuffer, INDEXBUFFER_32BIT, 0);
 				Renderer::GetDevice()->DrawIndexed(submesh->Indices.size(), 0, 0);
@@ -62,8 +67,7 @@ namespace PRE
 			SetEvent(Handle[ThreadID]);
 		};
 		RenderStaticMesh = lambda;
-		Renderer::shadermanager->GetPSO(nullptr, PSO);
-		JobScheduler::Wait(parallel_for(*StaticmeshList.data, StaticmeshList.Size(), RenderStaticMesh,(void*)PSO));
+		JobScheduler::Wait(parallel_for(*StaticmeshList.data, StaticmeshList.Size(), RenderStaticMesh, (void*)nullptr));
 	}
 
 	void RenderWorld::EndRender()
@@ -127,6 +131,70 @@ namespace PRE
 		StaticmeshList.Push_Back(sm);
 	}
 
+	void RenderWorld::RenderMaterial(SHADERSTAGE stage, SubMesh* submesh)
+	{
+		if (submesh->material->BaseColorMap != nullptr)
+		{
+			Renderer::GetDevice()->BindResource(stage, submesh->material->BaseColorMap, 0);
+		}
+		if (submesh->material->MetalicMap != nullptr)
+		{
+			Renderer::GetDevice()->BindResource(stage, submesh->material->MetalicMap, 1);
+		}
+		if (submesh->material->SpecularMap != nullptr)
+		{
+			Renderer::GetDevice()->BindResource(stage, submesh->material->SpecularMap, 2);
+		}
+		if (submesh->material->RoughnessMap != nullptr)
+		{
+			Renderer::GetDevice()->BindResource(stage, submesh->material->RoughnessMap, 3);
+		}
+		if (submesh->material->EmissiveMap != nullptr)
+		{
+			Renderer::GetDevice()->BindResource(stage, submesh->material->EmissiveMap, 4);
+		}
+		if (submesh->material->OpacityMap != nullptr)
+		{
+			Renderer::GetDevice()->BindResource(stage, submesh->material->OpacityMap, 5);
+		}
+		if (submesh->material->OpcaityMaskMap != nullptr)
+		{
+			Renderer::GetDevice()->BindResource(stage, submesh->material->OpcaityMaskMap, 6);
+		}
+		if (submesh->material->NormalMap != nullptr)
+		{
+			Renderer::GetDevice()->BindResource(stage, submesh->material->NormalMap, 7);
+		}
+		if (submesh->material->WorldPositionOffset != nullptr)
+		{
+			Renderer::GetDevice()->BindResource(stage, submesh->material->WorldPositionOffset, 8);
+		}
+		if (submesh->material->WorldDisplacement != nullptr)
+		{
+			Renderer::GetDevice()->BindResource(stage, submesh->material->WorldDisplacement, 9);
+		}
+		if (submesh->material->TessellationMultiplerMap != nullptr)
+		{
+			Renderer::GetDevice()->BindResource(stage, submesh->material->TessellationMultiplerMap, 10);
+		}
+		if (submesh->material->SubsurfaceMap != nullptr)
+		{
+			Renderer::GetDevice()->BindResource(stage, submesh->material->SubsurfaceMap, 11);
+		}
+		if (submesh->material->AmbientMap != nullptr)
+		{
+			Renderer::GetDevice()->BindResource(stage, submesh->material->AmbientMap, 12);
+		}
+		if (submesh->material->RefractionMap != nullptr)
+		{
+			Renderer::GetDevice()->BindResource(stage, submesh->material->RefractionMap, 13);
+		}
+		if (submesh->material->PixelDepthOffset != nullptr)
+		{
+			Renderer::GetDevice()->BindResource(stage, submesh->material->PixelDepthOffset, 14);
+		}
+	}
+
 	void RenderWorld::RenderScene()
 	{
 		BeginRender();
@@ -163,7 +231,6 @@ namespace PRE
 		mLastMousePos.x = 0;
 		mLastMousePos.y = 0;
 
-		PSO = allocatorFC::allocateNew<GraphicPSO>(*allocator);
 
 		JobScheduler::Initialize();
 		for (uint32_t i = 0; i < 9; ++i)
