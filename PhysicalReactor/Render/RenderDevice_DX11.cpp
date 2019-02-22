@@ -3497,45 +3497,34 @@ void RenderDevice_DX11::UnbindUAVs(int slot, int num)
 	raster_uavs_slot[ThreadID] = 8;
 }
 
-void RenderDevice_DX11::BindSampler(SHADERSTAGE stage, Sampler* sampler, ShaderReflection* sf)
+void RenderDevice_DX11::BindSampler(SHADERSTAGE stage, Sampler* sampler, int slot,int count)
 {
 
-	ShaderReflectionDX* sfdx = (ShaderReflectionDX*)sf;
 	ID3D11SamplerState* SAMPLER = (ID3D11SamplerState*)sampler->resource;
-
-
-	for (ShaderInputBindDescDX* psfdx:sfdx->ResourceBindings)
+	switch (stage)
 	{
-		if (psfdx->Type==D3D_SIT_SAMPLER)
-		{
-			switch (stage)
-			{
-			case PRE::VS_STAGE:
-				deviceContexts[ThreadID]->VSSetSamplers(psfdx->BindPoint, 1, &SAMPLER);
-				break;
-			case PRE::HS_STAGE:
-				deviceContexts[ThreadID]->HSSetSamplers(psfdx->BindPoint, 1, &SAMPLER);
-				break;
-			case PRE::DS_STAGE:
-				deviceContexts[ThreadID]->DSSetSamplers(psfdx->BindPoint, 1, &SAMPLER);
-				break;
-			case PRE::GS_STAGE:
-				deviceContexts[ThreadID]->GSSetSamplers(psfdx->BindPoint, 1, &SAMPLER);
-				break;
-			case PRE::PS_STAGE:
-				deviceContexts[ThreadID]->PSSetSamplers(psfdx->BindPoint, 1, &SAMPLER);
-				break;
-			case PRE::CS_STAGE:
-				deviceContexts[ThreadID]->CSSetSamplers(psfdx->BindPoint, 1, &SAMPLER);
-				break;
-			default:
-				assert(0);
-				break;
-			}
-		}
+	case PRE::VS_STAGE:
+		deviceContexts[ThreadID]->VSSetSamplers(slot, count, &SAMPLER);
+		break;
+	case PRE::HS_STAGE:
+		deviceContexts[ThreadID]->HSSetSamplers(slot, count, &SAMPLER);
+		break;
+	case PRE::DS_STAGE:
+		deviceContexts[ThreadID]->DSSetSamplers(slot, count, &SAMPLER);
+		break;
+	case PRE::GS_STAGE:
+		deviceContexts[ThreadID]->GSSetSamplers(slot, count, &SAMPLER);
+		break;
+	case PRE::PS_STAGE:
+		deviceContexts[ThreadID]->PSSetSamplers(slot, count, &SAMPLER);
+		break;
+	case PRE::CS_STAGE:
+		deviceContexts[ThreadID]->CSSetSamplers(slot, count, &SAMPLER);
+		break;
+	default:
+		assert(0);
+		break;
 	}
-
-
 }
 
 void RenderDevice_DX11::BindConstantBuffer(SHADERSTAGE stage, GPUBuffer* buffer, int slot, const UINT *pFirstConstant, const UINT *pNumberConstant)

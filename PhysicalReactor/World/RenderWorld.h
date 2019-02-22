@@ -15,18 +15,23 @@ namespace PRE
 	{
 		RenderConstantBuffer()
 		{
-			DirectX::XMStoreFloat4x4(&model, XMMatrixIdentity());
+			
 			DirectX::XMStoreFloat4x4(&view, XMMatrixIdentity());
 			DirectX::XMStoreFloat4x4(&projection, XMMatrixIdentity());
+			DirectX::XMStoreFloat4x4(&textransform, XMMatrixIdentity());
+			DirectX::XMStoreFloat4x4(&worldinvtranspose, XMMatrixIdentity());
+			DirectX::XMStoreFloat4x4(&model, XMMatrixIdentity());
 		}
-
-		DirectX::XMFLOAT4X4 model;
-		DirectX::XMFLOAT4X4 padding1;
-		DirectX::XMFLOAT4X4 padding2;
-		DirectX::XMFLOAT4X4 padding3;
 
 		DirectX::XMFLOAT4X4 view;
 		DirectX::XMFLOAT4X4 projection;
+		DirectX::XMFLOAT4X4 textransform;
+		DirectX::XMFLOAT4X4 worldinvtranspose;
+
+		DirectX::XMFLOAT4X4 model;
+	
+
+		
 	};
 	/*
 	struct VertexPositionColor

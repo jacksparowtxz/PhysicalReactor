@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Material.h"
-
+#include "Render/Renderer.h"
 
 Material::Material()
 {
@@ -10,6 +10,7 @@ Material::Material()
 
 Material::~Material()
 {
+	delete InitiSampler;
 }
 
 Material::Material(const std::string &newName)
@@ -27,50 +28,68 @@ void Material::Init()
 
 	Materialname = "NewMaterial";
 
-	 BaseColorMap=nullptr;
-	 BaseColorMapName="";
+	SamplerDesc InitSamplerDesc;
+	InitiSampler = new Sampler;
+	Renderer::GetDevice()->CreateSamplerState(&InitSamplerDesc, InitiSampler);
+	BaseColorMap=nullptr;
+	BaseColorMapName="";
+	BaseColorSampler = InitiSampler;
 
 	MetalicMap=nullptr;
 	MetalicMapName="";
+	MetalicSampler = InitiSampler;
 
 	SpecularMap=nullptr;
 	SpecularMapName="";
+	SpecularSampler = InitiSampler;
 
 	RoughnessMap=nullptr;
 	RoughnessMapName="";
+	RoughnessSampler = InitiSampler;
 
 	EmissiveMap=nullptr;
 	EmissiveMapName="";
+	EmissiveSampler = InitiSampler;
 
 	OpacityMap=nullptr;
 	OpacityMapName="";
+	OpacitySampler = InitiSampler;
 
 	OpcaityMaskMap=nullptr;
 	OpcaityMaskMapName="";
+	OpcaityMaskSampler = InitiSampler;
 
 	NormalMap=nullptr;
 	NormalMapName="";
+	NormalSampler = InitiSampler;
 
 	WorldPositionOffset=nullptr;
 	WorldPositionOffsetName="";
+	WorldPositionOffsetSampler = InitiSampler;
 
 	WorldDisplacement=nullptr;
 	WorldDisplacementName="";
+	WorldDisplacementSampler = InitiSampler;
 
 	TessellationMultiplerMap=nullptr;
 	TessellationMultipler="";
+	TessellationMultiplerSampler = InitiSampler;
 
 	SubsurfaceMap=nullptr;
 	SubsurfaceMapName="";
+	SubsurfaceSampler = InitiSampler;
 
 	AmbientMap=nullptr;
 	AmbientMapname="";
+	AmbientSampler = InitiSampler;
 
 	RefractionMap=nullptr;
 	RefractionMapname="";
+	RefractionSampler = InitiSampler;
 
 	PixelDepthOffset=nullptr;
 	PixelDepthOffsetName="";
+	PixelDepthOffsetSampler = InitiSampler;
 
 	TwoSide=false;
 

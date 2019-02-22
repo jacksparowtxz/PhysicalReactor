@@ -48,17 +48,17 @@ namespace PRE
 			Renderer::shadermanager->GetPSO(nullptr, &PSO);
 			Renderer::GetDevice()->BindGraphicsPSO(&PSO);
 			UINT pFisrtConstant1 = 0;
-			UINT pNumberConstant1 = 16;
+			UINT pNumberConstant1 = 64;
 			Renderer::GetDevice()->BindConstantBuffer(VS_STAGE, constbuffer, 0, &pFisrtConstant1, &pNumberConstant1);
 			UINT pFisrtConstant2 = 16;
-			UINT pNumberConstant2 = 32;
+			UINT pNumberConstant2 = 16;
 			Renderer::GetDevice()->BindConstantBuffer(VS_STAGE, constbuffer, 1, &pFisrtConstant2, &pNumberConstant2);
 			DirectX::XMStoreFloat4x4(&m_constantBufferData[ThreadID]->model, XMMatrixTranspose(XMMatrixRotationY(90.f)));
 			for (SubMesh* submesh : sm->Meshs)
 			{
 				UINT stride = sizeof(Vertex);
 				UINT offset = 0;
-				
+				RenderMaterial(PS_STAGE, submesh);
 				Renderer::GetDevice()->BindVertexBuffers(&submesh->mVertexBuffer, 0, 1, &stride, &offset);
 				Renderer::GetDevice()->BindIndexBuffer(submesh->mIndexBuffer, INDEXBUFFER_32BIT, 0);
 				Renderer::GetDevice()->DrawIndexed(submesh->Indices.size(), 0, 0);
@@ -136,62 +136,77 @@ namespace PRE
 		if (submesh->material->BaseColorMap != nullptr)
 		{
 			Renderer::GetDevice()->BindResource(stage, submesh->material->BaseColorMap, 0);
+			Renderer::GetDevice()->BindSampler(stage, submesh->material->BaseColorSampler, 0, 1);
 		}
 		if (submesh->material->MetalicMap != nullptr)
 		{
 			Renderer::GetDevice()->BindResource(stage, submesh->material->MetalicMap, 1);
+			Renderer::GetDevice()->BindSampler(stage, submesh->material->MetalicSampler, 1, 1);
 		}
 		if (submesh->material->SpecularMap != nullptr)
 		{
 			Renderer::GetDevice()->BindResource(stage, submesh->material->SpecularMap, 2);
+			Renderer::GetDevice()->BindSampler(stage, submesh->material->SpecularSampler, 2, 1);
 		}
 		if (submesh->material->RoughnessMap != nullptr)
 		{
 			Renderer::GetDevice()->BindResource(stage, submesh->material->RoughnessMap, 3);
+			Renderer::GetDevice()->BindSampler(stage, submesh->material->RoughnessSampler, 3, 1);
 		}
 		if (submesh->material->EmissiveMap != nullptr)
 		{
 			Renderer::GetDevice()->BindResource(stage, submesh->material->EmissiveMap, 4);
+			Renderer::GetDevice()->BindSampler(stage, submesh->material->EmissiveSampler, 4, 1);
 		}
 		if (submesh->material->OpacityMap != nullptr)
 		{
 			Renderer::GetDevice()->BindResource(stage, submesh->material->OpacityMap, 5);
+			Renderer::GetDevice()->BindSampler(stage, submesh->material->OpacitySampler, 5, 1);
 		}
 		if (submesh->material->OpcaityMaskMap != nullptr)
 		{
 			Renderer::GetDevice()->BindResource(stage, submesh->material->OpcaityMaskMap, 6);
+			Renderer::GetDevice()->BindSampler(stage, submesh->material->OpcaityMaskSampler, 6, 1);
 		}
 		if (submesh->material->NormalMap != nullptr)
 		{
 			Renderer::GetDevice()->BindResource(stage, submesh->material->NormalMap, 7);
+			Renderer::GetDevice()->BindSampler(stage, submesh->material->NormalSampler, 7, 1);
 		}
 		if (submesh->material->WorldPositionOffset != nullptr)
 		{
 			Renderer::GetDevice()->BindResource(stage, submesh->material->WorldPositionOffset, 8);
+			Renderer::GetDevice()->BindSampler(stage, submesh->material->WorldPositionOffsetSampler, 8, 1);
 		}
 		if (submesh->material->WorldDisplacement != nullptr)
 		{
 			Renderer::GetDevice()->BindResource(stage, submesh->material->WorldDisplacement, 9);
+			Renderer::GetDevice()->BindSampler(stage, submesh->material->WorldDisplacementSampler, 9, 1);
 		}
 		if (submesh->material->TessellationMultiplerMap != nullptr)
 		{
 			Renderer::GetDevice()->BindResource(stage, submesh->material->TessellationMultiplerMap, 10);
+			Renderer::GetDevice()->BindSampler(stage, submesh->material->TessellationMultiplerSampler, 10, 1);
 		}
 		if (submesh->material->SubsurfaceMap != nullptr)
 		{
 			Renderer::GetDevice()->BindResource(stage, submesh->material->SubsurfaceMap, 11);
+			Renderer::GetDevice()->BindSampler(stage, submesh->material->SubsurfaceSampler, 11, 1);
 		}
 		if (submesh->material->AmbientMap != nullptr)
 		{
 			Renderer::GetDevice()->BindResource(stage, submesh->material->AmbientMap, 12);
+			Renderer::GetDevice()->BindSampler(stage, submesh->material->AmbientSampler, 12, 1);
 		}
 		if (submesh->material->RefractionMap != nullptr)
 		{
 			Renderer::GetDevice()->BindResource(stage, submesh->material->RefractionMap, 13);
+			Renderer::GetDevice()->BindSampler(stage, submesh->material->RefractionSampler, 13, 1);
 		}
 		if (submesh->material->PixelDepthOffset != nullptr)
 		{
 			Renderer::GetDevice()->BindResource(stage, submesh->material->PixelDepthOffset, 14);
+			Renderer::GetDevice()->BindSampler(stage, submesh->material->PixelDepthOffsetSampler, 14, 1);
 		}
 	}
 

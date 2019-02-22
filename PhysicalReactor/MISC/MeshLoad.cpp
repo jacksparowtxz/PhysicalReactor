@@ -186,6 +186,9 @@ void GameMeshImport::ProcessMesh(aiMesh* mesh, const aiScene* scene, StaticMesh 
 	}
 
 
+	
+
+
 	SubMesh *loadsub =new SubMesh(std::move(Vertices),std::move(indices));
 	loadsub->material = meshmaterial;
 	loadmesh->Meshs.push_back(loadsub);

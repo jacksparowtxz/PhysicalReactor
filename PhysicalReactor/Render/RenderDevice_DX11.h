@@ -147,7 +147,7 @@ namespace PRE
 		virtual void BindUAVS(SHADERSTAGE stage, GPUResource* const* resource, int slot, int count)override;
 		virtual void UnbindResources(int slot, int num)override;
 		virtual void UnbindUAVs(int slot, int num)override;
-		virtual void BindSampler(SHADERSTAGE stage, Sampler* sampler, ShaderReflection* sf)override;
+		virtual void BindSampler(SHADERSTAGE stage, Sampler* sampler,int slot,int count)override;
 		virtual void BindConstantBuffer(SHADERSTAGE stage, GPUBuffer* buffer, int slot, const UINT *pFirstConstant, const UINT *pNumberConstant)override;
 		virtual void BindVertexBuffers(GPUBuffer* const *vertexBuffers, int slot, int count, const UINT* strides, const UINT*offsets)override;
 		virtual void BindIndexBuffer(GPUBuffer* indexBuffer, const INDEXBUFFER_FORMAT format, UINT offset)override;

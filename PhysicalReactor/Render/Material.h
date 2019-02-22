@@ -35,48 +35,65 @@ public:
 
 	Texture2D* BaseColorMap;
 	string BaseColorMapName;
+	Sampler* BaseColorSampler;
 
 	Texture2D* MetalicMap;
 	string MetalicMapName;
+	Sampler* MetalicSampler;
 
 	Texture2D* SpecularMap;
 	string SpecularMapName;
+	Sampler* SpecularSampler;
 
 	Texture2D* RoughnessMap;
 	string RoughnessMapName;
+	Sampler* RoughnessSampler;
 
 	Texture2D* EmissiveMap;
 	string EmissiveMapName;
+	Sampler* EmissiveSampler;
 
 	Texture2D* OpacityMap;
 	string OpacityMapName;
+	Sampler* OpacitySampler;
 
 	Texture2D* OpcaityMaskMap;
 	string OpcaityMaskMapName;
+	Sampler* OpcaityMaskSampler;
 
 	Texture2D* NormalMap;
 	string NormalMapName;
+	Sampler* NormalSampler;
 
 	Texture2D* WorldPositionOffset;
 	string WorldPositionOffsetName;
+	Sampler* WorldPositionOffsetSampler;
 
 	Texture2D* WorldDisplacement;
 	string WorldDisplacementName;
+	Sampler* WorldDisplacementSampler;
 	
 	Texture2D* TessellationMultiplerMap;
 	string TessellationMultipler;
+	Sampler* TessellationMultiplerSampler;
 	
 	Texture2D* SubsurfaceMap;
 	string SubsurfaceMapName;
+	Sampler* SubsurfaceSampler;
 	
 	Texture2D* AmbientMap;
 	string AmbientMapname;
+	Sampler* AmbientSampler;
 	
 	Texture2D* RefractionMap;
 	string RefractionMapname;
+	Sampler* RefractionSampler;
 
 	Texture2D* PixelDepthOffset;
 	string PixelDepthOffsetName;
+	Sampler* PixelDepthOffsetSampler;
+
+	Sampler* InitiSampler;
 	
 	float Metalness;
 	float Roughness;
