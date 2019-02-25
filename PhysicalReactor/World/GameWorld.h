@@ -7,6 +7,7 @@
 #include "World/RenderWorld.h"
 #include "MISC/MeshLoad.h"
 #include "Render/Renderable.h"
+#include "MISC/AssetManager.h"
 
 #include <windows.h>
 
@@ -23,8 +24,7 @@ public:
 	const char* title;
 	RenderWorld* renderworld;
 	
-	GameMeshImport* MesnImport;
-
+	
 	GameWorld(HWND hwnd);
 	void Update(double deltatime);
 	void Render();

@@ -195,6 +195,27 @@
     <ClInclude Include="Render\Camera.h">
       <Filter>头文件\Render</Filter>
     </ClInclude>
+    <ClInclude Include="MISC\AssetManager.h">
+      <Filter>头文件\MISC</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DirectionalLight.h">
+      <Filter>头文件\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Light.h">
+      <Filter>头文件\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\PointLight.h">
+      <Filter>头文件\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Sky.h">
+      <Filter>头文件\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\SkyLight.h">
+      <Filter>头文件\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\SpotLight.h">
+      <Filter>头文件\Render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -294,6 +315,27 @@
       <Filter>头文件\MISC</Filter>
     </ClCompile>
     <ClCompile Include="Render\Camera.cpp">
+      <Filter>头文件\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="MISC\AssetManager.cpp">
+      <Filter>头文件\MISC</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DirectionalLight.cpp">
+      <Filter>头文件\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Light.cpp">
+      <Filter>头文件\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\PointLight.cpp">
+      <Filter>头文件\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Sky.cpp">
+      <Filter>头文件\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\SkyLight.cpp">
+      <Filter>头文件\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\SpotLight.cpp">
       <Filter>头文件\Render</Filter>
     </ClCompile>
   </ItemGroup>

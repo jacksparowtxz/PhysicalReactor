@@ -27,7 +27,7 @@ namespace PRE
 		{
 			allocatorFC::deallocateDelete<RenderConstantBuffer>(*allocator, m_constantBufferData[i]);
 		}
-		
+		allocatorFC::deallocateDelete<RenderDevice>(*allocator, Renderer::renderdevice);
 	}
 
 	void RenderWorld::BeginRender()
@@ -47,6 +47,7 @@ namespace PRE
 			GraphicPSO PSO;
 			Renderer::shadermanager->GetPSO(nullptr, &PSO);
 			Renderer::GetDevice()->BindGraphicsPSO(&PSO);
+			Renderer::GetDevice()->BindRasterizerState(*rasterizerstate);
 			UINT pFisrtConstant1 = 0;
 			UINT pNumberConstant1 = 64;
 			Renderer::GetDevice()->BindConstantBuffer(VS_STAGE, constbuffer, 0, &pFisrtConstant1, &pNumberConstant1);
@@ -224,13 +225,13 @@ namespace PRE
 					if (sm->GetMaterialBlendMode())
 					{
 						DrawKey drawkey = DrawKey::GenerateKey(0, ViewLayerType::e3D, 1, sm->GetMaterialID().data,Depth.data, TranslucencyType::eOpaque,false);
-						sm->drawkey = &drawkey;
+						*sm->drawkey = std::move(drawkey);
 						LStaticMeshList.push_back(&sm[i]);
 					}
 					else
 					{
 						DrawKey drawkey = DrawKey::GenerateKey(0, ViewLayerType::e3D, 1, sm->GetMaterialID().data, Depth.data, TranslucencyType::eNormal, false);
-						sm->drawkey = &drawkey;
+						*sm->drawkey = std::move(drawkey);
 						LTStaticMeshList.push_back(&sm[i]);
 					}
 				}
@@ -298,6 +299,18 @@ namespace PRE
 		RadixSortFC(*TVisiblityMesh.data, TVisiblityMesh.Size(), nullptr);
 	}
 
+	void RenderWorld::RenderWireframe(int i)
+	{
+		if (i == 0)
+		{
+			rasterizerstate = Solidstate;
+		}
+		else
+		{
+			rasterizerstate = Wireframestate;
+		}
+	}
+
 	void RenderWorld::RenderScene()
 	{
 		BeginRender();
@@ -307,7 +320,7 @@ namespace PRE
 
 	void RenderWorld::Initilize(HWND windows, Allocator* allocator)
 	{
-		Renderer::renderdevice = new RenderDevice_DX11(windows, false, true);
+		Renderer::renderdevice = allocatorFC::allocateNew<RenderDevice_DX11>(*allocator,windows, false, true);
 		Renderer::shadermanager = allocatorFC::allocateNew<ShaderManager>(*allocator);
 		Renderer::shadermanager->CreateShader();
 		camera = allocatorFC::allocateNew<Camera>(*allocator);
@@ -341,6 +354,21 @@ namespace PRE
 			m_constantBufferData[i] = allocatorFC::allocateNew<RenderConstantBuffer>(*allocator);
 			Handle[i] = CreateEvent(NULL, FALSE, TRUE, NULL);
 		}
+
+		RasterizerStateDesc Wireframedesc;
+		Wireframedesc.FillMode = FILL_WIREFRAME;
+		Wireframedesc.CullMode = CULL_BACK;
+		Wireframedesc.FrontCounterClockWise = false;
+		Wireframedesc.DepthCilpEnable = true;
+		
+
+		RasterizerStateDesc Soliddesc;
+		Wireframedesc.FillMode = FILL_SOLID;
+		Wireframedesc.CullMode = CULL_BACK;
+		Wireframedesc.FrontCounterClockWise = false;
+		Wireframedesc.DepthCilpEnable = true;
+		Renderer::GetDevice()->CreateRasterizerState(&Soliddesc, Solidstate);
+		Renderer::GetDevice()->CreateRasterizerState(&Wireframedesc, Wireframestate);
 	}
 
 }

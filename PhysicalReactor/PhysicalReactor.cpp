@@ -5,6 +5,8 @@
 #include "PhysicalReactor.h"
 #include "World/GameWorld.h"
 #include "MISC/Timer.h"
+#include<vld.h>
+
 #define MAX_LOADSTRING 100
 using namespace PRE;
 

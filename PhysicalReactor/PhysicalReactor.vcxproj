@@ -75,9 +75,9 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>D:\PR\PhysicalReactor;D:\PR\PhysicalReactor\assimp;$(IncludePath)</IncludePath>
+    <IncludePath>D:\PR\PhysicalReactor;D:\PR\PhysicalReactor\assimp;C:\Program Files %28x86%29\Visual Leak Detector\include;$(IncludePath)</IncludePath>
     <ReferencePath>D:\PR\PhysicalReactor;D:\PR\PhysicalReactor\assimp;$(ReferencePath)</ReferencePath>
-    <LibraryPath>D:\PR\PhysicalReactor\assimp;$(LibraryPath)</LibraryPath>
+    <LibraryPath>D:\PR\PhysicalReactor\assimp;C:\Program Files %28x86%29\Visual Leak Detector\lib\Win64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -177,6 +177,7 @@
     <ClInclude Include="JobSystem\Random.h" />
     <ClInclude Include="JobSystem\ThreadGroup.h" />
     <ClInclude Include="JobSystem\WorkStealingQueue.h" />
+    <ClInclude Include="MISC\AssetManager.h" />
     <ClInclude Include="MISC\Frustum.h" />
     <ClInclude Include="MISC\Intersectables.h" />
     <ClInclude Include="MISC\json.hpp" />
@@ -189,17 +190,23 @@
     <ClInclude Include="MISC\tinyxml2.h" />
     <ClInclude Include="PhysicalReactor.h" />
     <ClInclude Include="Render\Camera.h" />
+    <ClInclude Include="Render\DirectionalLight.h" />
     <ClInclude Include="Render\DrawKey.h" />
     <ClInclude Include="Render\GraphicEnum.h" />
     <ClInclude Include="Render\GraphicsDescriptors.h" />
     <ClInclude Include="Render\GraphicsResource.h" />
+    <ClInclude Include="Render\Light.h" />
     <ClInclude Include="Render\Material.h" />
+    <ClInclude Include="Render\PointLight.h" />
     <ClInclude Include="Render\Renderable.h" />
     <ClInclude Include="Render\RenderDevice.h" />
     <ClInclude Include="Render\RenderDevice_DX11.h" />
     <ClInclude Include="Render\Renderer.h" />
     <ClInclude Include="Render\ResourceMapping.h" />
     <ClInclude Include="Render\ShaderManager.h" />
+    <ClInclude Include="Render\Sky.h" />
+    <ClInclude Include="Render\SkyLight.h" />
+    <ClInclude Include="Render\SpotLight.h" />
     <ClInclude Include="Render\StaticMesh.h" />
     <ClInclude Include="Render\Vertex.h" />
     <ClInclude Include="Resource.h" />
@@ -261,6 +268,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="MISC\AssetManager.cpp" />
     <ClCompile Include="MISC\Frustum.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -288,11 +296,14 @@
     <ClCompile Include="Render\Camera.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Render\DirectionalLight.cpp" />
     <ClCompile Include="Render\GraphicsResource.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Render\Light.cpp" />
     <ClCompile Include="Render\Material.cpp" />
+    <ClCompile Include="Render\PointLight.cpp" />
     <ClCompile Include="Render\RenderDevice.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
@@ -308,6 +319,9 @@
     <ClCompile Include="Render\ShaderManager.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Render\Sky.cpp" />
+    <ClCompile Include="Render\SkyLight.cpp" />
+    <ClCompile Include="Render\SpotLight.cpp" />
     <ClCompile Include="Render\StaticMesh.cpp" />
     <ClCompile Include="Render\Vertex.cpp" />
     <ClCompile Include="stdafx.cpp">

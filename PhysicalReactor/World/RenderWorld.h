@@ -57,6 +57,7 @@ namespace PRE
 		void AddStaticMesh(StaticMesh* sm);
 		void RenderMaterial(SHADERSTAGE stage,SubMesh* submesh);
 		void InitViews();
+		void RenderWireframe(int i);
 		Allocator* allocator;
 
 		Vector<StaticMesh*> StaticmeshList;
@@ -72,5 +73,8 @@ namespace PRE
 		HANDLE Handle[9];
 		uint64_t ListPtr[9];
 		uint64_t TListPtr[9];
+		RasterizerState* Wireframestate;
+		RasterizerState* Solidstate;
+		RasterizerState* rasterizerstate;
 	};
 }

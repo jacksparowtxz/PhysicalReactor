@@ -15,7 +15,7 @@ GameWorld::GameWorld(HWND hwnd)
 	renderworld = allocatorFC::allocateNew<RenderWorld>(*RenderAllocator, hwnd, RenderAllocator,dynamiclinearallocator);
 
 
-	MesnImport = allocatorFC::allocateNew<GameMeshImport>(*Main_Allocator);
+	AssetManager::MeshImport = allocatorFC::allocateNew<GameMeshImport>(*Main_Allocator);
 
 	const char* tmptitle = "PRE";
 	size_t titlelength = strlen(tmptitle) + 1;
@@ -77,7 +77,7 @@ void GameWorld::MouseButtonUp()
 void GameWorld::Import(std::string path)
 {
 	StaticMesh* ImportMesh = allocatorFC::allocateNew<StaticMesh>(*Main_Allocator);
-	MesnImport->Import(path,ImportMesh);
+	AssetManager::GetDevice()->Import(path,ImportMesh);
 	renderworld->AddStaticMesh(ImportMesh);
 }
 
@@ -87,6 +87,7 @@ GameWorld::~GameWorld()
 	{
 		if (RenderAllocator != nullptr)
 		{
+			allocatorFC::deallocateDelete(*Main_Allocator, AssetManager::MeshImport);
 			allocatorFC::deallocateDelete(*RenderAllocator, renderworld);
 			allocatorFC::deallocateDelete(*Main_Allocator, RenderAllocator);
 		}
