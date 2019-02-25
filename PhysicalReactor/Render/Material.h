@@ -1,6 +1,7 @@
 #pragma once
 #include"Render/GraphicEnum.h"
 #include"Render/GraphicsResource.h"
+#include"MISC/MiscHelper.h"
 #include<string>
 
 using namespace PRE;
@@ -15,7 +16,7 @@ public:
 	Material();
 	Material(const std::string &newName);
 	~Material();
-	void Init();
+	void Init(const std::string &newName);
 
 
 
@@ -101,5 +102,5 @@ public:
 
 	bool TwoSide;
 
-
+	BitSizeStruct<31> *MaterialID;
 };

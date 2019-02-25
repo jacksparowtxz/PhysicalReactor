@@ -67,6 +67,9 @@ public:
 	Frustum GetFrustum();
 	ProjectionType GetProjectionType();
 	void SetProjectionType(const ProjectionType& type);
+
+
+	float GetDistance(const XMVECTOR& otherpos);
 private:
 
 	// Camera coordinate system with coordinates relative to world space.

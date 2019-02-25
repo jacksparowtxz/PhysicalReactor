@@ -282,6 +282,14 @@ namespace PRE {
 		this->type = type;
 	}
 
+	float Camera::GetDistance(const XMVECTOR & otherpos)
+	{
+		XMVECTOR pos = XMLoadFloat3(&mPosition);
+		XMVECTOR diffence = XMVectorSubtract(pos, otherpos);
+		XMVECTOR distance = XMVector3Length(diffence);
+		return XMVectorGetX(distance);
+	}
+
 
 }
 

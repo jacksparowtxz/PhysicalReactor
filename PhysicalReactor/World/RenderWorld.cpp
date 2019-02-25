@@ -11,7 +11,7 @@ using namespace std;
 
 namespace PRE
 {
-	RenderWorld::RenderWorld(HWND windows, Allocator* Inallocator, DynamicLinearAllocator* allocator1) :allocator(Inallocator),StaticmeshList(*allocator1)
+	RenderWorld::RenderWorld(HWND windows, Allocator* Inallocator, DynamicLinearAllocator* allocator1) :allocator(Inallocator),StaticmeshList(*allocator1), VisiblityMesh(*allocator1), TVisiblityMesh(*allocator1)
 	{
 		Initilize(windows,allocator);
 		
@@ -208,6 +208,94 @@ namespace PRE
 			Renderer::GetDevice()->BindResource(stage, submesh->material->PixelDepthOffset, 14);
 			Renderer::GetDevice()->BindSampler(stage, submesh->material->PixelDepthOffsetSampler, 14, 1);
 		}
+	}
+
+	void RenderWorld::InitViews()
+	{
+		std::function<void(StaticMesh*, uint32_t, void*)> FrustumCull;
+		auto lambda = [&, this](StaticMesh* sm, uint32_t size, void* ExtraData) {
+		         
+			for (uint32_t i = 0; i < size; i++)
+			{
+				if (camera->GetFrustum().CheckBox(*sm->aabb) != 0)
+				{
+					BitSizeStruct<21> Depth;
+					Depth.data = std::move(camera->GetDistance(sm->GetTransInformation(1)));
+					if (sm->GetMaterialBlendMode())
+					{
+						DrawKey drawkey = DrawKey::GenerateKey(0, ViewLayerType::e3D, 1, sm->GetMaterialID().data,Depth.data, TranslucencyType::eOpaque,false);
+						sm->drawkey = &drawkey;
+						LStaticMeshList.push_back(&sm[i]);
+					}
+					else
+					{
+						DrawKey drawkey = DrawKey::GenerateKey(0, ViewLayerType::e3D, 1, sm->GetMaterialID().data, Depth.data, TranslucencyType::eNormal, false);
+						sm->drawkey = &drawkey;
+						LTStaticMeshList.push_back(&sm[i]);
+					}
+				}
+			}
+			
+			ListPtr[ThreadID] = (uint64_t)&LStaticMeshList;
+			TListPtr[ThreadID] = (uint64_t)&LTStaticMeshList;
+		};
+
+		FrustumCull = lambda;
+		JobScheduler::Wait(parallel_for(*StaticmeshList.data,StaticmeshList.Size(),FrustumCull,nullptr,DataSizeSplitter(32*1024)));
+
+		for (uint32_t i = 0; i < 9; i++)
+		{
+		    std::vector<StaticMesh*> *slist = (std::vector<StaticMesh*>*)ListPtr[i];
+			std::vector<StaticMesh*> *Tslist = (std::vector<StaticMesh*>*)TListPtr[i];
+
+
+			for(uint32_t k = 0;k < slist->size(); k++)
+			{
+				VisiblityMesh.Push_Back(slist->operator[](k));
+			}
+			for (uint32_t k = 0; k < Tslist->size(); k++)
+			{
+				TVisiblityMesh.Push_Back(Tslist->operator[](k));
+			}
+		}
+
+		std::function<void(StaticMesh*, uint32_t, void*)> RadixSortFC;
+		auto radixsort = [&, this](StaticMesh* unorderarray, uint32_t size, void* extradata) {
+		
+			StaticMesh *radixArrays[10];
+			int Ra[10];
+			for (int i = 0; i < 10; i++)
+			{
+				radixArrays[i] = (StaticMesh *)malloc(sizeof(StaticMesh)*(size + 1));
+				Ra[i] = 0;    			
+			}
+			for (int pos = 1; pos <= 10; pos++)  
+			{
+				for (int i = 0; i < size; i++)    
+				{
+					int num = GetDigitInPos(unorderarray[i].GetMaterialID().data, pos);
+					int index = ++Ra[num];
+					radixArrays[num][index] = unorderarray[i];
+				}
+				for (int i = 0, j = 0; i < 10; i++)
+				{
+					for (int k = 1; k <= Ra[i]; k++)
+					{
+						unorderarray[j++] = radixArrays[i][k];
+					}
+					radixArrays[i][0] = StaticMesh();
+					Ra[i] = 0;
+				}
+			}
+			for (int i = 0; i < 10; i++)
+			{
+				free(radixArrays[i]);
+			}
+		};
+
+		RadixSortFC = radixsort;
+		RadixSortFC(*VisiblityMesh.data, VisiblityMesh.Size(), nullptr);
+		RadixSortFC(*TVisiblityMesh.data, TVisiblityMesh.Size(), nullptr);
 	}
 
 	void RenderWorld::RenderScene()

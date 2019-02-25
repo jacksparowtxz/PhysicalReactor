@@ -5,6 +5,8 @@
 #include "Container/vector.h"
 #include "Render/Renderable.h"
 #include "Render/Camera.h"
+#include "Render/DrawKey.h"
+#include "MISC/MiscHelper.h"
 #include<windows.h>
 
 using namespace PRE;
@@ -33,12 +35,9 @@ namespace PRE
 
 		
 	};
-	/*
-	struct VertexPositionColor
-	{
-		DirectX::XMFLOAT3 pos;
-		DirectX::XMFLOAT3 color;
-	};*/
+
+	 thread_local std::vector<StaticMesh*> LStaticMeshList;
+	 thread_local std::vector<StaticMesh*> LTStaticMeshList;
 	class RenderWorld
 	{
 	public:
@@ -57,9 +56,13 @@ namespace PRE
 		void SetMousePosition(HWND windows,int x, int y);
 		void AddStaticMesh(StaticMesh* sm);
 		void RenderMaterial(SHADERSTAGE stage,SubMesh* submesh);
+		void InitViews();
 		Allocator* allocator;
 
 		Vector<StaticMesh*> StaticmeshList;
+
+		Vector<StaticMesh*> VisiblityMesh;
+		Vector<StaticMesh*> TVisiblityMesh;
 
 		RenderConstantBuffer* m_constantBufferData[9];
 		GPUBuffer* constbuffer;
@@ -67,5 +70,7 @@ namespace PRE
 		POINT mLastMousePos;
 		double dt;
 		HANDLE Handle[9];
+		uint64_t ListPtr[9];
+		uint64_t TListPtr[9];
 	};
 }

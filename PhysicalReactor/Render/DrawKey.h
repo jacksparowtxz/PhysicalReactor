@@ -46,8 +46,7 @@ namespace PRE
 
 		struct Transparent
 		{
-			uint64_t materialPass : 4;
-			uint64_t matrtialId : 27;
+			uint64_t matrtialId : 31;
 			uint64_t depth : 24;
 			uint64_t cmd : 1;
 
@@ -58,8 +57,7 @@ namespace PRE
 		struct Opaque
 		{
 			uint64_t depth : 24;
-			uint64_t materialPass : 4;
-			uint64_t materialId : 27;
+			uint64_t materialId : 31;
 			uint64_t cmd : 1;
 
 
@@ -262,7 +260,7 @@ namespace PRE
 
 	inline void DrawKey::sanityChecks()
 	{
-		assert(PRE::isLittleEndian());
+		/*assert(PRE::isLittleEndian());
 
 		DrawKey drawkey;
 		drawkey.value = 0;
@@ -293,7 +291,7 @@ namespace PRE
 		drawkey.custom.enabled = 0;
 		drawkey.translucency = (uint32_t)TranslucencyType::eOpaque;
 		drawkey.viewLayer = 0x2;
-		assert(drawkey.value == DrawKey::kOpaqueModeValue);
+		assert(drawkey.value == DrawKey::kOpaqueModeValue);*/
 
 	}
 

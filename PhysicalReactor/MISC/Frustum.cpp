@@ -114,7 +114,7 @@ int Frustum::CheckBox(const AABB& box) const
 		}
 		if (iInCount==0)
 		{
-			return false;
+			return 0;
 		}
 		iTotalIn += iPtIn;
 	}

@@ -4,7 +4,8 @@
 
 Material::Material()
 {
-	Init();
+	Materialname = "NewMaterial";
+	Init(Materialname);
 }
 
 
@@ -15,12 +16,11 @@ Material::~Material()
 
 Material::Material(const std::string &newName)
 {
-	Init();
-	Materialname = newName;
+	Init(newName);
 }
 
 
-void Material::Init()
+void Material::Init(const std::string &newName)
 {
 	MaterialType = RENDERTYPE::RENDERTYPE_SURFACE;
 	Shadingmodel = SHADINGMODEL::SHADINGMODEL_DEFAULTUNLIT;
@@ -93,6 +93,10 @@ void Material::Init()
 
 	TwoSide=false;
 
+	
+	Materialname = newName;
+	uint64_t ID = std::hash<std::string>{}(newName);
+	MaterialID->data = std::move(ID);
 }
 
 RENDERTYPE Material::GetRenderType() const

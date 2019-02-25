@@ -5,6 +5,7 @@
 #include"Render/GraphicsDescriptors.h"
 #include"Render/Renderer.h"
 #include"MISC/Intersectables.h"
+#include"Render/DrawKey.h"
 #include<vector>
 
 using namespace PRE;
@@ -78,8 +79,14 @@ public:
 	AABB* aabb;
 	vector<SubMesh*> Meshs;
 	VertexLayout* vertexlayout;
+	XMFLOAT4X4* Transformation;
+	DrawKey* drawkey;
 
 	StaticMesh();
 	~StaticMesh();
+
+	XMVECTOR GetTransInformation(int index);
+	BitSizeStruct<31> GetMaterialID();
+	bool GetMaterialBlendMode();
 };
 
