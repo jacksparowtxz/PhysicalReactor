@@ -2,7 +2,7 @@
 #include"Render/Renderer.h"
 #include"Render/Renderable.h"
 #include"Render/Material.h"
-
+#include"MISC/TextureManager.h"
 
 
 
@@ -16,5 +16,6 @@ public:
 
 	StaticMesh* SkyMesh;
 	Material* Skymaterial;
+	Texture2D* SkyCubeMap;
 };
 
