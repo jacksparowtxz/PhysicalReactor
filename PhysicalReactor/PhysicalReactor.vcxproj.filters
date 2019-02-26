@@ -216,6 +216,18 @@
     <ClInclude Include="Render\SpotLight.h">
       <Filter>头文件\Render</Filter>
     </ClInclude>
+    <ClInclude Include="MISC\DDSTextureLoader.h">
+      <Filter>头文件\MISC</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureManager.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MISC\TextureLoader.h">
+      <Filter>头文件\MISC</Filter>
+    </ClInclude>
+    <ClInclude Include="MISC\TextureManager.h">
+      <Filter>头文件\MISC</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -338,6 +350,18 @@
     <ClCompile Include="Render\SpotLight.cpp">
       <Filter>头文件\Render</Filter>
     </ClCompile>
+    <ClCompile Include="MISC\DDSTextureLoader.cpp">
+      <Filter>头文件\MISC</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureManager.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MISC\TextureLoader.cpp">
+      <Filter>头文件\MISC</Filter>
+    </ClCompile>
+    <ClCompile Include="MISC\TextureManager.cpp">
+      <Filter>头文件\MISC</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="PhysicalReactor.rc">
@@ -357,6 +381,12 @@
       <Filter>头文件\Shader</Filter>
     </FxCompile>
     <FxCompile Include="vs.hlsl">
+      <Filter>头文件\Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="SkyPS.hlsl">
+      <Filter>头文件\Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="SkyVS.hlsl">
       <Filter>头文件\Shader</Filter>
     </FxCompile>
   </ItemGroup>

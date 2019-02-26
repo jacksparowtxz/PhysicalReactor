@@ -178,6 +178,7 @@
     <ClInclude Include="JobSystem\ThreadGroup.h" />
     <ClInclude Include="JobSystem\WorkStealingQueue.h" />
     <ClInclude Include="MISC\AssetManager.h" />
+    <ClInclude Include="MISC\DDSTextureLoader.h" />
     <ClInclude Include="MISC\Frustum.h" />
     <ClInclude Include="MISC\Intersectables.h" />
     <ClInclude Include="MISC\json.hpp" />
@@ -186,6 +187,8 @@
     <ClInclude Include="MISC\MiscHelper.h" />
     <ClInclude Include="MISC\stb_image.h" />
     <ClInclude Include="MISC\stb_image_write.h" />
+    <ClInclude Include="MISC\TextureLoader.h" />
+    <ClInclude Include="MISC\TextureManager.h" />
     <ClInclude Include="MISC\Timer.h" />
     <ClInclude Include="MISC\tinyxml2.h" />
     <ClInclude Include="PhysicalReactor.h" />
@@ -212,6 +215,7 @@
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="TextureManager.h" />
     <ClInclude Include="World\GameWorld.h" />
     <ClInclude Include="World\RenderWorld.h" />
   </ItemGroup>
@@ -269,6 +273,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="MISC\AssetManager.cpp" />
+    <ClCompile Include="MISC\DDSTextureLoader.cpp" />
     <ClCompile Include="MISC\Frustum.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -284,6 +289,8 @@
     <ClCompile Include="MISC\MiscHelper.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="MISC\TextureLoader.cpp" />
+    <ClCompile Include="MISC\TextureManager.cpp" />
     <ClCompile Include="MISC\Timer.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -330,6 +337,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="World\GameWorld.cpp" />
     <ClCompile Include="World\RenderWorld.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
@@ -350,6 +358,8 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
+    <FxCompile Include="SkyPS.hlsl" />
+    <FxCompile Include="SkyVS.hlsl" />
     <FxCompile Include="vs.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
