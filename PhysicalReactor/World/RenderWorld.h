@@ -7,6 +7,7 @@
 #include "Render/Camera.h"
 #include "Render/DrawKey.h"
 #include "MISC/MiscHelper.h"
+#include "Render/sky.h"
 #include<windows.h>
 
 using namespace PRE;
@@ -76,5 +77,8 @@ namespace PRE
 		RasterizerState* Wireframestate;
 		RasterizerState* Solidstate;
 		RasterizerState* rasterizerstate;
+
+		Sky* sky;
+
 	};
 }

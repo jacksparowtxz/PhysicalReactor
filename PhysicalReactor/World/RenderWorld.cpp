@@ -73,7 +73,7 @@ namespace PRE
 
 	void RenderWorld::EndRender()
 	{
-		WaitForMultipleObjects(9L,Handle,TRUE,INFINITY);
+		//WaitForMultipleObjects(9L,Handle,TRUE,INFINITY);
 		Renderer::GetDevice()->ExcuteDeferredContexts();
 		Renderer::GetDevice()->PresentEnd();
 	}
@@ -369,6 +369,10 @@ namespace PRE
 		Wireframedesc.DepthCilpEnable = true;
 		Renderer::GetDevice()->CreateRasterizerState(&Soliddesc, Solidstate);
 		Renderer::GetDevice()->CreateRasterizerState(&Wireframedesc, Wireframestate);
+
+
+		sky = allocatorFC::allocateNew<Sky>(*allocator);
+
 	}
 
 }
