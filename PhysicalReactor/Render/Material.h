@@ -23,7 +23,9 @@ public:
 	RENDERTYPE GetRenderType() const;
 	SHADINGMODEL GetShadingMode() const;
 	BLENDMODE GetBlendMode() const;
-
+	void SetRasterState(RasterizerStateDesc rsdesc);
+	void SetDepthStencilState(DepthStencilStateDesc dsdesc);
+	
 	
 
 
@@ -95,7 +97,10 @@ public:
 	Sampler* PixelDepthOffsetSampler;
 
 	Sampler* InitiSampler;
-	
+	RasterizerState* rasterzerstate;
+	DepthStencilState* depthstencilstate;
+
+
 	float Metalness;
 	float Roughness;
 	XMFLOAT3 BaseColor;

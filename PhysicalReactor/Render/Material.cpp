@@ -31,6 +31,16 @@ void Material::Init(const std::string &newName)
 	SamplerDesc InitSamplerDesc;
 	InitiSampler = new Sampler;
 	Renderer::GetDevice()->CreateSamplerState(&InitSamplerDesc, InitiSampler);
+
+	RasterizerStateDesc RSdesc;
+	rasterzerstate = new RasterizerState;
+	Renderer::GetDevice()->CreateRasterizerState(&RSdesc,rasterzerstate);
+
+	DepthStencilStateDesc DSdesc;
+	depthstencilstate = new DepthStencilState;
+	Renderer::GetDevice()->CreateDepthStencilState(&DSdesc,depthstencilstate);
+
+
 	BaseColorMap=nullptr;
 	BaseColorMapName="";
 	BaseColorSampler = InitiSampler;
@@ -116,6 +126,20 @@ BLENDMODE Material::GetBlendMode() const
 {
 
 	return BLENDMODE::BLEND_OPAQUE;
+}
+
+void Material::SetRasterState(RasterizerStateDesc rsdesc)
+{
+	Renderer::GetDevice()->DestroyRasterizerState(rasterzerstate);
+	Renderer::GetDevice()->CreateRasterizerState(&rsdesc, rasterzerstate);
+
+}
+
+void Material::SetDepthStencilState(DepthStencilStateDesc dsdesc)
+{
+	Renderer::GetDevice()->DestroyDepthStencilState(depthstencilstate);
+	Renderer::GetDevice()->CreateDepthStencilState(&dsdesc, depthstencilstate);
+
 }
 
 
