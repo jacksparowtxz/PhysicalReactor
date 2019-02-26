@@ -1,8 +1,5 @@
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
-
 #include "MeshLoad.h"
-
+#include "MISC/TextureManager.h"
 
 using namespace PRE;
 
@@ -184,11 +181,6 @@ void GameMeshImport::ProcessMesh(aiMesh* mesh, const aiScene* scene, StaticMesh 
 		meshmaterial->BaseColor = basefactor;
 
 	}
-
-
-	
-
-
 	SubMesh *loadsub =new SubMesh(std::move(Vertices),std::move(indices));
 	loadsub->material = meshmaterial;
 	loadmesh->Meshs.push_back(loadsub);
@@ -209,38 +201,10 @@ std::vector<Texture2D*> GameMeshImport::loadMaterialTexture(aiMaterial* mat, aiT
 		   filename = directory + "/" + filename;
 		   std::string name = std::string(filename.begin(), filename.end());
 		   const char* szname = name.c_str();
-		   int width = 0;
-		   int height = 0;
-		   int channelcount = 0;
-		   unsigned char* data = stbi_load(szname, &width, &height, &channelcount, 4);
-
-		   TextureDesc desc;
-		   desc.ArraySize = 1;
-		   desc.BindFlags = BIND_SHADER_RESOURCE | BIND_UNORDERED_ACCESS;
-		   desc.CPUAccessFlags = 0;
-		   desc.Format = FORMAT_R8G8B8A8_UNORM;
-		   desc.Height = static_cast<uint32_t>(height);
-		   desc.Width = static_cast<uint32_t>(width);
-		   desc.MipLevels = (UINT)log2(max(width, height));
-		   desc.MiscFlags = 0;
-		   desc.Usage = USAGE_DEFAULT;
-
-		   UINT mipwidth = width;
-		   SubresourceData* InitData = new SubresourceData[desc.MipLevels];
-		   for (UINT mip = 0; mip < desc.MipLevels; ++mip)
-		   {
-			   InitData[mip].pSysMem = data;
-			   InitData[mip].SysMemPitch = static_cast<UINT>(mipwidth*(channelcount));
-			   mipwidth = max(1, mipwidth / 2);
-		   }
-		   texture2d->RequestIndepentShaderReourcesForMIPs(true);
-		   texture2d->RequesIndenpentUnorderedAccessResoucesForMips(true);
-		   HRESULT hr = Renderer::GetDevice()->CreateTexture2D(&desc, InitData, &texture2d);
-		   assert(SUCCEEDED(hr));
+		   TextureManager::GetLoader()->LoadTexture(name, texture2d);
 		   textures.push_back(texture2d);
 		   lastname = std::move(str.C_Str());
-		   stbi_image_free(data);
-		  delete InitData;
+		 
 	   }
     }
 		return textures;
@@ -294,7 +258,7 @@ float GameMeshImport::GetNumerFactorAssimp(std::string key, unsigned int type, u
 
 
 
-Texture2D  GameMeshImport::TextureFormFile(const char* path, std::string directory)
+/*Texture2D  GameMeshImport::TextureFormFile(const char* path, std::string directory)
 {
 	std::string filename = string(path);
 	filename = directory + "/" + filename;
@@ -336,4 +300,4 @@ Texture2D  GameMeshImport::TextureFormFile(const char* path, std::string directo
 	}
 
 	return *texture2d;
-}
+}*/

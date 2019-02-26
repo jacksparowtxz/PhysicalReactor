@@ -5,6 +5,7 @@
 #include "assimp/postprocess.h"
 #include <vector>
 
+
 #include "assimp/pbrmaterial.h"
 #include "MISC/Frustum.h"
 #include "Render/Renderer.h"
@@ -28,7 +29,7 @@ private:
 	void ProcessNode(aiNode* node, const aiScene* scene, StaticMesh* loadmesh);
 	void ProcessMesh(aiMesh* mesh, const aiScene* scene, StaticMesh* loadmesh);
 	vector<Texture2D*> loadMaterialTexture(aiMaterial* mat, aiTextureType type, std::string name);
-	Texture2D  TextureFormFile(const char* path, std::string directory);
+	//Texture2D  TextureFormFile(const char* path, std::string directory);
 	std::string directory;
 	static std::string lastname;
 	float MaxX, MaxY, MaxZ, MinX, MinY, MinZ;
