@@ -8,6 +8,9 @@
 #include <functional>
 
 using namespace std;
+thread_local std::vector<StaticMesh*> LStaticMeshList;
+thread_local std::vector<StaticMesh*> LTStaticMeshList;
+
 
 namespace PRE
 {
@@ -21,6 +24,7 @@ namespace PRE
 	RenderWorld::~RenderWorld()
 	{
 		JobScheduler::Shutdown();
+		allocatorFC::deallocateDelete<Sky>(*allocator, sky);
 		allocatorFC::deallocateDelete<Camera>(*allocator, camera);
 		allocatorFC::deallocateDelete<ShaderManager>(*allocator, Renderer::shadermanager);
 		for (uint32_t i = 0; i < 9; i++)
@@ -67,8 +71,36 @@ namespace PRE
 			Renderer::GetDevice()->FinishComanlist();
 			SetEvent(Handle[ThreadID]);
 		};
-		RenderStaticMesh = lambda;
-		JobScheduler::Wait(parallel_for(*StaticmeshList.data, StaticmeshList.Size(), RenderStaticMesh, (void*)nullptr));
+		//RenderStaticMesh = lambda;
+		//JobScheduler::Wait(parallel_for(*StaticmeshList.data, StaticmeshList.Size(), RenderStaticMesh, (void*)nullptr));
+		std::function<void(Sky*, uint32_t, void*)> RenderSkyFC;
+		auto RenderSkybox = [&, this](Sky*sky, uint32_t size, void* extradata) {
+		
+			Renderer::GetDevice()->UpdateBuffer(constbuffer, m_constantBufferData[ThreadID]);
+			
+
+			Renderer::GetDevice()->BindRasterizerState(*sky->Skymaterial->rasterzerstate);
+			GraphicPSO PSO;
+			Renderer::shadermanager->GetPSO(nullptr, &PSO);
+			PSO.desc.dss = sky->Skymaterial->depthstencilstate;
+			Renderer::GetDevice()->BindGraphicsPSO(&PSO);
+			Renderer::GetDevice()->BindSampler(PS_STAGE,sky->Skymaterial->InitiSampler,4,1);
+			UINT pFisrtConstant = 0;
+			UINT pNumberConstant = 32;
+			Renderer::GetDevice()->BindConstantBuffer(VS_STAGE, constbuffer,0,&pFisrtConstant,&pNumberConstant);
+			UINT stride = sizeof(Vertex);
+			UINT offset = 0;
+			RenderMaterial(PS_STAGE, sky->SkyMesh->Meshs[0]);
+			Renderer::GetDevice()->BindVertexBuffers(&sky->SkyMesh->Meshs[0]->mVertexBuffer, 0, 1, &stride, &offset);
+			Renderer::GetDevice()->BindIndexBuffer(sky->SkyMesh->Meshs[0]->mIndexBuffer, INDEXBUFFER_32BIT, 0);
+			Renderer::GetDevice()->DrawIndexed(sky->SkyMesh->Meshs[0]->Indices.size(), 0, 0);
+			Renderer::GetDevice()->FinishComanlist();
+		};
+
+		RenderSkyFC =RenderSkybox;
+		RenderSkyFC(sky, 1, nullptr);
+		JobScheduler::Wait(parallel_for(sky, 1, RenderSkyFC, nullptr));
+
 	}
 
 	void RenderWorld::EndRender()
@@ -354,6 +386,9 @@ namespace PRE
 			m_constantBufferData[i] = allocatorFC::allocateNew<RenderConstantBuffer>(*allocator);
 			Handle[i] = CreateEvent(NULL, FALSE, TRUE, NULL);
 		}
+
+		Solidstate=allocatorFC::allocateNew<RasterizerState>(*allocator);
+	    Wireframestate=allocatorFC::allocateNew<RasterizerState>(*allocator);
 
 		RasterizerStateDesc Wireframedesc;
 		Wireframedesc.FillMode = FILL_WIREFRAME;

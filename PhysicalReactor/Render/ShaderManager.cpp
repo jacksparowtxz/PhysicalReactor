@@ -130,8 +130,9 @@ void ShaderManager::CreateShader()
 			for (auto i:shadernames)
 			{
 				LoadShader(i, VS_STAGE);
-				shadernames.clear();
+				
 			}
+			shadernames.clear();
 		}
 		else if(type=="PS/")
 		{
@@ -143,8 +144,9 @@ void ShaderManager::CreateShader()
 			for (auto i : shadernames)
 			{
 				LoadShader(i, PS_STAGE);
-				shadernames.clear();
+				
 			}
+			shadernames.clear();
 		}
 		else if (type == "HS/")
 		{
@@ -156,8 +158,9 @@ void ShaderManager::CreateShader()
 			for (auto i : shadernames)
 			{
 				LoadShader(i, HS_STAGE);
-				shadernames.clear();
+				
 			}
+			shadernames.clear();
 		}
 		else if (type == "GS/")
 		{
@@ -169,8 +172,9 @@ void ShaderManager::CreateShader()
 			for (auto i : shadernames)
 			{
 				LoadShader(i, GS_STAGE);
-				shadernames.clear();
+				
 			}
+			shadernames.clear();
 		}
 		else if (type == "DS/")
 		{
@@ -182,8 +186,9 @@ void ShaderManager::CreateShader()
 			for (auto i : shadernames)
 			{
 				LoadShader(i, DS_STAGE);
-				shadernames.clear();
+				
 			}
+			shadernames.clear();
 		}
 		else if (type == "CS/")
 		{
@@ -195,8 +200,9 @@ void ShaderManager::CreateShader()
 			for (auto i : shadernames)
 			{
 				LoadShader(i, CS_STAGE);
-				shadernames.clear();
+				
 			}
+			shadernames.clear();
 		}
 	}
 
@@ -253,8 +259,8 @@ PRE::VertexLayout* ShaderManager::GetVertexLayout(const std::string& filename)
 
 void ShaderManager::GetPSO(Material* material, GraphicPSO* pso)
 {
-	pso->desc.vs = VSMap["vs.hlsl"];
-	pso->desc.ps = PSMap["ps.hlsl"];
-	pso->desc.VL = VLMap["vs.hlsl"];
+	pso->desc.vs = VSMap["SkyVS.hlsl"];
+	pso->desc.ps = PSMap["SkyPS.hlsl"];
+	pso->desc.VL = VLMap["SkyVS.hlsl"];
 }
 

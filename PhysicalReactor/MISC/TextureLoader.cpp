@@ -1,10 +1,8 @@
-#define STB_IMAGE_IMPLEMENTATION
-#include "MISC/stb_image.h"
 #include "stdafx.h"
+#define STB_IMAGE_IMPLEMENTATION
 #include "TextureLoader.h"
-#include "CommonInclude.h"
-#include"MISC/MiscHelper.h"
 
+#include "stb_image.h"
 using namespace PRE;
 
 
@@ -24,7 +22,7 @@ void TextureLoader::LoadTexture(const string & TexturefileName, Texture2D* LoadM
 
 	 std::string exname=GetExtensionFromFileName(TexturefileName);
 
-	 if (exname.compare="dds")
+	 if (exname=="dds")
 	 {
 		 const char* filenamechar = TexturefileName.c_str();
 		 int iSize;

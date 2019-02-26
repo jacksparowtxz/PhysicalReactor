@@ -7,19 +7,20 @@ StaticMesh::StaticMesh():directory(""),aabb(nullptr)
 	XMFLOAT3 zero = { 0,0,0 };
 	XMFLOAT4 Id = { 0,0,0,1 };
 
-	XMVECTOR vZero = XMLoadFloat3(&zero);
-	XMVECTOR qId = XMLoadFloat4(&Id);
+	XMVECTOR vZero = DirectX::XMLoadFloat3(&zero);
+	XMVECTOR qId = DirectX::XMLoadFloat4(&Id);
 
 	XMFLOAT4 rot = {0,0,0,1};
 	XMFLOAT3 pos = {0,0,0};
 	XMFLOAT3 scale = { 0,0,0};
-	XMVECTOR qRot = XMLoadFloat4(&rot);
-	XMVECTOR vPos = XMLoadFloat3(&pos);
-	XMVECTOR vScale = XMLoadFloat3(&scale);
+	XMVECTOR qRot = DirectX::XMLoadFloat4(&rot);
+	XMVECTOR vPos = DirectX::XMLoadFloat3(&pos);
+	XMVECTOR vScale = DirectX::XMLoadFloat3(&scale);
 
 	XMMATRIX mtx = XMMatrixTransformation(vZero, qId, vScale, vZero, qRot, vPos);
 	mtx = XMMatrixTranspose(mtx);
-	XMStoreFloat4x4(Transformation, mtx);
+	Transformation = new XMFLOAT4X4;
+	DirectX::XMStoreFloat4x4(Transformation, mtx);
 
 	drawkey = new DrawKey;
 
@@ -31,7 +32,7 @@ StaticMesh::StaticMesh():directory(""),aabb(nullptr)
 StaticMesh::~StaticMesh()
 {
 	SAFE_DELETE(aabb);
-	
+	SAFE_DELETE(drawkey);
 }
 
 XMVECTOR StaticMesh::GetTransInformation(int index)
@@ -41,8 +42,8 @@ XMVECTOR StaticMesh::GetTransInformation(int index)
 	XMVECTOR vScale;
 	
 	XMMATRIX WORLD;
-	XMStoreFloat4x4(Transformation, WORLD);
-	XMMatrixDecompose(&vScale, &qRot, &vPos, WORLD);
+	DirectX::XMStoreFloat4x4(Transformation, WORLD);
+	DirectX::XMMatrixDecompose(&vScale, &qRot, &vPos, WORLD);
 	if (index == 1)
 	{
 		return vPos;

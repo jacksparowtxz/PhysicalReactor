@@ -25,7 +25,7 @@ public:
 	BLENDMODE GetBlendMode() const;
 	void SetRasterState(RasterizerStateDesc rsdesc);
 	void SetDepthStencilState(DepthStencilStateDesc dsdesc);
-	
+	void SetSampleState(SamplerDesc spdesc);
 	
 
 

@@ -11,11 +11,14 @@ GameWorld::GameWorld(HWND hwnd)
 	ASSERT(Main_Allocator != nullptr);
 	RenderAllocator = allocatorFC::allocateNew<ProxyAllocator>(*Main_Allocator, *Main_Allocator);
 	ASSERT(RenderAllocator != nullptr);
-	dynamiclinearallocator = allocatorFC::allocateNew<DynamicLinearAllocator>(*Main_Allocator, *Main_Allocator, 512 * 1024, 32);
-	renderworld = allocatorFC::allocateNew<RenderWorld>(*RenderAllocator, hwnd, RenderAllocator,dynamiclinearallocator);
-
-
 	AssetManager::MeshImport = allocatorFC::allocateNew<GameMeshImport>(*Main_Allocator);
+	ASSERT(AssetManager::MeshImport != nullptr);
+	dynamiclinearallocator = allocatorFC::allocateNew<DynamicLinearAllocator>(*Main_Allocator, *Main_Allocator, 512 * 1024, 32);
+	ASSERT(dynamiclinearallocator != nullptr);
+	renderworld = allocatorFC::allocateNew<RenderWorld>(*RenderAllocator, hwnd, RenderAllocator,dynamiclinearallocator);
+	ASSERT(renderworld!= nullptr);
+	TextureManager::TextureImport = allocatorFC::allocateNew<TextureLoader>(*Main_Allocator);
+	
 
 	const char* tmptitle = "PRE";
 	size_t titlelength = strlen(tmptitle) + 1;
@@ -25,7 +28,7 @@ GameWorld::GameWorld(HWND hwnd)
 
 	
 
-	Import("RE/SciFiHelmet.gltf");
+//	Import("RE/SciFiHelmet.gltf");
 	//Import("RE/nanosuit.obj");
 }
 
@@ -88,6 +91,7 @@ GameWorld::~GameWorld()
 		if (RenderAllocator != nullptr)
 		{
 			allocatorFC::deallocateDelete(*Main_Allocator, AssetManager::MeshImport);
+			allocatorFC::deallocateDelete(*Main_Allocator, TextureManager::TextureImport);
 			allocatorFC::deallocateDelete(*RenderAllocator, renderworld);
 			allocatorFC::deallocateDelete(*Main_Allocator, RenderAllocator);
 		}

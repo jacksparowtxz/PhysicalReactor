@@ -196,9 +196,19 @@ namespace PRE
 
 	inline PRE::MaterialId DrawKey::material() const 
 	{
-		MaterialId NullID = {-2u,-2u};
-		return  (custom.enabled==true)?(NullID):isOpaqueMode() ? PRE::MaterialId(opaque.materialId, 0) :
-		         	PRE::MaterialId(transparent.matrtialId, 0);
+		MaterialId NullID = {0u,0u};
+		if (custom.enabled)
+		{
+			if (isOpaqueMode())
+			{
+				return PRE::MaterialId(opaque.materialId, 0);
+			}
+			else
+			{
+				return PRE::MaterialId(transparent.matrtialId, 0);
+			}
+		}
+		return NullID;
 	}
 
 	inline bool DrawKey::isOpaqueMode() const

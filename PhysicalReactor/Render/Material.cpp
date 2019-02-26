@@ -12,6 +12,7 @@ Material::Material()
 Material::~Material()
 {
 	delete InitiSampler;
+	delete MaterialID;
 }
 
 Material::Material(const std::string &newName)
@@ -106,6 +107,7 @@ void Material::Init(const std::string &newName)
 	
 	Materialname = newName;
 	uint64_t ID = std::hash<std::string>{}(newName);
+	MaterialID = new BitSizeStruct<31>();
 	MaterialID->data = std::move(ID);
 }
 
@@ -140,6 +142,12 @@ void Material::SetDepthStencilState(DepthStencilStateDesc dsdesc)
 	Renderer::GetDevice()->DestroyDepthStencilState(depthstencilstate);
 	Renderer::GetDevice()->CreateDepthStencilState(&dsdesc, depthstencilstate);
 
+}
+
+void Material::SetSampleState(SamplerDesc spdesc)
+{
+	Renderer::GetDevice()->DestroySamplerState(InitiSampler);
+	Renderer::GetDevice()->CreateSamplerState(&spdesc, InitiSampler);
 }
 
 

@@ -8,7 +8,7 @@
 #include "MISC/MeshLoad.h"
 #include "Render/Renderable.h"
 #include "MISC/AssetManager.h"
-
+#include "MISC/TextureManager.h"
 #include <windows.h>
 
 using namespace PRE;

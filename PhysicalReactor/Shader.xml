@@ -1,9 +1,10 @@
 <root>
    <TYPE category="VS/">
       <Name>vs.hlsl</Name>
+	  <Name>SkyVS.hlsl</Name>
 	</TYPE>
     <TYPE category="PS/">
       <Name>ps.hlsl</Name>
-
+	  <Name>SkyPS.hlsl</Name>
 	</TYPE>
 </root>

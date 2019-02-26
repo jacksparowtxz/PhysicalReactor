@@ -8,12 +8,12 @@ struct PixelShaderInput
 };
 
 
-TextureCube SkyCubemap : register(t0);
+TextureCube SkyCubemap : register(t4);
 
 SamplerState samTriLinearSam : register(s0);
 
 
-float4 main(PixelShaderInput PSInput):SV_Target
+float4 main(PixelShaderInput PSInput) : SV_TARGET
 {
 
     return SkyCubemap.Sample(samTriLinearSam,PSInput.PosL);

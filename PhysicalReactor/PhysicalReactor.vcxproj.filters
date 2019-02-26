@@ -353,9 +353,6 @@
     <ClCompile Include="MISC\DDSTextureLoader.cpp">
       <Filter>头文件\MISC</Filter>
     </ClCompile>
-    <ClCompile Include="TextureManager.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="MISC\TextureLoader.cpp">
       <Filter>头文件\MISC</Filter>
     </ClCompile>

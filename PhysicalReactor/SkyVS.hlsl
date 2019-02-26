@@ -30,7 +30,7 @@ PixelShaderInput main(VertexShaderInput Input)
 
     float4 Temp = mul(float4(Input.PosL, 1.0f), View);
   
-    PSInput.PosH = mul(Temp, Projection).xyz;
+    PSInput.PosH = mul(Temp, Projection).xyww;
     PSInput.PosL = Input.PosL;
     return PSInput;
 }

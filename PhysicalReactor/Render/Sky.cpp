@@ -6,9 +6,9 @@
 Sky::Sky()
 {
 	SkyMesh = new StaticMesh;
-	AssetManager::GetDevice()->Import("Re/smsphere.h",SkyMesh);
+	AssetManager::GetDevice()->Import("Re/smsphere.obj",SkyMesh);
 	SkyCubeMap = new Texture2D;
-	TextureManager::GetLoader()->LoadTexture("Re/OutCube1.dds", SkyCubeMap);
+	TextureManager::GetLoader()->LoadTexture("Re/OutputCube1.dds", SkyCubeMap);
 	Skymaterial = new Material("SkyMaterial");
 
 	DepthStencilStateDesc dsdesc;
@@ -16,6 +16,14 @@ Sky::Sky()
 
 	Skymaterial->SetDepthStencilState(dsdesc);
 	Skymaterial->EmissiveMap = SkyCubeMap;
+
+	SamplerDesc spdesc;
+	spdesc.Filter = FILTER_MIN_MAG_MIP_LINEAR;
+	spdesc.AddressU = TEXTURE_ADDRESS_WRAP;
+	spdesc.AddressV = TEXTURE_ADDRESS_WRAP;
+
+	Skymaterial->SetSampleState(spdesc);
+
 
 }
 

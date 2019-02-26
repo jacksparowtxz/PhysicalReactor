@@ -37,8 +37,7 @@ namespace PRE
 		
 	};
 
-	 thread_local std::vector<StaticMesh*> LStaticMeshList;
-	 thread_local std::vector<StaticMesh*> LTStaticMeshList;
+	 
 	class RenderWorld
 	{
 	public:
