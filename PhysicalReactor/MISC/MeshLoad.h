@@ -14,7 +14,7 @@
 #include <windows.h>
 
 #include "Render/GraphicsResource.h"
-
+#include "MISC/TextureManager.h"
 
 using namespace PRE;
 
