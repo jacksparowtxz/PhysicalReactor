@@ -3957,6 +3957,11 @@ void RenderDevice_DX11::SetMarker(const std::string &name)
 	userDefinedAnnotations[ThreadID]->SetMarker(wstring(name.begin(), name.end()).c_str());
 }
 
+void* RenderDevice_DX11::GetDevice()
+{
+	return device;
+}
+
 /*
 void  RenderDevice_DX11::GetShaderReflection(GraphicBlob* blob, ShaderReflection* sf, Allocator* alloc)
 {

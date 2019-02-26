@@ -182,7 +182,7 @@ namespace PRE
 		virtual void EventBegin(const std::string& name)override;
 		virtual void EventEnd()override;
 		virtual void SetMarker(const std::string &name)override;
-		//virtual void GetShaderReflection(GraphicBlob* blob, ShaderReflection* sf,Allocator* alloc) override;
+		virtual void* GetDevice()override;
 		private:
 			HRESULT CreateShaderResourceView(Texture1D* pTexture);
 			HRESULT CreateShaderResourceView(Texture2D* pTexture);

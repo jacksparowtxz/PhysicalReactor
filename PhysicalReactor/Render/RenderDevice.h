@@ -203,55 +203,7 @@ namespace PRE
 		virtual void EventEnd() = 0;
 		virtual void SetMarker(const std::string &name) = 0;
 
-		//virtual void GetShaderReflection(GraphicBlob* blob,ShaderReflection* sf,Allocator* alloc)=0;
-
-
-		/*virtual void BindScissorRects(UINT numRects, const Rect* rect, uint32_t threadID) = 0;
-		virtual void BindViewports(UINT NumViewports, const ViewPort* pViewports, uint32_t threadID) = 0;
-		virtual void BindRenderTargets(UINT NumViews, Texture2D* const *ppRenderTargets, Texture2D* depthStencilTexture, uint32_t threadID, int arrayIndex = -1) = 0;
-		virtual void ClearRenderTarget(Texture* pTexture, const FLOAT ColorRGBA[4], uint32_t threadID, int arrayIndex = -1) = 0;
-		virtual void ClearDepthStencil(Texture2D* pTexture, UINT ClearFlags, FLOAT Depth, UINT8 Stencil, uint32_t threadID, int arrayIndex = -1) = 0;
-		virtual void BindResource(SHADERSTAGE stage, GPUResource* resource, ShaderReflection* sf, uint32_t threadID, int arrayIndex = -1) = 0;
-		virtual void BindResources(SHADERSTAGE stage, GPUResource *const* resources, ShaderReflection* sf, int count, uint32_t threadID) = 0;
-		virtual void BindUAV(SHADERSTAGE stage, GPUResource *resources, int slot, uint32_t threadID, int arrayIndex = -1) = 0;
-		virtual void BindUAVS(SHADERSTAGE stage, GPUResource* const* resource, int slot, int count, uint32_t threadID) = 0;
-		virtual void UnbindResources(int slot, int num, uint32_t threadID) = 0;
-		virtual void UnbindUAVs(int slot, int num, uint32_t threadID) = 0;
-		virtual void BindSampler(SHADERSTAGE stage, Sampler* sampler, ShaderReflection* sf, uint32_t threadID) = 0;
-		virtual void BindConstantBuffer(GraphicPSO* pso, GPUBuffer* buffer, uint32_t threadID) = 0;
-		virtual void BindVertexBuffers(GPUBuffer* const *vertexBuffers, int slot, int count, const UINT* strides, const UINT*offsets, uint32_t threadID) = 0;
-		virtual void BindIndexBuffer(GPUBuffer* indexBuffer, const INDEXBUFFER_FORMAT format, UINT offset, uint32_t threadID) = 0;
-		virtual void BindStencilRef(UINT value, uint32_t thraedID) = 0;
-		virtual void BindBlendFactor(XMFLOAT4 value, uint32_t threadID) = 0;
-		///////////////////////////////////////////////////////////////////////////////////
-		virtual void BindGraphicsPSO(GraphicPSO* pso, uint32_t threadID) = 0;
-		//////////////////////////////////////////////////////////////////////////////////
-		virtual void BindRasterizerState(RasterizerState RSstate) = 0;
-		virtual void BindComputerPSO(ComputerPSO* pso, uint32_t threadID) = 0;
-		virtual void Draw(int vertexCount, UINT startVertexLociotn, uint32_t threadID) = 0;
-		virtual void DrawIndexed(int Indexcount, UINT startVertexLocation, UINT baseVertexLocation, uint32_t threadID) = 0;
-		virtual void DrawInstanced(int vertexCount, int instanceCount, UINT startVertexLocation, UINT startInstanceLocation, uint32_t threadID) = 0;
-		virtual void DrawIndexedInstanced(int indexCount, int instanceCount, UINT startIndexLocation, UINT baseVertexLocation, UINT startInstanced, uint32_t threadID) = 0;
-		virtual void DrawInstancedIndirect(GPUBuffer* args, UINT args_offset, uint32_t threadID) = 0;
-		virtual void Dispatch(UINT threadGruopCountX, UINT threadGruopCountY, UINT threadGruopCountZ, uint32_t threadID) = 0;
-		virtual void DispatchIndirect(GPUBuffer* args, UINT args_offset, uint32_t threadID) = 0;
-		virtual void CopyTexture2D(Texture2D* pDest, Texture2D* pSrc, uint32_t threadID) = 0;
-		virtual void CopyTexture2D_Region(Texture2D* pDest, UINT dstMip, UINT dstX, UINT dstY, Texture2D* pSrc, UINT srcMip, uint32_t threadID) = 0;
-		virtual void MSAAResolve(Texture2D* pDst, Texture2D* pSrc, uint32_t threadID) = 0;
-		virtual void UpdateBuffer(GPUBuffer* buffer, const void* data, uint32_t threadID, int datasize = -1) = 0;
-		virtual void *AllocateFromRingBuffer(GPURingBuffer* buffer, size_t dataSize, UINT& offsetIntoBuffer, uint32_t threadID) = 0;
-		virtual void InvalidateBufferAccess(GPUBuffer* buffer, uint32_t threadID) = 0;
-		virtual bool DownloadResource(GPUBuffer* resurceToDownload, GPUResource* resourceDest, void* dataDest, uint32_t threadID) = 0;
-		virtual void QueryBegin(GPUQuery *query, uint32_t threadID) = 0;
-		virtual void QueryEnd(GPUQuery* query, uint32_t threadID) = 0;
-		virtual bool QueryRead(GPUQuery* query, uint32_t threadID) = 0;
-		virtual void UAVBarrier(GPUResource* const* uavs, UINT NumBarries, uint32_t thraadID) = 0;
-		virtual void TransitionBarrier(GPUResource* const* resource, UINT NumBarrires, RESOUCRCE_STATES stateBefore, RESOUCRCE_STATES stateAFTER, uint32_t threadID) = 0;
-
-		virtual void WaitForGPU() = 0;
-		virtual void EventBegin(const std::string& name, uint32_t threadID) = 0;
-		virtual void EventEnd(uint32_t threadID) = 0;
-		virtual void SetMarker(const std::string &name, uint32_t threadID) = 0;*/
+		virtual void* GetDevice() = 0;
 
 	};
 
