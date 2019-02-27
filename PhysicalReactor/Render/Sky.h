@@ -13,7 +13,7 @@ class Sky
 public:
 	Sky();
 	~Sky();
-
+	void CreateSphere(float radius, UINT sliceCount, UINT stackCount, vector<Vertex>& Inverteices, vector<uint32_t>& indices);
 	StaticMesh* SkyMesh;
 	Material* Skymaterial;
 	Texture2D* SkyCubeMap;
