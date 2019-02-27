@@ -31,9 +31,11 @@ void TextureLoader::LoadTexture(const string & TexturefileName, Texture2D* LoadM
 		 wfilename = (wchar_t *)malloc(iSize * sizeof(wchar_t));
 		 MultiByteToWideChar(CP_ACP, 0, filenamechar, -1, wfilename, iSize);
 		 ID3D11Resource* TexResrouce = nullptr;
-		 ID3D11ShaderResourceView* srv = (ID3D11ShaderResourceView*)LoadMap->SRV;
-		 DirectX::CreateDDSTextureFromFile((ID3D11Device*)Renderer::GetDevice()->GetDevice(), wfilename, &TexResrouce,
+		 ID3D11ShaderResourceView* srv = nullptr;
+		 HRESULT hr= DirectX::CreateDDSTextureFromFile((ID3D11Device*)Renderer::GetDevice()->GetDevice(), wfilename, &TexResrouce,
 			&srv);
+		LoadMap->SRV=(CPUHandle)srv;
+		 SUCCEEDED(hr);
 		 SAFE_RELEASE(TexResrouce);
 		 free(wfilename);
 	 }
