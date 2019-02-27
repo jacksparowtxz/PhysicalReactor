@@ -78,7 +78,7 @@ public:
 	string directory;
 	AABB* aabb;
 	vector<SubMesh*> Meshs;
-	VertexLayout* vertexlayout;
+	//VertexLayout* vertexlayout;
 	XMFLOAT4X4* Transformation;
 	DrawKey* drawkey;
 

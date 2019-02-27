@@ -8,17 +8,17 @@ Sky::Sky()
 {
 
 
-	std::vector<Vertex> vs;
-	std::vector<uint32_t> is;
-	CreateSphere(5000.0f, 30, 30, vs,is);
-	SubMesh *sphere = new SubMesh(vs,is);
+	//std::vector<Vertex> vs;
+	//std::vector<uint32_t> is;
+	//CreateSphere(5000.0f, 30, 30, vs,is);
+	//SubMesh *sphere = new SubMesh(vs,is);
 	
 
 
 
 	SkyMesh = new StaticMesh;
-	SkyMesh->Meshs.push_back(sphere);
-	//AssetManager::GetDevice()->Import("Re/smsphere.obj",SkyMesh);
+	//SkyMesh->Meshs.push_back(sphere);
+	AssetManager::GetDevice()->Import("Re/smsphere.obj",SkyMesh);
 	SkyCubeMap = new Texture2D;
 	TextureManager::GetLoader()->LoadTexture("Re/OutputCube1.dds", SkyCubeMap);
 	Skymaterial = new Material("SkyMaterial");
@@ -43,6 +43,7 @@ Sky::Sky()
 	RasterizerStateDesc rsdesc;
 	rsdesc.CullMode = CULL_NONE;
 	rsdesc.DepthCilpEnable = true;
+	rsdesc.ScissorEnable = false;
 	Skymaterial->SetRasterState(rsdesc);
 }
 

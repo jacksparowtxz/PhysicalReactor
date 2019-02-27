@@ -33,6 +33,7 @@ StaticMesh::~StaticMesh()
 {
 	SAFE_DELETE(aabb);
 	SAFE_DELETE(drawkey);
+	SAFE_DELETE(Transformation);
 }
 
 XMVECTOR StaticMesh::GetTransInformation(int index)
