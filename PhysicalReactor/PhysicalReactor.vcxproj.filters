@@ -219,9 +219,6 @@
     <ClInclude Include="MISC\DDSTextureLoader.h">
       <Filter>头文件\MISC</Filter>
     </ClInclude>
-    <ClInclude Include="TextureManager.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="MISC\TextureLoader.h">
       <Filter>头文件\MISC</Filter>
     </ClInclude>

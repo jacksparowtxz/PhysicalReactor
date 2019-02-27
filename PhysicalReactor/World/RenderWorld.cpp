@@ -26,6 +26,10 @@ namespace PRE
 		JobScheduler::Shutdown();
 		allocatorFC::deallocateDelete<Sky>(*allocator, sky);
 		allocatorFC::deallocateDelete<Camera>(*allocator, camera);
+		allocatorFC::deallocateDelete<RasterizerState>(*allocator, Wireframestate);
+		allocatorFC::deallocateDelete<RasterizerState>(*allocator, Solidstate);
+		allocatorFC::deallocateDelete<RasterizerState>(*allocator, rasterizerstate);
+		allocatorFC::deallocateDelete<GPUBuffer>(*allocator, constbuffer);
 		allocatorFC::deallocateDelete<ShaderManager>(*allocator, Renderer::shadermanager);
 		for (uint32_t i = 0; i < 9; i++)
 		{
@@ -85,7 +89,7 @@ namespace PRE
 			PSO.desc.rs = sky->Skymaterial->rasterzerstate;
 			PSO.desc.dss = sky->Skymaterial->depthstencilstate;
 			Renderer::GetDevice()->BindGraphicsPSO(&PSO);
-			UINT pFisrtConstant = 0;
+			UINT pFisrtConstant = 16;
 			UINT pNumberConstant = 16;
 			Renderer::GetDevice()->BindConstantBuffer(VS_STAGE, constbuffer,0,&pFisrtConstant,&pNumberConstant);
 			XMFLOAT3 eyePos = camera->GetPosition();
@@ -368,7 +372,7 @@ namespace PRE
 		constantdesc.MiscFlags = 0;
 		constantdesc.Usage = USAGE_DEFAULT;
 		constantdesc.StructureByteStride = 0;
-		constbuffer = new GPUBuffer;
+		constbuffer =allocatorFC::allocateNew<GPUBuffer>(*allocator);
 		Renderer::GetDevice()->CreateBuffer(&constantdesc, nullptr, constbuffer);
 
 

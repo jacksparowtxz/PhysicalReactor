@@ -59,12 +59,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 			DispatchMessage(&msg);
 		}
 		else {
-			//if (!GamePause)
-			//{
+			if (!GamePause)
+			{
 				gametimer->Tick();
 				gw->Update(gametimer->GetDeltaTime());
 				gw->Render();
-			//}
+			}
 		}
 	}
 
@@ -134,6 +134,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			{
 				gw->~GameWorld();
 				gametimer->~Timer();
+				delete gw;
+				delete gametimer;
 				DestroyWindow(hWnd);
 			}
                 break;
