@@ -3091,7 +3091,7 @@ void RenderDevice_DX11::SetName(GPUResource* pResource, const std::string&name)
 
 void RenderDevice_DX11::PresentBegin()
 {
-	const float color[4] = { 1.f, 1.0f, 1.000000000f, 1.000000000f };
+	const float color[4] = { 0.f, 0.0f, 0.000000000f, 1.000000000f };
 	ImmediatedeviceContext->ClearRenderTargetView(renderTargetView, color);
 	ImmediatedeviceContext->ClearDepthStencilView(DepthStecilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 }

@@ -18,19 +18,22 @@ namespace PRE
 	{
 		RenderConstantBuffer()
 		{
-			
 			DirectX::XMStoreFloat4x4(&view, XMMatrixIdentity());
 			DirectX::XMStoreFloat4x4(&projection, XMMatrixIdentity());
 			DirectX::XMStoreFloat4x4(&textransform, XMMatrixIdentity());
 			DirectX::XMStoreFloat4x4(&worldinvtranspose, XMMatrixIdentity());
+			DirectX::XMStoreFloat4x4(&WorldViewProj, XMMatrixIdentity());
+
 			DirectX::XMStoreFloat4x4(&model, XMMatrixIdentity());
 		}
 
-		DirectX::XMFLOAT4X4 view;
+		DirectX::XMFLOAT4X4 WorldViewProj;
 		DirectX::XMFLOAT4X4 projection;
 		DirectX::XMFLOAT4X4 textransform;
 		DirectX::XMFLOAT4X4 worldinvtranspose;
 
+		
+		DirectX::XMFLOAT4X4 view;
 		DirectX::XMFLOAT4X4 model;
 	
 

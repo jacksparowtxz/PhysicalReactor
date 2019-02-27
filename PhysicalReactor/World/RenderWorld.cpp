@@ -79,15 +79,20 @@ namespace PRE
 			Renderer::GetDevice()->UpdateBuffer(constbuffer, m_constantBufferData[ThreadID]);
 			
 
-			Renderer::GetDevice()->BindRasterizerState(*sky->Skymaterial->rasterzerstate);
+		
 			GraphicPSO PSO;
 			Renderer::shadermanager->GetPSO(nullptr, &PSO);
+			PSO.desc.rs = sky->Skymaterial->rasterzerstate;
 			PSO.desc.dss = sky->Skymaterial->depthstencilstate;
 			Renderer::GetDevice()->BindGraphicsPSO(&PSO);
-			Renderer::GetDevice()->BindSampler(PS_STAGE,sky->Skymaterial->InitiSampler,4,1);
 			UINT pFisrtConstant = 0;
-			UINT pNumberConstant = 32;
+			UINT pNumberConstant = 16;
 			Renderer::GetDevice()->BindConstantBuffer(VS_STAGE, constbuffer,0,&pFisrtConstant,&pNumberConstant);
+			XMFLOAT3 eyePos = camera->GetPosition();
+			XMMATRIX T = XMMatrixTranslation(eyePos.x, eyePos.y, eyePos.z);
+			XMMATRIX WVP = XMMatrixMultiply(T, camera->ViewProj());
+			DirectX::XMStoreFloat4x4(&m_constantBufferData[ThreadID]->WorldViewProj, XMMatrixTranspose(WVP));
+			//DirectX::XMStoreFloat4x4(&m_constantBufferData[ThreadID]->model, XMMatrixScaling(8000.f,8000.f,8000.f));
 			UINT stride = sizeof(Vertex);
 			UINT offset = 0;
 			RenderMaterial(PS_STAGE, sky->SkyMesh->Meshs[0]);
@@ -99,7 +104,7 @@ namespace PRE
 
 		RenderSkyFC =RenderSkybox;
 		RenderSkyFC(sky, 1, nullptr);
-		JobScheduler::Wait(parallel_for(sky, 1, RenderSkyFC, nullptr));
+		//JobScheduler::Wait(parallel_for(sky, 1, RenderSkyFC, nullptr));
 
 	}
 
@@ -124,7 +129,7 @@ namespace PRE
 	void RenderWorld::ReSize(int width, int height)
 	{
 		Renderer::GetDevice()->SetResolution(width, height);
-		camera->SetLens(0.45f*MathHelper::Pi, (float)(width / height), 0.01f, 1000.0f);
+		camera->SetLens(0.25f*MathHelper::Pi, (float)(width / height), 0.01f, 1000.0f);
 	}
 
 	void RenderWorld::MoveForWard(float Direction)
@@ -373,8 +378,8 @@ namespace PRE
 		int SCREENWIDTH = rect.right - rect.left;
 		int SCREENHEIGHT = rect.bottom - rect.top;
 
-		camera->SetPosition(0.0f, 30.0f, -300.0f);
-		camera->SetLens(0.45f*MathHelper::Pi, (float)(SCREENWIDTH/SCREENHEIGHT), 0.01f, 1000.0f);
+		camera->SetPosition(0.0f, 2.0f, -15.0f);
+		camera->SetLens(0.25f*MathHelper::Pi, (float)(SCREENWIDTH/SCREENHEIGHT), 0.01f, 1000.0f);
 		
 		mLastMousePos.x = 0;
 		mLastMousePos.y = 0;

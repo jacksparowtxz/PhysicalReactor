@@ -148,6 +148,7 @@ void Material::SetSampleState(SamplerDesc spdesc)
 {
 	Renderer::GetDevice()->DestroySamplerState(InitiSampler);
 	Renderer::GetDevice()->CreateSamplerState(&spdesc, InitiSampler);
+	EmissiveSampler = InitiSampler;
 }
 
 

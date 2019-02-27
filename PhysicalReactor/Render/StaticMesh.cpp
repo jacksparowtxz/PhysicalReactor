@@ -12,7 +12,7 @@ StaticMesh::StaticMesh():directory(""),aabb(nullptr)
 
 	XMFLOAT4 rot = {0,0,0,1};
 	XMFLOAT3 pos = {0,0,0};
-	XMFLOAT3 scale = { 0,0,0};
+	XMFLOAT3 scale = { 1,1,1};
 	XMVECTOR qRot = DirectX::XMLoadFloat4(&rot);
 	XMVECTOR vPos = DirectX::XMLoadFloat3(&pos);
 	XMVECTOR vScale = DirectX::XMLoadFloat3(&scale);
