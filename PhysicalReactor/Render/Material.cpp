@@ -13,6 +13,8 @@ Material::~Material()
 {
 	delete InitiSampler;
 	delete MaterialID;
+	delete rasterzerstate;
+	delete depthstencilstate;
 }
 
 Material::Material(const std::string &newName)
