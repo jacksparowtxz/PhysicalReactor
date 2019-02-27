@@ -1587,7 +1587,7 @@ RenderDevice_DX11::~RenderDevice_DX11()
 		SAFE_RELEASE(commandlists[i]);
 	}
 	SAFE_RELEASE(BasedeviceContexts);
-	SAFE_DELETE_ARRAY(*deviceContexts);
+	SAFE_DELETE_ARRAY(deviceContexts[9]);
 	ID3D11Debug* d3dDebug;
 	HRESULT hr = device->QueryInterface(__uuidof(ID3D11Debug), reinterpret_cast<void**>(&d3dDebug));
 	if (SUCCEEDED(hr))
@@ -2730,7 +2730,7 @@ HRESULT RenderDevice_DX11::CreateRasterizerState(const RasterizerStateDesc *pRas
 	desc.DepthBiasClamp = pRasterizerStateDesc->DepthBiasClamp;
 	desc.SlopeScaledDepthBias = pRasterizerStateDesc->SlopeScaledDepthBias;
 	desc.DepthClipEnable = pRasterizerStateDesc->DepthCilpEnable;
-	desc.ScissorEnable = true;
+	desc.ScissorEnable = pRasterizerStateDesc->ScissorEnable;
 	desc.MultisampleEnable = pRasterizerStateDesc->MultisampleEnable;
 	desc.AntialiasedLineEnable = pRasterizerStateDesc->AntialiasedLineEnable;
 
