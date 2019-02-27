@@ -479,13 +479,14 @@ namespace PRE
 		float DepthBiasClamp;
 		float SlopeScaledDepthBias;
 		bool DepthCilpEnable;
+		bool ScissorEnable;
 		bool MultisampleEnable;
 		bool AntialiasedLineEnable;
 		bool ConservativeRasterizationEnable;
 		UINT ForceSampleCount;
 
 		RasterizerStateDesc() :FillMode(FILL_SOLID), CullMode(CULL_NONE), FrontCounterClockWise(false), DepthBias(0), DepthBiasClamp(0.0f),
-			SlopeScaledDepthBias(0.0f), DepthCilpEnable(false), MultisampleEnable(false), AntialiasedLineEnable(false), ConservativeRasterizationEnable(false), ForceSampleCount(0)
+			SlopeScaledDepthBias(0.0f), DepthCilpEnable(false), ScissorEnable(false), MultisampleEnable(false), AntialiasedLineEnable(false), ConservativeRasterizationEnable(false), ForceSampleCount(0)
 		{}
 	};
 
