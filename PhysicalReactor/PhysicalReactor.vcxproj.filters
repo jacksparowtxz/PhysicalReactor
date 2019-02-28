@@ -389,5 +389,8 @@
     <FxCompile Include="SkyVS.hlsl">
       <Filter>头文件\Shader</Filter>
     </FxCompile>
+    <FxCompile Include="DeferredBaseVS.hlsl">
+      <Filter>头文件\Shader</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
