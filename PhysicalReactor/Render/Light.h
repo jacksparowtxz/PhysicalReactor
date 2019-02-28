@@ -9,6 +9,7 @@ enum LightType
 	POINTLIGHT,
 	SPOTLIGHT,
     SKYLIGHT,
+	NONE,
 };
 
 enum IntensityUnits
@@ -38,8 +39,7 @@ public:
 	virtual ~Light();
 
 	LightType lightype;
-	XMFLOAT4X4* world;
-	XMFLOAT4* color;
+	
 
 	int Lightchannel;
 	float Intensity;
@@ -60,7 +60,7 @@ public:
 	bool Forcecachedshadowingformoveable;
 	
 	bool Caststaticshadow;
-	bool castdyanmicshadow;
+	bool Castdyanmicshadow;
 	bool affecttranslucentLights;
 	bool volumetricshadows;
 
@@ -81,13 +81,15 @@ public:
 
 	///////////////////////////light function
 	//LightFunctionMaterial* LM;
-	XMFLOAT4 * lightfunctionscale;
+	
 	float fadedistance;
 	float disabledBrightness;
 
 	
 
-
+	XMFLOAT4 *lightfunctionscale;
+	XMFLOAT4X4* world;
+	XMFLOAT4* color;
 
 
 
