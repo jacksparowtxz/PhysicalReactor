@@ -15,14 +15,14 @@ public:
 	float softsourceradius;
 	float sourcelengh;
 	float lightfalloffexponent;
-	bool  useInverseSquaredFalloff;
-	bool CastShadowformCinematicobjectonly;
+	float IESIntensityScale;
 	IntensityUnits intensityunits;
 	///////////////////////spoint  Light Profile
 	//IES Texture;
-	float IESIntensityScale;
-	bool IESIntensity;
 	
+	bool IESIntensity;
+	bool  useInverseSquaredFalloff;
+	bool CastShadowformCinematicobjectonly;
 
 };
 
