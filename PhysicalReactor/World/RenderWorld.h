@@ -3,6 +3,7 @@
 #include "Allocator/Allocator.h"
 #include "Allocator/DynamicLinearAllocator.h"
 #include "Container/vector.h"
+#include "World/Level.h"
 #include "Render/Renderable.h"
 #include "Render/Camera.h"
 #include "Render/DrawKey.h"
@@ -56,10 +57,10 @@ namespace PRE
 		void MoveRight(float Direction);
 		void CameraRotation(WPARAM btnState,int x, int y);
 		void SetMousePosition(HWND windows,int x, int y);
-		void AddStaticMesh(StaticMesh* sm);
 		void RenderMaterial(SHADERSTAGE stage,SubMesh* submesh);
 		void InitViews();
-		void RenderWireframe(int i);
+		void RenderWireframe(bool Wireframe);
+		void BuildScene(Level* level);
 		Allocator* allocator;
 
 		Vector<StaticMesh*> StaticmeshList;

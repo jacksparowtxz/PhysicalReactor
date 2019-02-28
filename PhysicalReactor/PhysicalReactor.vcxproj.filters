@@ -225,6 +225,9 @@
     <ClInclude Include="MISC\TextureManager.h">
       <Filter>头文件\MISC</Filter>
     </ClInclude>
+    <ClInclude Include="World\Level.h">
+      <Filter>头文件\World</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -355,6 +358,9 @@
     </ClCompile>
     <ClCompile Include="MISC\TextureManager.cpp">
       <Filter>头文件\MISC</Filter>
+    </ClCompile>
+    <ClCompile Include="World\Level.cpp">
+      <Filter>头文件\World</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

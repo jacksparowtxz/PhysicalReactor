@@ -26,25 +26,19 @@ GameWorld::GameWorld(HWND hwnd)
 	memcpy(tmp, tmptitle, sizeof(char)*titlelength);
 	title = tmp;
 
-	
-
-//	Import("RE/SciFiHelmet.gltf");
-	//Import("RE/nanosuit.obj");
+	level = allocatorFC::allocateNew<Level>(*Main_Allocator,*Main_Allocator);
 }
 
 void GameWorld::Update(double deltatime)
 {
 	renderworld->Update(deltatime);
+	renderworld->BuildScene(level);
 }
 
 void GameWorld::Render()
 {
-	
 	renderworld->RenderScene();
-
 }
-
-
 
 void GameWorld::ReSize(int width, int height)
 {
@@ -76,12 +70,16 @@ void GameWorld::MouseButtonUp()
 	ReleaseCapture();
 }
 
-
-void GameWorld::Import(std::string path)
+void GameWorld::AddStaticMesh(std::string path)
 {
 	StaticMesh* ImportMesh = allocatorFC::allocateNew<StaticMesh>(*Main_Allocator);
-	AssetManager::GetDevice()->Import(path,ImportMesh);
-	renderworld->AddStaticMesh(ImportMesh);
+	AssetManager::GetDevice()->Import(path, ImportMesh);
+	level->AddStaticMesh(ImportMesh);
+}
+
+void GameWorld::AddSky()
+{
+	level->AddSky();
 }
 
 GameWorld::~GameWorld()
@@ -90,6 +88,7 @@ GameWorld::~GameWorld()
 	{
 		if (RenderAllocator != nullptr)
 		{
+			allocatorFC::deallocateDelete(*Main_Allocator,level);
 			allocatorFC::deallocateDelete(*Main_Allocator, AssetManager::MeshImport);
 			allocatorFC::deallocateDelete(*Main_Allocator, TextureManager::TextureImport);
 			allocatorFC::deallocateDelete(*RenderAllocator, renderworld);

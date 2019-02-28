@@ -77,12 +77,31 @@ namespace PRE
 		};
 		//RenderStaticMesh = lambda;
 		//JobScheduler::Wait(parallel_for(*StaticmeshList.data, StaticmeshList.Size(), RenderStaticMesh, (void*)nullptr));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		///////////////////RenderSky/////////////////////////////
 		std::function<void(Sky*, uint32_t, void*)> RenderSkyFC;
 		auto RenderSkybox = [&, this](Sky*sky, uint32_t size, void* extradata) {
 		
 			Renderer::GetDevice()->UpdateBuffer(constbuffer, m_constantBufferData[ThreadID]);
-			
-
 		
 			GraphicPSO PSO;
 			Renderer::shadermanager->GetPSO(nullptr, &PSO);
@@ -96,7 +115,6 @@ namespace PRE
 			XMMATRIX T = XMMatrixTranslation(eyePos.x, eyePos.y, eyePos.z);
 			XMMATRIX WVP = XMMatrixMultiply(T, camera->ViewProj());
 			DirectX::XMStoreFloat4x4(&m_constantBufferData[ThreadID]->WorldViewProj, XMMatrixTranspose(WVP));
-			//DirectX::XMStoreFloat4x4(&m_constantBufferData[ThreadID]->model, XMMatrixScaling(8000.f,8000.f,8000.f));
 			UINT stride = sizeof(Vertex);
 			UINT offset = 0;
 			RenderMaterial(PS_STAGE, sky->SkyMesh->Meshs[0]);
@@ -166,11 +184,6 @@ namespace PRE
 		mLastMousePos.y = y;
 
 		SetCapture(windows);
-	}
-
-	void RenderWorld::AddStaticMesh(StaticMesh* sm)
-	{
-		StaticmeshList.Push_Back(sm);
 	}
 
 	void RenderWorld::RenderMaterial(SHADERSTAGE stage, SubMesh* submesh)
@@ -340,16 +353,22 @@ namespace PRE
 		RadixSortFC(*TVisiblityMesh.data, TVisiblityMesh.Size(), nullptr);
 	}
 
-	void RenderWorld::RenderWireframe(int i)
+	void RenderWorld::RenderWireframe(bool Wireframe)
 	{
-		if (i == 0)
-		{
-			rasterizerstate = Solidstate;
-		}
-		else
+		if (Wireframe)
 		{
 			rasterizerstate = Wireframestate;
 		}
+		else
+		{
+			rasterizerstate = Solidstate;
+		}
+	}
+
+	void RenderWorld::BuildScene(Level * level)
+	{
+		StaticmeshList = level->StaticMeshList;
+		sky = level->sky;
 	}
 
 	void RenderWorld::RenderScene()

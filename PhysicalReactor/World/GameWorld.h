@@ -9,6 +9,7 @@
 #include "Render/Renderable.h"
 #include "MISC/AssetManager.h"
 #include "MISC/TextureManager.h"
+#include "World/Level.h"
 #include <windows.h>
 
 using namespace PRE;
@@ -24,6 +25,8 @@ public:
 	const char* title;
 	RenderWorld* renderworld;
 	
+	Level* level;
+
 	
 	GameWorld(HWND hwnd);
 	void Update(double deltatime);
@@ -37,7 +40,9 @@ public:
 	void MouseButtonDown(HWND windows, int x, int y);
 	void MouseButtonUp();
 	
-	void Import(std::string path);
+	
+	void AddStaticMesh(std::string path);
+	void AddSky();
 	~GameWorld();
 };
 
