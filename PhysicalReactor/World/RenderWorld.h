@@ -67,7 +67,7 @@ namespace PRE
 
 		Vector<StaticMesh*> VisiblityMesh;
 		Vector<StaticMesh*> TVisiblityMesh;
-
+		Vector<Light*> RenderLight;
 		RenderConstantBuffer* m_constantBufferData[9];
 		GPUBuffer* constbuffer;
 		Camera *camera;

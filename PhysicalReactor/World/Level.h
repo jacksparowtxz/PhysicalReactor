@@ -13,6 +13,8 @@ public:
 	~Level();
 	
 	Vector<StaticMesh*> StaticMeshList;
+	Vector<Light*> LightList;
+
 
 	Sky* sky;
 
@@ -20,5 +22,6 @@ public:
 	Allocator* allocator;
 	void AddStaticMesh(StaticMesh* sm);
 	void AddSky();
+	void AddLight(LightType lighttype);
 };
 

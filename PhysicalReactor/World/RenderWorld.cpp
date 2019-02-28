@@ -14,7 +14,11 @@ thread_local std::vector<StaticMesh*> LTStaticMeshList;
 
 namespace PRE
 {
-	RenderWorld::RenderWorld(HWND windows, Allocator* Inallocator, DynamicLinearAllocator* allocator1) :allocator(Inallocator),StaticmeshList(*allocator1), VisiblityMesh(*allocator1), TVisiblityMesh(*allocator1)
+	RenderWorld::RenderWorld(HWND windows, Allocator* Inallocator, DynamicLinearAllocator* allocator1) :allocator(Inallocator),
+		                                                                                              StaticmeshList(*allocator1), 
+		                                                                                              VisiblityMesh(*allocator1), 
+		                                                                                              TVisiblityMesh(*allocator1),
+		                                                                                              RenderLight(*allocator)
 	{
 		Initilize(windows,allocator);
 		

@@ -82,6 +82,11 @@ void GameWorld::AddSky()
 	level->AddSky();
 }
 
+void GameWorld::Light(LightType lighttype)
+{
+	level->AddLight(lighttype);
+}
+
 GameWorld::~GameWorld()
 {
 	if (Main_Allocator != nullptr)

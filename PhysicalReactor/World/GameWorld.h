@@ -43,6 +43,7 @@ public:
 	
 	void AddStaticMesh(std::string path);
 	void AddSky();
+	void Light(LightType lighttype);
 	~GameWorld();
 };
 
