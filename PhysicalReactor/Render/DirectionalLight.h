@@ -9,23 +9,19 @@ public:
 
 	//////////////Light
 	float lightsourceangle;
-	XMFLOAT4* ModulatedShadowscolor;
-	bool castModulatedShadows;
-	bool AtmosphereFogsunlight;
-
+	
+	
 
 
 	/////////////////////////Directional shafts
 	float occlusionmaskdrakness;
 	float occlusiondepthrange;
-	bool Lightshaftsocclusion;
-	bool lightshaftbloom;
-	bool bloomthreashold;
-	XMFLOAT4* bloomtint;
+
+	
 
 	//////////////////////////////Directional field shadow
 	float DistanceFieldShadowDistance;
-	float distanceFieldTraceDistance;
+	float DistanceFieldTraceDistance;
 
 
 	/////////////////////Directional Lightmass
@@ -39,5 +35,14 @@ public:
 	float DistrbutionExponent;
 	float TransitionFraction;
 	float Distancefadeoutfraction;
+
+	bool castModulatedShadows;
+	bool AtmosphereFogsunlight;
+	bool Lightshaftsocclusion;
+	bool lightshaftbloom;
+	bool bloomthreashold;
+
+	XMFLOAT4* ModulatedShadowscolor;
+	XMFLOAT4* bloomtint;
 };
 
