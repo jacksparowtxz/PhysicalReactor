@@ -15,7 +15,7 @@ public:
 	float skyDistanceTHreadhold;
 	bool CaptureEmissiveOnly;
 	bool lowerhemisphereissoildColor;
-	XMFLOAT4 *Lowerhemispherecolor;
+	
 
 
 
@@ -27,5 +27,6 @@ public:
 	float occlusionexponent;
 	float minocclusion;
 	XMFLOAT4* occlusiontint;
+	XMFLOAT4 *Lowerhemispherecolor;
 };
 
