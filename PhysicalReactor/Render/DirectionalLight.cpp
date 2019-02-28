@@ -8,6 +8,7 @@ DirectionalLight::DirectionalLight():lightsourceangle(0.0f),occlusionmaskdraknes
 	                                TransitionFraction(0.0f),Distancefadeoutfraction(0.0f),castModulatedShadows(false),AtmosphereFogsunlight(false), 
 	                                Lightshaftsocclusion(false),lightshaftbloom(false),bloomthreashold(false)
 {
+	lightype = DIRECTIONALLIGHT;
 	ModulatedShadowscolor = new XMFLOAT4;
 	bloomtint = new XMFLOAT4;
 }
