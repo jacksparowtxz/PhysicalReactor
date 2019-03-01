@@ -36,3 +36,27 @@ struct SpotLight
     float pad;
 };
 
+///////////Form UE4
+float ClampedPow(float X, float Y)
+{
+    return pow(max(abs(X), 0.000001f), Y);
+}
+float2 ClampedPow(float2 X, float2 Y)
+{
+    return pow(max(abs(X), float2(0.000001f, 0.000001f)), Y);
+}
+float3 ClampedPow(float3 X, float3 Y)
+{
+    return pow(max(abs(X), float3(0.000001f, 0.000001f, 0.000001f)), Y);
+}
+float4 ClampedPow(float4 X, float4 Y)
+{
+    return pow(max(abs(X), float4(0.000001f, 0.000001f, 0.000001f, 0.000001f)), Y);
+}
+
+float PhongShadingPow(float X, float Y)
+{
+
+    return ClampedPow(X, Y);
+}
+///////////////////////
