@@ -8,7 +8,7 @@ public:
 	~DirectionalLight();
 
 	//////////////Light
-	float lightsourceangle;
+/*	float lightsourceangle;
 	
 	
 
@@ -43,6 +43,6 @@ public:
 	bool bloomthreashold;
 
 	XMFLOAT4* ModulatedShadowscolor;
-	XMFLOAT4* bloomtint;
+	XMFLOAT4* bloomtint; */
 };
 

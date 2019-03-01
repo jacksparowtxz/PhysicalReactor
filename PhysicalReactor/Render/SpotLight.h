@@ -14,7 +14,7 @@ public:
 	float sourceradius;
 	float softsourceradius;
 	float sourcelengh;
-	float lightfalloffexponent;
+/*	float lightfalloffexponent;
 	float IESIntensityScale;
 	IntensityUnits intensityunits;
 	///////////////////////spoint  Light Profile
@@ -22,7 +22,7 @@ public:
 	
 	bool IESIntensity;
 	bool  useInverseSquaredFalloff;
-	bool CastShadowformCinematicobjectonly;
+	bool CastShadowformCinematicobjectonly;*/
 
 };
 

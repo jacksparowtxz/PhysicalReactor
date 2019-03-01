@@ -393,4 +393,12 @@
       <Filter>头文件\Shader</Filter>
     </FxCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="BRDF.hlsli">
+      <Filter>头文件\Shader</Filter>
+    </None>
+    <None Include="Common.hlsli">
+      <Filter>头文件\Shader</Filter>
+    </None>
+  </ItemGroup>
 </Project>

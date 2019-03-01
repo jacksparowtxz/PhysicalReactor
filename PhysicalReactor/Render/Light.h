@@ -41,13 +41,13 @@ public:
 	LightType lightype;
 	
 
-	int Lightchannel;
+	//int Lightchannel;
 	float Intensity;
-	float Temperature;
-	float IndirectlightingIntensity;
-	float volumetricScatteringIntensity;
+	//float Temperature;
+	//float IndirectlightingIntensity;
+	//float volumetricScatteringIntensity;
 
-	float MinRoughness;
+	/*float MinRoughness;
 	float shadowResolutionscale;
 	float shadowbisa;
 	float shadowflitersharpen;
@@ -84,13 +84,13 @@ public:
 	
 	float fadedistance;
 	float disabledBrightness;
-
+	XMFLOAT4 *lightfunctionscale;*/
 	
 
-	XMFLOAT4 *lightfunctionscale;
+	
 	XMFLOAT4X4* world;
 	XMFLOAT4* color;
-
+	
 
 
 

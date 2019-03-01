@@ -13,7 +13,7 @@ public:
 	float sourceradius;
 	float softsourceradius;
 	float sourcelengh;
-	float lightfalloffexponent;
+/*	float lightfalloffexponent;
 	bool  useInverseSquaredFalloff;
 	bool CastShadowformCinematicobjectonly;
 
@@ -26,7 +26,7 @@ public:
 
 	////////////////////////////// field shadow
 	float raystartoffsetdepthscale;///P
-	bool RayTraceDistanceFieldshadows;/// P
+	bool RayTraceDistanceFieldshadows;/// P */
 	
 };
 
