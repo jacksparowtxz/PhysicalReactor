@@ -181,7 +181,43 @@ float3 Fresnel(float3 SpecularColor, float3 V,float3 H)
     return 0.5 * Square(((g - VOH) / (g + VOH)) * (1 + Square(g + VOH * VOH - 1) / (g - VOH * VOH + 1)));
 }
 
+Texture2D PreIntergrateGF;
+SamplerState PreIntergrateGFSampler;
 
+
+half3 EnvBRDF(half3 Specularcolor, half rougness, float3 n, float3 v)
+{
+    float2 AB = PreIntergrateGF.SampleLevel(PreIntergrateGFSampler, float2(dot(n,v),rougness),0).rg;
+    float3 GF = Specularcolor * AB.x + saturate(50.0f * Specularcolor.g) * AB.y;
+
+    return GF;
+}
+
+
+
+///////////////////////
+/////////////////////https://blog.selfshadow.com/publications/s2013-shading-course/lazarov/s2013_pbs_black_ops_2_slides_v2.pdf
+half3 EnvBRDFApprox(half3 Specularcolor, half rougness, float3 n, float3 v)
+{
+
+    const float4 c0 = { -1, -0.0275, -0.572, 0.022 };
+    const float4 c1 = { 1, 0.0425, 1.04, -0.04 };
+    float4 r = rougness * c0 + c1;
+    float a004 = min(r.x * r.x, exp(-9.28 * dot(n, v))) * r.x + r.y;
+    float2 AB = float2(-1.04, 1.04) * a004 + r.zw;
+
+    AB.y = saturate(50.0*Specularcolor.g);
+
+    return Specularcolor * AB.x + AB.y;
+}
+
+half EnvBRDFApproxNometal(half rougness, float3 n, float3 v)
+{
+    const half2 c0 = { -1, -0.0275 };
+    const half2 c1 = { 1, 0.0425 };
+    half2 r = rougness * c0 + c1;
+    return min(r.x * r.x, exp2(-9.28 * dot(n, v))) * r.x + r.y;
+}
 
 
 
@@ -216,3 +252,16 @@ float GGXAniso_NDF(float ax,float ay,float3 n,float3 h,float3 x,float y)
     return 1 / (PI / ax * ay * d * d);
 }
 
+//////////////////////////////Cloth BRDF
+float InvGGX_D(float a, float3 n, float3 h)
+{
+    float A = 4;
+    float d = (dot(n, h) - a * dot(n, h)) * dot(n, h) + a;
+    return rcp(PI * (1 + A * a)) * (1 + 4 * a * a / (d * d));
+}
+
+///////////
+float Vis_Cloth(float3 n, float3 v, float3 l)
+{
+    return rcp(4 * (dot(n, l) + dot(n, l) - dot(n, l) * dot(n, v)));
+}
