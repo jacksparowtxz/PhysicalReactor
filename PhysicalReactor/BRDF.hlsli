@@ -108,6 +108,91 @@ float GGX_Schilck(float r,float3 l,float3 v,float3 n)
     return 0.25 / (SchlickV * SchlickL);
 }
 
+//////////////////////////////////////////////////Simple vis 
+//////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+float Vis_Implict()
+{
+    return 0.25f;
+}
+
+///////////////////////////////////////////////////
+///////////////////////////////
+///////////////////////////////////////http://sirkan.iit.bme.hu/~szirmay/brdf6.pdf
+float Vis_Neumann(float3 n,float3 v,float3 l)
+{
+    return 1 / (4 * max(dot(n, l), dot(n, l)));
+}
+
+/////////////////////////////////////////
+//////////////////////////////////////////
+////////////////////////////////////////////////http://sirkan.iit.bme.hu/~szirmay/scook.pdf
+float Vis_Kelemen(float3 v,float3 h)
+{
+    return rcp(4 * dot(v, h) * dot(v, h) + 1e-5);
+}
+
+
+////////////////////////////////////////////
+//////////////////////////////////////////
+//////////////////////////////////////////////////////
+float Vis_Simth(float a,float3 n,float3 l,float3 v)
+{
+    float Vis_SimthV = dot(n, v) + sqrt(dot(n, v) * (dot(n, v) - dot(n, v) * a * a) + a * a);
+    float Vis_SimthL = dot(n, l) + sqrt(dot(n, l) * (dot(n, l) - dot(n, l) * a * a) + a * a);
+    return rcp(Vis_SimthV * Vis_SimthL);
+}
+
+
+////////////////////////////////////
+///////////////////////////////////
+///////////////////////////////////////http://jcgt.org/published/0003/02/03/paper.pdf
+float Vis_SmithJointApprox(float a,float3 n,float3 v,float3 l)
+{
+    float a = sqrt(a);
+    float Vis_SimthV = dot(n, l) * (dot(n, v) * (1 - a) + a);
+    float Vis_SimthL = dot(n, v) * (dot(n, l) * (1 - a) + a);
+    return 0.5 * rcp(Vis_SimthV + Vis_SimthL);
+}
+
+
+
+
+//////////////////////////////simple Fresnel
+float3 F_Simple(float SpecularColor)
+{
+    return SpecularColor;
+}
+
+//////////////////////////////////
+///////////////////////http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.50.2297&rep=rep1&type=pdf
+float3 Fresnel_Schlick(float3 specularcolor,float3 v,float3 h)
+{
+    float Fc = pow(1 - dot(v, h), 5);
+    return saturate(50.0f * specularcolor.g) * Fc + (1 - Fc) * specularcolor;
+}
+
+float3 Fresnel(float3 SpecularColor, float3 V,float3 H)
+{
+    float3 SpecularColorSqrt = sqrt(clamp(float3(0, 0, 0), float3(0.99, 0.99, 0.99), SpecularColor));
+    float3 n = (1 + SpecularColorSqrt) / (1 - SpecularColorSqrt);
+    float3 g = sqrt(n * n + dot(V, H) * dot(V, H) - 1);
+    float VOH = dot(V, H);
+    return 0.5 * Square(((g - VOH) / (g + VOH)) * (1 + Square(g + VOH * VOH - 1) / (g - VOH * VOH + 1)));
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 //////////////////////Specular F
 ////////////////// Spherical Gaussian approximation
 /////////////////////F(v,h)=F0+(1-F0)*EXP2(-5.55473(V¡¤H)-6.98316)*(V¡¤H)
@@ -117,5 +202,17 @@ float GGX_Schilck(float r,float3 l,float3 v,float3 n)
 float GGX_SGA(float F0,float3 v,float3 n)
 {
     return F0 + (1.0f - F0) * pow(1.0f - dot(v,n), 5.0f);
+}
+
+////////////////////////////////////////////////////////////
+////////////////////////////////////////////  H for the half-vector, N for the normal, \alpha for roughness, X for the tangent and Y for the bi-tangent (in my case these are simply aligned with the x and y axes respectively).
+////////////////////////////////////////////\ax and \ay represent roughness in the corresponding directions
+/////////////////////////////http://graphicrants.blogspot.com/2013/08/specular-brdf-reference.html
+float GGXAniso_NDF(float ax,float ay,float3 n,float3 h,float3 x,float y)
+{
+    float XOH = dot(x, h);
+    float YOH = dot(y, h);
+    float d = XOH * XOH / (ax * ax) + YOH * YOH / (ay * ay) + dot(n, h) * dot(n, h);
+    return 1 / (PI / ax * ay * d * d);
 }
 
