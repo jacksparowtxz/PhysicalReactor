@@ -400,5 +400,8 @@
     <None Include="Common.hlsli">
       <Filter>头文件\Shader</Filter>
     </None>
+    <None Include="Mathematics.hlsli">
+      <Filter>头文件\Shader</Filter>
+    </None>
   </ItemGroup>
 </Project>
