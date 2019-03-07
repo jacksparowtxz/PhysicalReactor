@@ -45,3 +45,72 @@ float3 spherical_harmonics_Irrandice(float3 Coefficients[9],float3 n)
 
     return color;
 }
+
+float3x3 GetTangentBasis(float3 TangentZ)
+{
+    float3 UpVector = abs(TangentZ.z) < 0.999 ? float3(0, 0, 1) : float3(1, 0, 0);
+    float3 TangentX = normalize(cross(UpVector, TangentZ));
+    float3 TangentY = cross(TangentZ, TangentX);
+    return float3x3(TangentX, TangentY, TangentZ);
+}
+
+float3 TangentToWorld(float3 Vec, float3 TangentZ)
+{
+    return mul(Vec, GetTangentBasis(TangentZ));
+}
+
+//////////////////////////////////////////ImprotanceSample
+//////////////////////////////////////https://schuttejoe.github.io/post/ggximportancesamplingpart1/
+////////////////////////////////////////https://www.tobias-franke.eu/log/2014/03/30/notes_on_importance_sampling.html
+float4 ImportanceSampleGGX(float2 Xi, float Roughness)
+{
+    float a2 = Roughness * Roughness;
+    float Phi = 2 * PI * Xi.x;
+    float CosTheta = sqrt((1 - Xi.y) / (1 + (a2 * a2 - 1) * Xi.y));
+    float SinTheta = sqrt(1 - CosTheta * CosTheta);
+
+    float3 H;
+    H.x = SinTheta * cos(Phi);
+    H.y = SinTheta * sin(Phi);
+    H.z = CosTheta;
+	
+    float d = (CosTheta * a2 - CosTheta) * CosTheta + 1;
+    float D = a2 / (PI * d * d);
+    float PDF = D * CosTheta;
+    return float4(H, PDF);
+}
+
+
+
+/////////////////////////////////Van der Corput sequence
+/////////////////////////////////http://holger.dammertz.org/stuff/notes_HammersleyOnHemisphere.html
+float VDC_radicalInverse(uint bits)
+{
+    bits = (bits << 16u) | (bits >> 16u);
+    bits = ((bits & 0x55555555u) << 1u) | ((bits & 0xAAAAAAAAu) >> 1u);
+    bits = ((bits & 0x33333333u) << 2u) | ((bits & 0xCCCCCCCCu) >> 2u);
+    bits = ((bits & 0x0F0F0F0Fu) << 4u) | ((bits & 0xF0F0F0F0u) >> 4u);
+    bits = ((bits & 0x00FF00FFu) << 8u) | ((bits & 0xFF00FF00u) >> 8u);
+    return float(bits) * 2.3283064365386963e-10;
+}
+
+//////////////////
+/////////////////////
+
+float2 Hammersley(uint Index, uint NumSamples, uint2 Random)
+{
+    float E1 = frac((float) Index / NumSamples + float(Random.x & 0xffff) / (1 << 16));
+    float E2 = VDC_radicalInverse(Index)* 2.3283064365386963e-10;
+    return float2(E1, E2);
+}
+
+float2 sampleHammersley(uint i,float InvNumSample, uint2 n)
+{
+    return float2(i * InvNumSample, VDC_radicalInverse(n.y));
+}
+
+float3 sampleHemisphere(float u1, float u2)
+{
+    const float u1p = sqrt(max(0.0, 1.0 - u1 * u1));
+    return float3(cos(2 * PI * u2) * u1p, sin(2 * PI * u2) * u1p, u1);
+}

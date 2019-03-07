@@ -388,6 +388,7 @@
       <FileType>Document</FileType>
     </None>
     <None Include="Common.hlsli" />
+    <None Include="ImageBasedLighting.hlsli" />
     <None Include="Mathematics.hlsli" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
