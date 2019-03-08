@@ -220,15 +220,6 @@ half EnvBRDFApproxNometal(half rougness, float3 n, float3 v)
 }
 
 
-
-
-
-
-
-
-
-
-
 //////////////////////Specular F
 ////////////////// Spherical Gaussian approximation
 /////////////////////F(v,h)=F0+(1-F0)*EXP2(-5.55473(V¡¤H)-6.98316)*(V¡¤H)
@@ -265,3 +256,15 @@ float Vis_Cloth(float3 n, float3 v, float3 l)
 {
     return rcp(4 * (dot(n, l) + dot(n, l) - dot(n, l) * dot(n, v)));
 }
+
+
+///////////////////////////////////////////Specular/glossiness workflow
+///////////////////////////
+//cdiff = diffuse.rgb * (1 - max(specular.r, specular.g, specular.b)) 
+//F0 =specular
+//¦Á = (1 - glossiness) ^ 2
+
+///////////////////////////////////////////metal roughness
+//ks=F;
+//kd=1-ks;
+//float3 kd = lerp(float3(1, 1, 1) - F, float3(0, 0, 0), metalness);
