@@ -27,6 +27,7 @@ GameWorld::GameWorld(HWND hwnd)
 	title = tmp;
 
 	level = allocatorFC::allocateNew<Level>(*Main_Allocator,*Main_Allocator);
+	//CreateDefalutLevel();
 }
 
 void GameWorld::Update(double deltatime)
@@ -70,6 +71,8 @@ void GameWorld::MouseButtonUp()
 	ReleaseCapture();
 }
 
+
+
 void GameWorld::AddStaticMesh(std::string path)
 {
 	StaticMesh* ImportMesh = allocatorFC::allocateNew<StaticMesh>(*Main_Allocator);
@@ -77,10 +80,10 @@ void GameWorld::AddStaticMesh(std::string path)
 	level->AddStaticMesh(ImportMesh);
 }
 
-void GameWorld::AddSky()
+/*void GameWorld::AddSky()
 {
 	level->AddSky();
-}
+}*/
 
 void GameWorld::Light(LightType lighttype)
 {

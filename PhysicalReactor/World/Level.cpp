@@ -3,6 +3,10 @@
 
 Level::Level(Allocator *allocator) :StaticMeshList(*allocator), LightList(*allocator),sky(nullptr)
 {
+	AddSky();
+
+	ComputerPSO CSPSO;
+	CSPSO.desc.cs == Renderer::shadermanager->GetComputerShader("equirect2cube.hlsl");
 
 }
 
