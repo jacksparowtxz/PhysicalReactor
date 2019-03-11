@@ -3,19 +3,6 @@
 ////////////spherical-harmonics Function
 /////////////////////////////////////"Simplifying-Spherical-Harmonics-for-Lighting"Dr Graham Hazel
 
-/*float3 Coefficients[9] =
-{
- 2.0952,    2.0944,    1.91702,
-0.653221,	0.693606,	0.762548,
--0.0489448,	-0.0396268	,-0.0285173,
-0.0441169	,0.0430626,	0.0677261,
-0.03926,	0.0186167,	0.00929239,
-0.183267,	0.158966	,0.1199,
--0.168802,	-0.157308	,-0.159969,
--0.0361812,	-0.0386558	,-0.0466892,
--0.199456,	-0.169909,	-0.153581,
-};*/
-
 float3 spherical_harmonics_Irrandice(float3 Coefficients[9],float3 n)
 {
 
@@ -45,6 +32,8 @@ float3 spherical_harmonics_Irrandice(float3 Coefficients[9],float3 n)
 
     return color;
 }
+
+
 
 float3x3 GetTangentBasis(float3 TangentZ)
 {
@@ -159,4 +148,19 @@ float3 getSamplingVector(uint3 ThreadID, RWTexture2DArray<float4> outputtextures
     }
     return normalize(ret);
 
+}
+
+
+void HarmonicBasis(float Basis[9],float x,float y,float z,float r)
+{
+    Basis[0] = 1.f / 2.f * sqrt(1.f / PI);
+    Basis[1] = sqrt(3.f / (4.f * PI)) * y / r;
+    Basis[2] = sqrt(3.f / (4.f * PI)) * z / r;
+    Basis[3] = sqrt(3.f / (4.f * PI)) * x / r;
+    float r2 = r * r;
+    Basis[4] = 1.f / 2.f * sqrt(15.f / PI) * x * y / r2;
+    Basis[5] = 1.f / 2.f * sqrt(15.f / PI) * y * z / r2;
+    Basis[6] = 1.f / 4.f * sqrt(5.f / PI) * (-x * x - y * y + 2 * z * z) / r2;
+    Basis[7] = 1.f / 2.f * sqrt(15.f / PI) * z * x / r2;
+    Basis[8] = 1.f / 4.f * sqrt(15.f / PI) * (x * x - y * y) / r2;
 }

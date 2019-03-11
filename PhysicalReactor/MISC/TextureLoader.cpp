@@ -74,40 +74,42 @@ void TextureLoader::LoadTexture(const string & TexturefileName, Texture2D* LoadM
 		 assert(SUCCEEDED(hr));
 		 stbi_image_free(data);
 		 delete InitData;
-
-
-
-		 TextureDesc CubeMapdesc;
-		 CubeMapdesc.ArraySize = 6;
-		 CubeMapdesc.BindFlags = BIND_SHADER_RESOURCE | BIND_UNORDERED_ACCESS;
-		 CubeMapdesc.CPUAccessFlags = 0;
-		 CubeMapdesc.Format = FORMAT_R16G16B16A16_FLOAT;
-		 CubeMapdesc.Height = static_cast<uint32_t>(1024);
-		 CubeMapdesc.Width = static_cast<uint32_t>(1024);
-		 CubeMapdesc.MipLevels = (UINT)log2(max(1024, 1024));
-		 CubeMapdesc.MiscFlags = RESOURCE_MISC_TEXTURECUBE;
-		 CubeMapdesc.Usage = USAGE_DEFAULT;
-		 HRESULT chr = Renderer::GetDevice()->CreateTexture2D(&CubeMapdesc, nullptr, &LoadMap);
-		 assert(SUCCEEDED(chr));
-		 ComputerPSO CSPSO;
-		 CSPSO.desc.cs ==Renderer::shadermanager->GetComputerShader("equirect2cube.hlsl");
+		 LoadMap = std::move(EnvTexture);
 		
-		 Sampler Computersampler;
-		 Computersampler.desc.Filter = FILTER_MIN_MAG_MIP_LINEAR;
-		 Computersampler.desc.AddressU = TEXTURE_ADDRESS_WRAP;
-		 Computersampler.desc.AddressV = TEXTURE_ADDRESS_WRAP;
-		 Computersampler.desc.AddressW = TEXTURE_ADDRESS_WRAP;
-		 Computersampler.desc.MaxAnisotropy = 1;
-		 Computersampler.desc.MinLOD = 0;
-		 Computersampler.desc.MaxLOD = FLT_MAX;
-		
-		 Renderer::GetDevice()->BindResource(CS_STAGE, EnvTexture,0);
-		 Renderer::GetDevice()->BindUAV(CS_STAGE, LoadMap,0);
-		 Renderer::GetDevice()->BindSampler(CS_STAGE,&Computersampler,0,1);
-		 Renderer::GetDevice()->BindComputerPSO(&CSPSO);
-		 Renderer::GetDevice()->Dispatch(LoadMap->GetDesc().Width/32, LoadMap->GetDesc().Height / 32,6);
-		 Renderer::GetDevice()->GenerateMips(LoadMap);
-		 delete EnvTexture;
+		 if (UseCubeMap)
+		 {
+			 TextureDesc CubeMapdesc;
+			 CubeMapdesc.ArraySize = 6;
+			 CubeMapdesc.BindFlags = BIND_SHADER_RESOURCE | BIND_UNORDERED_ACCESS;
+			 CubeMapdesc.CPUAccessFlags = 0;
+			 CubeMapdesc.Format = FORMAT_R16G16B16A16_FLOAT;
+			 CubeMapdesc.Height = static_cast<uint32_t>(1024);
+			 CubeMapdesc.Width = static_cast<uint32_t>(1024);
+			 CubeMapdesc.MipLevels = (UINT)log2(max(1024, 1024));
+			 CubeMapdesc.MiscFlags = RESOURCE_MISC_TEXTURECUBE;
+			 CubeMapdesc.Usage = USAGE_DEFAULT;
+			 HRESULT chr = Renderer::GetDevice()->CreateTexture2D(&CubeMapdesc, nullptr, &LoadMap);
+			 assert(SUCCEEDED(chr));
+			 ComputerPSO CSPSO;
+			 CSPSO.desc.cs == Renderer::shadermanager->GetComputerShader("equirect2cube.hlsl");
+
+			 Sampler Computersampler;
+			 Computersampler.desc.Filter = FILTER_MIN_MAG_MIP_LINEAR;
+			 Computersampler.desc.AddressU = TEXTURE_ADDRESS_WRAP;
+			 Computersampler.desc.AddressV = TEXTURE_ADDRESS_WRAP;
+			 Computersampler.desc.AddressW = TEXTURE_ADDRESS_WRAP;
+			 Computersampler.desc.MaxAnisotropy = 1;
+			 Computersampler.desc.MinLOD = 0;
+			 Computersampler.desc.MaxLOD = FLT_MAX;
+
+			 Renderer::GetDevice()->BindResource(CS_STAGE, EnvTexture, 0);
+			 Renderer::GetDevice()->BindUAV(CS_STAGE, LoadMap, 0);
+			 Renderer::GetDevice()->BindSampler(CS_STAGE, &Computersampler, 0, 1);
+			 Renderer::GetDevice()->BindComputerPSO(&CSPSO);
+			 Renderer::GetDevice()->Dispatch(LoadMap->GetDesc().Width / 32, LoadMap->GetDesc().Height / 32, 6);
+			 Renderer::GetDevice()->GenerateMips(LoadMap);
+			 delete EnvTexture;
+		 }
 	 }
 	 else
 	 {
