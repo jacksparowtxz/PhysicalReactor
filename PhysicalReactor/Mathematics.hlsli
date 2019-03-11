@@ -58,7 +58,10 @@ float3 TangentToWorld(float3 Vec, float3 TangentZ)
 {
     return mul(Vec, GetTangentBasis(TangentZ));
 }
-
+float3 TangentToWorld2(const float3 v, const float3 N, const float3 S, const float3 T)
+{
+    return S * v.x + T * v.y + N * v.z;
+}
 //////////////////////////////////////////ImprotanceSample
 //////////////////////////////////////https://schuttejoe.github.io/post/ggximportancesamplingpart1/
 ////////////////////////////////////////https://www.tobias-franke.eu/log/2014/03/30/notes_on_importance_sampling.html
@@ -113,4 +116,47 @@ float3 sampleHemisphere(float u1, float u2)
 {
     const float u1p = sqrt(max(0.0, 1.0 - u1 * u1));
     return float3(cos(2 * PI * u2) * u1p, sin(2 * PI * u2) * u1p, u1);
+}
+
+void ComputeBasisVector(const float3 N,out float3 S,out float3 T)
+{
+    T = cross(N, float3(0.0, 1.0, 0.0));
+    T = lerp(cross(N, float3(1.0, 0.0, 0.0)), T, step(0.00001f, dot(T, T)));
+
+    T = normalize(T);
+    S = normalize(cross(N, T));
+}
+
+float3 getSamplingVector(uint3 ThreadID, RWTexture2DArray<float4> outputtextures)
+{
+    float outputWidth, outputHeight, outputDepth;
+    outputtextures.GetDimensions(outputWidth, outputHeight, outputDepth);
+
+    float2 st = ThreadID.xy / float2(outputWidth, outputHeight);
+    float2 uv = 2.0 * float2(st.x, 1.0 - st.y) - float2(1.0f, 1.0f);
+
+    float3 ret;
+    switch (ThreadID.z)
+    {
+        case 0:
+            ret = float3(1.0, uv.y, -uv.x);
+            break;
+        case 1:
+            ret = float3(-1.0, uv.y, uv.x);
+            break;
+        case 2:
+            ret = float3(uv.x, 1.0, -uv.y);
+            break;
+        case 3:
+            ret = float3(uv.x, -1.0, uv.y);
+            break;
+        case 4:
+            ret = float3(uv.x, uv.y, 1.0);
+            break;
+        case 5:
+            ret = float3(-uv.x, uv.y, -1.0);
+            break;
+    }
+    return normalize(ret);
+
 }
