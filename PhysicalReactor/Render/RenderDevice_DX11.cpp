@@ -3962,6 +3962,11 @@ void* RenderDevice_DX11::GetDevice()
 	return device;
 }
 
+void RenderDevice_DX11::GenerateMips(GPUResource* ShaderResourceView)
+{
+	deviceContexts[ThreadID]->GenerateMips((ID3D11ShaderResourceView*)ShaderResourceView->SRV);
+}
+
 /*
 void  RenderDevice_DX11::GetShaderReflection(GraphicBlob* blob, ShaderReflection* sf, Allocator* alloc)
 {

@@ -183,6 +183,8 @@ namespace PRE
 		virtual void EventEnd()override;
 		virtual void SetMarker(const std::string &name)override;
 		virtual void* GetDevice()override;
+
+		virtual void GenerateMips(GPUResource* SRV)override;
 		private:
 			HRESULT CreateShaderResourceView(Texture1D* pTexture);
 			HRESULT CreateShaderResourceView(Texture2D* pTexture);

@@ -202,6 +202,9 @@ namespace PRE
 		virtual void EventBegin(const std::string& name) = 0;
 		virtual void EventEnd() = 0;
 		virtual void SetMarker(const std::string &name) = 0;
+		virtual void GenerateMips(GPUResource* ShaderResourceView)=0;
+
+
 
 		virtual void* GetDevice() = 0;
 
