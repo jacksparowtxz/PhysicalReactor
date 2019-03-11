@@ -8,6 +8,6 @@ class TextureLoader
 public:
 	TextureLoader();
 	~TextureLoader();
-	void LoadTexture(const string & TexturefileName,Texture2D* LoadMap);
+	void LoadTexture(const string & TexturefileName,Texture2D* LoadMap,bool UseCubeMap);
 };
 
