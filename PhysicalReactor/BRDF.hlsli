@@ -147,11 +147,11 @@ float Vis_Simth(float a,float3 n,float3 l,float3 v)
 ////////////////////////////////////
 ///////////////////////////////////
 ///////////////////////////////////////http://jcgt.org/published/0003/02/03/paper.pdf
-float Vis_SmithJointApprox(float a,float3 n,float3 v,float3 l)
+float Vis_SmithJointApprox(float a,float3 nov,float3 nol)
 {
     float a = sqrt(a);
-    float Vis_SimthV = dot(n, l) * (dot(n, v) * (1 - a) + a);
-    float Vis_SimthL = dot(n, v) * (dot(n, l) * (1 - a) + a);
+    float Vis_SimthV = nol * (nov) * (1 - a) + a;
+    float Vis_SimthL = nov * (nol) * (1 - a) + a;
     return 0.5 * rcp(Vis_SimthV + Vis_SimthL);
 }
 
