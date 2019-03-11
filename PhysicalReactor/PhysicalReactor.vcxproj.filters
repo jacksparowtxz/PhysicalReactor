@@ -395,6 +395,12 @@
     <FxCompile Include="equirect2cube.hlsl">
       <Filter>头文件\Shader</Filter>
     </FxCompile>
+    <FxCompile Include="PerfilterEnvMap.hlsl">
+      <Filter>头文件\Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="SpLUT.hlsl">
+      <Filter>头文件\Shader</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="BRDF.hlsli">

@@ -1,6 +1,8 @@
 
 
-#define PI 3.1415
+#define PI 3.1415f
+#define Epsilon=0.00001f
+
 
 struct DirectionalLight
 {
