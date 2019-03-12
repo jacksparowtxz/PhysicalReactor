@@ -6,7 +6,7 @@
 float3 spherical_harmonics_Irrandice(float3 Coefficients[9],float3 n)
 {
 
-    float SHbasis[16];
+    float SHbasis[9];
     float x = n.x;
     float y = n.y;
     float z = n.z;

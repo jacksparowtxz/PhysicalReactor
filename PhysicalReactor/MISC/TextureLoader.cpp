@@ -74,7 +74,7 @@ void TextureLoader::LoadTexture(const string & TexturefileName, Texture2D* LoadM
 		 assert(SUCCEEDED(hr));
 		 stbi_image_free(data);
 		 delete InitData;
-		 LoadMap = std::move(EnvTexture);
+		 
 		
 		 if (UseCubeMap)
 		 {
@@ -109,6 +109,10 @@ void TextureLoader::LoadTexture(const string & TexturefileName, Texture2D* LoadM
 			 Renderer::GetDevice()->Dispatch(LoadMap->GetDesc().Width / 32, LoadMap->GetDesc().Height / 32, 6);
 			 Renderer::GetDevice()->GenerateMips(LoadMap);
 			 delete EnvTexture;
+		 }
+		 else
+		 {
+			 LoadMap = std::move(EnvTexture);
 		 }
 	 }
 	 else

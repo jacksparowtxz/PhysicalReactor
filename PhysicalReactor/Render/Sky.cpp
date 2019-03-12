@@ -9,7 +9,7 @@ Sky::Sky()
 	SkyMesh = new StaticMesh;
 	AssetManager::GetDevice()->Import("Re/smsphere.obj",SkyMesh);
 	SkyCubeMap = new Texture2D;
-	TextureManager::GetLoader()->LoadTexture("Re/OutputCube1.dds", SkyCubeMap);
+	TextureManager::GetLoader()->LoadTexture("Re/OutputCube1.dds", SkyCubeMap,true);
 	Skymaterial = new Material("SkyMaterial");
 
 	DepthStencilStateDesc dsdesc;

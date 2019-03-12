@@ -4,7 +4,7 @@
 
 
 
-TextureCube inputTexture : register(t0);
+Texture2D inputTexture : register(t0);
 RWTexture2DArray<float4> outputtexture : register(u0);
 
 SamplerState defaultSampler : register(s0);
@@ -14,9 +14,7 @@ SamplerState defaultSampler : register(s0);
 void main(uint3 ThreadID : SV_DispatchThreadID)
 {
 
-
-
-
+  
 
 
 
