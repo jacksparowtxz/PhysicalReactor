@@ -159,6 +159,16 @@ int PRE::GetDigitInPos(int num, int pos)
 	return (num / temp) % 10;
 }
 
+void PRE::LoadSH(std::string filename, shcoeffs* cofs)
+{
+	ifstream ifs("sh_coefficients.txt");
+
+	for (int i = 0; i < 9; i++)
+	{
+		ifs >> cofs[i].r >> cofs[i].g >> cofs[i].b;
+	}
+}
+
 /*
 void Halo::RemoveExtensionFromFileName(std::string& filename)
 {

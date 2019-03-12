@@ -30,7 +30,10 @@ namespace PRE
 		}
 	};
 
-
+	struct shcoeffs
+	{
+		float r,g,b;
+	};
 
 	template<uint64_t BitSize>
 	struct BitSizeStruct
@@ -87,5 +90,9 @@ namespace PRE
 
 		return castTo;
 	}
+
+
+	///////////////////Sphericalharmonics
+	void LoadSH(std::string filename, shcoeffs* cofs);
 
 }
