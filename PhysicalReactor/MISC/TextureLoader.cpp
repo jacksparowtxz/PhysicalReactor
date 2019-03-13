@@ -5,6 +5,7 @@
 #include "stb_image.h"
 
 #include"Render/ShaderManager.h"
+#include"MISC/Mathhelper.h"
 using namespace PRE;
 
 
@@ -149,4 +150,92 @@ void TextureLoader::LoadTexture(const string & TexturefileName, Texture2D* LoadM
 		 stbi_image_free(data);
 		 delete InitData;
 	 }
+}
+
+void TextureLoader::MakeRadianceMap(Texture2D* ufilterEnvmap,Texture2D* env_Map,Texture2D* Splut)
+{
+	ComputerPSO CSPSO;
+	CSPSO.desc.cs == Renderer::shadermanager->GetComputerShader("PerfilterEnvMap.hlsl");
+	struct SpeularMapFilterSetting
+	{
+		float roughness;
+		XMFLOAT3 Padding;
+	};
+
+	GPUBufferDesc smpdesc;
+	smpdesc.BindFlags = BIND_CONSTANT_BUFFER;
+	smpdesc.ByteWidth = sizeof(SpeularMapFilterSetting);
+	smpdesc.CPUAccessFlags = 0;
+	smpdesc.MiscFlags = 0;
+	smpdesc.Usage = USAGE_DEFAULT;
+	smpdesc.StructureByteStride = 0;
+
+	GPUBuffer* SpeularMapFilterSettingCB = new GPUBuffer;
+
+	Renderer::GetDevice()->CreateBuffer(&smpdesc,nullptr, SpeularMapFilterSettingCB);
+
+
+	TextureDesc CubeMapdesc;
+	CubeMapdesc.ArraySize = 6;
+	CubeMapdesc.BindFlags = BIND_SHADER_RESOURCE | BIND_UNORDERED_ACCESS;
+	CubeMapdesc.CPUAccessFlags = 0;
+	CubeMapdesc.Format = FORMAT_R16G16B16A16_FLOAT;
+	CubeMapdesc.Height = static_cast<uint32_t>(1024);
+	CubeMapdesc.Width = static_cast<uint32_t>(1024);
+	CubeMapdesc.MipLevels = (UINT)log2(max(1024, 1024));
+	CubeMapdesc.MiscFlags = RESOURCE_MISC_TEXTURECUBE;
+	CubeMapdesc.Usage = USAGE_DEFAULT;
+
+	Renderer::GetDevice()->CreateTexture2D(&CubeMapdesc,nullptr,&env_Map);
+
+	for (int arraySlice = 0; arraySlice < 6; ++arraySlice)
+	{
+		Renderer::GetDevice()->CopyTexture2D_Region(env_Map,0,0,0, ufilterEnvmap,0,arraySlice);
+	}
+	Sampler Computersampler;
+	Computersampler.desc.Filter = FILTER_MIN_MAG_MIP_LINEAR;
+	Computersampler.desc.AddressU = TEXTURE_ADDRESS_WRAP;
+	Computersampler.desc.AddressV = TEXTURE_ADDRESS_WRAP;
+	Computersampler.desc.AddressW = TEXTURE_ADDRESS_WRAP;
+	Computersampler.desc.MaxAnisotropy = 1;
+	Computersampler.desc.MinLOD = 0;
+	Computersampler.desc.MaxLOD = FLT_MAX;
+	Renderer::GetDevice()->BindResource(CS_STAGE,ufilterEnvmap,0);
+	Renderer::GetDevice()->BindSampler(CS_STAGE, &Computersampler, 0,1);
+	Renderer::GetDevice()->BindComputerPSO(&CSPSO);
+
+	const float deltaRoughness = 1.0f / PRE::fmax(float(env_Map->GetDesc().MipLevels - 1), 1.0f);
+	for (UINT level = 1, size = 512; level < env_Map->GetDesc().MipLevels; ++level, size /= 2)
+	{
+		const UINT numGroups = MathHelper::Max<int>(1, size / 32);
+		const SpeularMapFilterSetting spmfs = { level*deltaRoughness };
+		Renderer::GetDevice()->UpdateBuffer(SpeularMapFilterSettingCB,&spmfs);
+		Renderer::GetDevice()->BindConstantBuffer(CS_STAGE,SpeularMapFilterSettingCB,0,nullptr,nullptr);
+		Renderer::GetDevice()->BindUAV(CS_STAGE,env_Map,0);
+		Renderer::GetDevice()->Dispatch(numGroups, numGroups, 6);
+	}
+	ComputerPSO ComputeSpLut;
+	ComputeSpLut.desc.cs = Renderer::shadermanager->GetComputerShader("SpLUT.hlsl");
+
+	Sampler SpBrdfLUT;
+	SpBrdfLUT.desc.Filter = FILTER_MIN_MAG_MIP_LINEAR;
+	SpBrdfLUT.desc.AddressU = TEXTURE_ADDRESS_CLAMP;
+	SpBrdfLUT.desc.AddressV = TEXTURE_ADDRESS_CLAMP;
+	SpBrdfLUT.desc.AddressW = TEXTURE_ADDRESS_CLAMP;
+	SpBrdfLUT.desc.MaxAnisotropy = 1;
+	SpBrdfLUT.desc.MinLOD = 0;
+	SpBrdfLUT.desc.MaxLOD = FLT_MAX;
+
+	Renderer::GetDevice()->BindResource(CS_STAGE, Splut, 0);
+	Renderer::GetDevice()->BindComputerPSO(&ComputeSpLut);
+	Renderer::GetDevice()->Dispatch(Splut->desc.Width/32, Splut->desc.Height / 32,1);
+
+	
+}
+
+void TextureLoader::MakeIadiacneMap(shcoeffs* cofs)
+{
+	///////////USE spherical_harmonics
+	PRE::LoadSH("sh_coefficients.txt",cofs);
+
 }
