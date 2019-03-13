@@ -161,7 +161,7 @@ int PRE::GetDigitInPos(int num, int pos)
 
 void PRE::LoadSH(std::string filename, shcoeffs* cofs)
 {
-	ifstream ifs("sh_coefficients.txt");
+	ifstream ifs(filename);
 
 	for (int i = 0; i < 9; i++)
 	{
