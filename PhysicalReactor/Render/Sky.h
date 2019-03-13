@@ -16,5 +16,10 @@ public:
 	StaticMesh* SkyMesh;
 	Material* Skymaterial;
 	Texture2D* SkyCubeMap;
+
+
+	////////////////////PBR envmap
+	Texture2D* EnvMap;
+	Texture2D* SpLutMap;
 };
 

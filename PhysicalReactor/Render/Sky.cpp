@@ -9,8 +9,11 @@ Sky::Sky()
 	SkyMesh = new StaticMesh;
 	AssetManager::GetDevice()->Import("Re/smsphere.obj",SkyMesh);
 	SkyCubeMap = new Texture2D;
-	TextureManager::GetLoader()->LoadTexture("Re/OutputCube1.dds", SkyCubeMap,true);
+	TextureManager::GetLoader()->LoadTexture("Re/SkyhighFluffycloudField4k.hdr", SkyCubeMap,true);
 	Skymaterial = new Material("SkyMaterial");
+	Texture2D* EnvMap=new Texture2D;
+	Texture2D* SpLutMap = new Texture2D;
+	TextureManager::GetLoader()->MakeRadianceMap(SkyCubeMap,EnvMap,SpLutMap);
 
 	DepthStencilStateDesc dsdesc;
 	dsdesc.DepthEnable = true;
@@ -42,4 +45,6 @@ Sky::~Sky()
 	delete SkyCubeMap;
 	delete Skymaterial;
 	delete SkyMesh;
+	delete EnvMap;
+	delete SpLutMap;
 }
