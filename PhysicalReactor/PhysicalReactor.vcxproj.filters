@@ -401,6 +401,12 @@
     <FxCompile Include="SpLUT.hlsl">
       <Filter>头文件\Shader</Filter>
     </FxCompile>
+    <FxCompile Include="ToneMappingPS.hlsl">
+      <Filter>头文件\Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="ToneMappingVS.hlsl">
+      <Filter>头文件\Shader</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="BRDF.hlsli">
