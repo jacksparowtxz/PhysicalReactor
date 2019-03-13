@@ -186,7 +186,7 @@ namespace PRE
 		virtual void Dispatch(UINT threadGruopCountX, UINT threadGruopCountY, UINT threadGruopCountZ) = 0;
 		virtual void DispatchIndirect(GPUBuffer* args, UINT args_offset) = 0;
 		virtual void CopyTexture2D(Texture2D* pDest, Texture2D* pSrc) = 0;
-		virtual void CopyTexture2D_Region(Texture2D* pDest, UINT dstMip, UINT dstX, UINT dstY, Texture2D* pSrc, UINT srcMip) = 0;
+		virtual void CopyTexture2D_Region(Texture2D* pDest, UINT dstMip, UINT dstX, UINT dstY, Texture2D* pSrc, UINT srcMip, UINT ArraySize) = 0;
 		virtual void MSAAResolve(Texture2D* pDst, Texture2D* pSrc) = 0;
 		virtual void UpdateBuffer(GPUBuffer* buffer, const void* data,int datasize=-1) = 0;
 		virtual void *AllocateFromRingBuffer(GPURingBuffer* buffer, size_t dataSize, UINT& offsetIntoBuffer) = 0;
