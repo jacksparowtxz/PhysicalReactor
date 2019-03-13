@@ -228,6 +228,12 @@
     <ClInclude Include="World\Level.h">
       <Filter>头文件\World</Filter>
     </ClInclude>
+    <ClInclude Include="DepthStancilTarget.h">
+      <Filter>头文件\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderTarget.h">
+      <Filter>头文件\Render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -361,6 +367,12 @@
     </ClCompile>
     <ClCompile Include="World\Level.cpp">
       <Filter>头文件\World</Filter>
+    </ClCompile>
+    <ClCompile Include="DepthStancilTarget.cpp">
+      <Filter>头文件\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderTarget.cpp">
+      <Filter>头文件\Render</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

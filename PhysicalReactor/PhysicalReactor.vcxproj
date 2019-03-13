@@ -170,6 +170,7 @@
     <ClInclude Include="CommonInclude.h" />
     <ClInclude Include="Container\GameType.h" />
     <ClInclude Include="Container\vector.h" />
+    <ClInclude Include="DepthStancilTarget.h" />
     <ClInclude Include="JobSystem\Delegate.h" />
     <ClInclude Include="JobSystem\JobScheduler.h" />
     <ClInclude Include="JobSystem\Number.h" />
@@ -192,6 +193,7 @@
     <ClInclude Include="MISC\Timer.h" />
     <ClInclude Include="MISC\tinyxml2.h" />
     <ClInclude Include="PhysicalReactor.h" />
+    <ClInclude Include="RenderTarget.h" />
     <ClInclude Include="Render\Camera.h" />
     <ClInclude Include="Render\DirectionalLight.h" />
     <ClInclude Include="Render\DrawKey.h" />
@@ -260,6 +262,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="DepthStancilTarget.cpp" />
     <ClCompile Include="JobSystem\JobScheduler.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
@@ -302,6 +305,7 @@
     <ClCompile Include="PhysicalReactor.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="RenderTarget.cpp" />
     <ClCompile Include="Render\Camera.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
