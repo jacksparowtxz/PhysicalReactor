@@ -3746,6 +3746,7 @@ void RenderDevice_DX11::MSAAResolve(Texture2D* pDst, Texture2D* pSrc)
 	deviceContexts[ThreadID]->ResolveSubresource((ID3D11Resource*)pDst->resource, 0, (ID3D11Resource*)pSrc->resource, 0, ConvertFormat(pDst->desc.Format));
 }
 
+
 void RenderDevice_DX11::UpdateBuffer(GPUBuffer* buffer, const void* data, int datasize)
 {
 	assert(buffer->desc.Usage != USAGE_IMMUTABLE&&"Can not update IMMUTABLE GPUBuffer");
