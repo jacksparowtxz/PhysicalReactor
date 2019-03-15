@@ -80,7 +80,7 @@ void DepthStencilTarget::Clear()
 	resolvedMSAAUptodate = false;
 }
 
-void DepthStencilTarget::CopyFrom(const DepthStancilTarget &form)
+void DepthStencilTarget::CopyFrom(const DepthStencilTarget &form)
 {
 	Renderer::GetDevice()->CopyTexture2D(GetTexture(), form.GetTexture());
 }
