@@ -36,7 +36,7 @@ namespace PRE
 		DirectX::XMFLOAT4X4 WorldViewProj;
 		DirectX::XMFLOAT4X4 model;
 	
-
+		 
 		
 	};
 

@@ -1,4 +1,8 @@
-// 通过像素着色器传递的每个像素的颜色数据。
+#include"BRDF.hlsli"
+#include"Common.hlsli"
+
+
+
 struct PixelShaderInput
 {
     float4 PosH : SV_POSITION;
@@ -6,6 +10,7 @@ struct PixelShaderInput
     float3 NormalW : NORMAL;
     float3 TangentW : TANGENT;
     float2 Tex : TEXCOORD;
+    float3x3 TBN : TBASIS;
 };
 
 Texture2D BaseColorMap : register(t0);
@@ -24,6 +29,10 @@ Texture2D AmbientMap : register(t12);
 Texture2D RefractionMap : register(t13);
 Texture2D PixelDepthOffset : register(t14);
 
+TextureCube specularTexture : register(t15);
+Texture2D specularBRDF_LUT : register(t17);
+
+
 SamplerState BaseColorSampler : register(s0);
 SamplerState MetalicSampler : register(s1);
 SamplerState SpecularSampler : register(s2);
@@ -40,7 +49,8 @@ SamplerState AmbientSampler : register(s12);
 SamplerState RefractionSampler : register(s13);
 SamplerState PixelDepthOffsetSampler : register(s14);
 
-
+SamplerState spBRDF_Sampler : register(s15);
+SamplerState Lut_Sampler : register(s16);
 
 // (内插)颜色数据的传递函数。
 float4 main(PixelShaderInput input) : SV_TARGET
