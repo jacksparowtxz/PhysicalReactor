@@ -18,7 +18,9 @@ namespace PRE
 		                                                                                              StaticmeshList(*allocator1), 
 		                                                                                              VisiblityMesh(*allocator1), 
 		                                                                                              TVisiblityMesh(*allocator1),
-		                                                                                              RenderLight(*allocator)
+		                                                                                              PointLights(*allocator),
+		                                                                                              SpotLights(*allocator),
+		                                                                                              DirectionalLights(*allocator)
 	{
 		Initilize(windows,allocator);
 		

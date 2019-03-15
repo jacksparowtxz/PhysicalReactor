@@ -15,6 +15,7 @@ using namespace PRE;
 namespace PRE
 {
 
+	
 	struct RenderConstantBuffer
 	{
 		RenderConstantBuffer()
@@ -36,7 +37,7 @@ namespace PRE
 		DirectX::XMFLOAT4X4 WorldViewProj;
 		DirectX::XMFLOAT4X4 model;
 	
-		 
+		
 		
 	};
 
@@ -67,7 +68,9 @@ namespace PRE
 
 		Vector<StaticMesh*> VisiblityMesh;
 		Vector<StaticMesh*> TVisiblityMesh;
-		Vector<Light*> RenderLight;
+		Vector<PointLight> PointLights;
+		Vector<SpotLight> SpotLights;
+		Vector<DirectionalLight> DirectionalLights;
 		RenderConstantBuffer* m_constantBufferData[9];
 		GPUBuffer* constbuffer;
 		Camera *camera;
@@ -81,6 +84,9 @@ namespace PRE
 		RasterizerState* rasterizerstate;
 
 		Sky* sky;
+
+
+		
 
 	};
 }
