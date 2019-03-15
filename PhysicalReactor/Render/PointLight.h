@@ -9,11 +9,16 @@ public:
 
 	/////////////////////point
 	//IntensityUnits intensityunits;
+	XMFLOAT4 color;
+	XMFLOAT3 position;
+	float Intensity;
+	XMFLOAT3 Rotaion;
 	float attenuationradius;
 	float sourceradius;
 	float softsourceradius;
 	float sourcelengh;
-	BaseLightInfo Light;
+	float pad;
+
 
 /*	float lightfalloffexponent;
 	bool  useInverseSquaredFalloff;
@@ -33,3 +38,4 @@ public:
 };
 
 
+//int i = sizeof(PointLight);64

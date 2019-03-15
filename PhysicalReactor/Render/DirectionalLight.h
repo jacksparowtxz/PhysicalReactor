@@ -6,8 +6,9 @@ public:
 	DirectionalLight();
 	~DirectionalLight();
 
-	BaseLightInfo Light;
-
+	XMFLOAT4 color;
+	XMFLOAT3 direction;
+	float Intensity;
 	
 	//////////////Light
 /*	float lightsourceangle;
@@ -48,3 +49,4 @@ public:
 	XMFLOAT4* bloomtint; */
 };
 
+//int i = sizeof(DirectionalLight);32

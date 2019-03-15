@@ -6,14 +6,18 @@ public:
 	SpotLight();
 	~SpotLight();
 	//////////////////////////////SpotLight
-	float InnerConeAngle;
+	XMFLOAT3 color;
 	float OuterConeAngle;
-	
+	XMFLOAT3 position;
+	float Intensity;
+	XMFLOAT3 Rotaion;
+	float InnerConeAngle;
+
 	float attenuationradius;
 	float sourceradius;
 	float softsourceradius;
 	float sourcelengh;
-	BaseLightInfo Light;
+	
 
 	
 /*	float lightfalloffexponent;
@@ -28,3 +32,4 @@ public:
 
 };
 
+int i = sizeof(SpotLight);
