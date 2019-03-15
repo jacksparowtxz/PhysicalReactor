@@ -341,9 +341,6 @@
     <ClCompile Include="Render\DirectionalLight.cpp">
       <Filter>头文件\Render</Filter>
     </ClCompile>
-    <ClCompile Include="Render\Light.cpp">
-      <Filter>头文件\Render</Filter>
-    </ClCompile>
     <ClCompile Include="Render\PointLight.cpp">
       <Filter>头文件\Render</Filter>
     </ClCompile>

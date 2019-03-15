@@ -56,5 +56,9 @@ SamplerState Lut_Sampler : register(s16);
 float4 main(PixelShaderInput input) : SV_TARGET
 {
     float4 basecolor = BaseColorMap.Sample(BaseColorSampler, input.Tex);
+    float metalness = MetalicMap.Sample(BaseColorSampler,input.Tex).r;
+    float roughness = RoughnessMap.Sample(BaseColorSampler,input.Tex).r;
+
+
 	return basecolor;
 }
