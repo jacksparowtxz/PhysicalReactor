@@ -1,23 +1,25 @@
 #pragma once
 #include "Light.h"
-class PointLight :
-	public Light
+class PointLight
+	
 {
 public:
 	PointLight();
 	~PointLight();
 
 	/////////////////////point
-	IntensityUnits intensityunits;
+	//IntensityUnits intensityunits;
 	float attenuationradius;
 	float sourceradius;
 	float softsourceradius;
 	float sourcelengh;
+	BaseLightInfo Light;
+
 /*	float lightfalloffexponent;
 	bool  useInverseSquaredFalloff;
 	bool CastShadowformCinematicobjectonly;
 
-
+	
 	///////////////////////point  Light Profile
 	//IES Texture;
 	float IESIntensityScale;
@@ -29,4 +31,5 @@ public:
 	bool RayTraceDistanceFieldshadows;/// P */
 	
 };
+
 

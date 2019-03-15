@@ -6,7 +6,7 @@ SpotLight::SpotLight():InnerConeAngle(0.0f),OuterConeAngle(0.0f),attenuationradi
                        /*,lightfalloffexponent(0.0f),IESIntensityScale(0.0f),intensityunits(Candelas),IESIntensity(false)
 	                    ,useInverseSquaredFalloff(false),CastShadowformCinematicobjectonly(false)*/
 {
-	lightype = SPOTLIGHT;
+
 }
 
 

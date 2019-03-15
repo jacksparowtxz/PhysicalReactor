@@ -1,7 +1,6 @@
 #pragma once
 #include "Light.h"
-class SpotLight :
-	public Light
+class SpotLight
 {
 public:
 	SpotLight();
@@ -14,6 +13,9 @@ public:
 	float sourceradius;
 	float softsourceradius;
 	float sourcelengh;
+	BaseLightInfo Light;
+
+	
 /*	float lightfalloffexponent;
 	float IESIntensityScale;
 	IntensityUnits intensityunits;

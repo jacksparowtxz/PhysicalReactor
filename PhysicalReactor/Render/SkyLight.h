@@ -1,7 +1,6 @@
 #pragma once
 #include "Light.h"
-class SkyLight :
-	public Light
+class SkyLight
 {
 public:
 	SkyLight();
@@ -15,7 +14,7 @@ public:
 	float skyDistanceTHreadhold;
 	bool CaptureEmissiveOnly;
 	bool lowerhemisphereissoildColor;
-	
+
 
 
 
@@ -28,5 +27,7 @@ public:
 	float minocclusion;
 	XMFLOAT4* occlusiontint;
 	XMFLOAT4 *Lowerhemispherecolor;
+
+	BaseLightInfo Light;
 };
 

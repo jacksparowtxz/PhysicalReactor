@@ -1,12 +1,14 @@
 #pragma once
 #include "Light.h"
-class DirectionalLight :
-	public Light
+class DirectionalLight
 {
 public:
 	DirectionalLight();
 	~DirectionalLight();
 
+	BaseLightInfo Light;
+
+	
 	//////////////Light
 /*	float lightsourceangle;
 	
