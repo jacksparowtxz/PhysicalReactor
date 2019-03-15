@@ -71,6 +71,9 @@ namespace PRE
 		Vector<PointLight> PointLights;
 		Vector<SpotLight> SpotLights;
 		Vector<DirectionalLight> DirectionalLights;
+		Vector<SkyLight> SkyLights;
+
+
 		RenderConstantBuffer* m_constantBufferData[9];
 		GPUBuffer* constbuffer;
 		Camera *camera;

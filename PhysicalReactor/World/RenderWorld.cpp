@@ -20,7 +20,8 @@ namespace PRE
 		                                                                                              TVisiblityMesh(*allocator1),
 		                                                                                              PointLights(*allocator),
 		                                                                                              SpotLights(*allocator),
-		                                                                                              DirectionalLights(*allocator)
+		                                                                                              DirectionalLights(*allocator),
+		                                                                                              SkyLights(*allocator)
 	{
 		Initilize(windows,allocator);
 		
@@ -375,6 +376,18 @@ namespace PRE
 	{
 		StaticmeshList = level->StaticMeshList;
 		sky = level->sky;
+		for (int i = 0; i < level->DirectionalLightList.Size(); i++)
+		{
+			DirectionalLights.Push_Back(std::move(*level->DirectionalLightList[i]));
+		}
+		for (int i = 0; i < level->PointLightList.Size(); i++)
+		{
+			PointLights.Push_Back(std::move(*level->PointLightList[i]));
+		}
+		for (int i = 0; i < level->SpotLightList.Size(); i++)
+		{
+			SpotLights.Push_Back(std::move(*level->SpotLightList[i]));
+		}
 	}
 
 	void RenderWorld::RenderScene()

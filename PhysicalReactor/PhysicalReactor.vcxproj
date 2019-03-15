@@ -406,7 +406,9 @@
     <None Include="BRDF.hlsli">
       <FileType>Document</FileType>
     </None>
-    <None Include="Common.hlsli" />
+    <None Include="Common.hlsli">
+      <FileType>Document</FileType>
+    </None>
     <None Include="ImageBasedLighting.hlsli" />
     <None Include="Mathematics.hlsli" />
   </ItemGroup>

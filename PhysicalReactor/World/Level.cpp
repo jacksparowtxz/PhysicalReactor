@@ -1,12 +1,14 @@
 #include "stdafx.h"
 #include "Level.h"
 
-Level::Level(Allocator *allocator) :StaticMeshList(*allocator), LightList(*allocator),sky(nullptr)
+Level::Level(Allocator *allocator) :StaticMeshList(*allocator), 
+                                    DirectionalLightList(*allocator), 
+                                    SpotLightList(*allocator), 
+                                    PointLightList(*allocator), 
+                                    SkyLightList(*allocator),
+                                    sky(nullptr)
 {
 	AddSky();
-
-
-
 }
 
 Level::~Level()
@@ -27,30 +29,29 @@ void Level::AddSky()
 
 void Level::AddLight(LightType lighttype)
 {
-	Light* light;
+	
 	switch (lighttype)
 	{
 	case DIRECTIONALLIGHT:
 	{
-		light=allocatorFC::allocateNew<DirectionalLight>(*allocator);
+		DirectionalLightList.Push_Back(allocatorFC::allocateNew<DirectionalLight>(*allocator));
 	}
 	break;
 	case POINTLIGHT:
 	{
-		light = allocatorFC::allocateNew<PointLight>(*allocator);
+		PointLightList.Push_Back(allocatorFC::allocateNew<PointLight>(*allocator));
 	}
 	break;
 	case SPOTLIGHT:
 	{
-		light = allocatorFC::allocateNew<SpotLight>(*allocator);
+		SpotLightList.Push_Back(allocatorFC::allocateNew<SpotLight>(*allocator));
 	}
 	break;
 	case SKYLIGHT:
 	{
-		light = allocatorFC::allocateNew<SkyLight>(*allocator);
+		SkyLightList.Push_Back(allocatorFC::allocateNew<SkyLight>(*allocator));
 	}
 	default:
 		break;
 	}
-	LightList.Push_Back(light);
 }

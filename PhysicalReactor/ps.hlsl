@@ -1,8 +1,21 @@
 #include"BRDF.hlsli"
-#include"Common.hlsli"
 
 
+cbuffer DirectionalLightCB : register(b0)
+{
+    DirectionalLight directionalights;
+};
 
+
+cbuffer PointLightCB : register(b1)
+{
+    PointLight pointlights[MAX_PLIGHTS];
+};
+
+cbuffer SpotLightCB : register(b2)
+{
+    SpotLight spotlights[MAX_SLIGHTS];
+};
 struct PixelShaderInput
 {
     float4 PosH : SV_POSITION;

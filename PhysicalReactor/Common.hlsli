@@ -2,6 +2,9 @@
 
 #define PI 3.1415f
 #define Epsilon=0.00001f
+#define MAX_PLIGHTS 1024
+#define MAX_SLIGHTS 819
+
 
 
 struct DirectionalLight
@@ -19,7 +22,9 @@ struct PointLight
     float3 rotation;
     float attenuationraduis;
     float sourceraduis;
+    float softsourceradius;
     float sourcelength;
+    float pad;
 };
 
 struct SpotLight
@@ -29,13 +34,14 @@ struct SpotLight
     float Intensity;
     float3 rotation;
     float InnerConeAngle;
-
     float OuterConeAngle;
     float attenuationradius;
     float sourceradius;
     float softsourceradius;
     float sourcelengh;
     float pad;
+    float pad1;
+    float pad2;
 };
 
 ///////////Form UE4

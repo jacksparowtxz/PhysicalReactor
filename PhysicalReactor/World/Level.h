@@ -13,8 +13,10 @@ public:
 	~Level();
 	
 	Vector<StaticMesh*> StaticMeshList;
-	Vector<Light*> LightList;
-
+	Vector<DirectionalLight*> DirectionalLightList;
+	Vector<SpotLight*> SpotLightList;
+	Vector<PointLight*> PointLightList;
+	Vector<SkyLight*> SkyLightList;
 
 	Sky* sky;
 
