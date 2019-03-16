@@ -34,10 +34,16 @@ namespace PRE
 		DirectX::XMFLOAT4X4 textransform;
 		DirectX::XMFLOAT4X4 worldinvtranspose;
 
-		DirectX::XMFLOAT4X4 WorldViewProj;
 		DirectX::XMFLOAT4X4 model;
-	
-		
+		DirectX::XMFLOAT4X4 WorldViewProj;
+		DirectX::XMFLOAT4X4 pading;
+		DirectX::XMFLOAT4X4 pading1;
+
+		SpotLight spotlights[1024];
+		PointLight pointlights[1024];
+		DirectionalLight directionallights;
+		DirectX::XMFLOAT4 EyePos;
+		shcoeffs COFS[9];
 		
 	};
 

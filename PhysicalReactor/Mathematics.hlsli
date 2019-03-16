@@ -3,7 +3,7 @@
 ////////////spherical-harmonics Function
 /////////////////////////////////////"Simplifying-Spherical-Harmonics-for-Lighting"Dr Graham Hazel
 
-float3 spherical_harmonics_Irrandice(float3 Coefficients[9],float3 n)
+float3 spherical_harmonics_Irrandice(coffies Coefficients[9], float3 n)
 {
 
     float SHbasis[9];
@@ -27,7 +27,9 @@ float3 spherical_harmonics_Irrandice(float3 Coefficients[9],float3 n)
     float3 color = { 0.f, 0.f, 0.f };
     for (int i = 0; i < 9;i++)
     {
-        color += Coefficients[i] * SHbasis[i];
+        color.r += Coefficients[i].r * SHbasis[i];
+        color.g += Coefficients[i].g * SHbasis[i];
+        color.b += Coefficients[i].b * SHbasis[i];
     }
 
     return color;

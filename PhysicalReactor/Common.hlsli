@@ -1,10 +1,17 @@
-
+#ifndef __COMMON_HLSL__
+#define __COMMON_HLSL__
 
 #define PI 3.1415f
 #define Epsilon=0.00001f
-#define MAX_PLIGHTS 1024
-#define MAX_SLIGHTS 819
+#define MAX_LIGHTS 1024
 
+struct coffies
+{
+    float r;
+    float g;
+    float b;
+    float a;
+};
 
 
 struct DirectionalLight
@@ -12,6 +19,8 @@ struct DirectionalLight
     float4 color;
     float3 direction;
     float Intensity;
+    float4 pad;
+    float4 pad1;
 };
 
 struct PointLight
@@ -202,3 +211,4 @@ float4 Pow6(float4 x)
     float4 xx = x * x;
     return xx * xx * xx;
 }
+#endif 

@@ -152,6 +152,7 @@ namespace PRE
 		{
 			DirectX::XMStoreFloat4x4(&m_constantBufferData[i]->projection, XMMatrixTranspose(camera->Proj()));
 			DirectX::XMStoreFloat4x4(&m_constantBufferData[i]->view, XMMatrixTranspose(camera->View()));
+			DirectX::XMStoreFloat4(&m_constantBufferData[i]->EyePos, {(camera->GetPositionXM),1.0f});
 		}
 	}
 
@@ -376,17 +377,18 @@ namespace PRE
 	{
 		StaticmeshList = level->StaticMeshList;
 		sky = level->sky;
-		for (int i = 0; i < level->DirectionalLightList.Size(); i++)
+	    m_constantBufferData[0]->directionallights = *level->DirectionalLightList[0];
+		for (uint32_t j = 0; j < level->DirectionalLightList.Size(); j++)
 		{
-			DirectionalLights.Push_Back(std::move(*level->DirectionalLightList[i]));
+			m_constantBufferData[0]->spotlights[j] = *level->SpotLightList[j];
 		}
-		for (int i = 0; i < level->PointLightList.Size(); i++)
+		for (uint32_t j = 0; j < level->DirectionalLightList.Size(); j++)
 		{
-			PointLights.Push_Back(std::move(*level->PointLightList[i]));
+			m_constantBufferData[0]->pointlights[j] = *level->PointLightList[j];
 		}
-		for (int i = 0; i < level->SpotLightList.Size(); i++)
+		for (uint32_t j = 1; j < 9; j++)
 		{
-			SpotLights.Push_Back(std::move(*level->SpotLightList[i]));
+			m_constantBufferData[j] = m_constantBufferData[0];
 		}
 	}
 

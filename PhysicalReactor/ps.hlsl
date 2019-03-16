@@ -1,5 +1,5 @@
 #include"BRDF.hlsli"
-
+#include"Mathematics.hlsli"
 
 cbuffer DirectionalLightCB : register(b0)
 {
@@ -9,13 +9,22 @@ cbuffer DirectionalLightCB : register(b0)
 
 cbuffer PointLightCB : register(b1)
 {
-    PointLight pointlights[MAX_PLIGHTS];
+    PointLight pointlights[MAX_LIGHTS];
 };
 
 cbuffer SpotLightCB : register(b2)
 {
-    SpotLight spotlights[MAX_SLIGHTS];
+    SpotLight spotlights[MAX_LIGHTS];
 };
+
+cbuffer EyePostionCB : register(b3)
+{
+    float4 EyePos;
+    coffies cosf[9];
+};
+
+
+
 struct PixelShaderInput
 {
     float4 PosH : SV_POSITION;
@@ -26,6 +35,9 @@ struct PixelShaderInput
     float3x3 TBN : TBASIS;
 };
 
+static const float3 Fdielectirc = 0.04;
+static const float epsilon = 0.00001;
+ 
 Texture2D BaseColorMap : register(t0);
 Texture2D MetalicMap : register(t1);
 Texture2D SpecularMap : register(t2);
@@ -68,10 +80,65 @@ SamplerState Lut_Sampler : register(s16);
 // (内插)颜色数据的传递函数。
 float4 main(PixelShaderInput input) : SV_TARGET
 {
-    float4 basecolor = BaseColorMap.Sample(BaseColorSampler, input.Tex);
+    float3 basecolor = BaseColorMap.Sample(BaseColorSampler, input.Tex);
     float metalness = MetalicMap.Sample(BaseColorSampler,input.Tex).r;
     float roughness = RoughnessMap.Sample(BaseColorSampler,input.Tex).r;
 
+    float3 Lo = normalize(EyePos.xyz - input.PosW);
 
-	return basecolor;
+    float3 N = normalize(2.0 * NormalMap.Sample(BaseColorSampler,input.Tex).rgb-1.0);
+    N = normalize(mul(input.TBN, N));
+
+    float cosLo = max(0.0, dot(N, Lo));
+
+    float Lr = 2.0 * cosLo * N - Lo;
+
+    float3 F0 = lerp(Fdielectirc,basecolor,metalness);
+
+
+    //Direct Light///Temp one directionlight
+    float3 Li = -directionalights.direction;
+    float3 Lradiance = directionalights.color.rgb;
+    float Intensity = directionalights.Intensity;
+
+    float3 Lh = normalize(Li+Lo);
+
+    float cosLi = max(0.0, dot(N, Li));
+    float cosLh = max(0.0, dot(N, Lh));
+
+    float F = Fresnel_Schlick(F0, Li, Lh);
+
+    float D = GGX_NDF(roughness,cosLh);
+
+    float G = GGX_Schilck(roughness,Li,Lh,N);
+
+    float kd = lerp(float3(1, 1, 1) - F, float3(0,0,0),metalness);
+
+    float diffuseBRDF = kd * basecolor;
+
+    float3 specularBRDF = (F * D * G) / max(epsilon,4.0*cosLi*cosLo);
+
+    float3 directLighting = (diffuseBRDF + specularBRDF) * Lradiance * cosLi * Intensity;
+
+
+    float3 irradiance = spherical_harmonics_Irrandice(cosf, N);
+
+    float3 IF = Fresnel_Schlick(F0,Lo,N);
+
+    float3 Ikd = lerp(1.0-IF,0.0,metalness);
+
+    float3 diffuseIBL = Ikd * basecolor * irradiance;
+
+    /////Return IBL Env map;
+    uint width, height, levels;
+    uint specularTextureLevels=SpecularMap.GetDimensions(0,width,height,levels);
+    float3 specularIrradiance = SpecularMap.SampleLevel(BaseColorSampler,Lr,roughness*specularTextureLevels).rgb;
+
+    float2 IspecularBRDF = specularBRDF_LUT.Sample(spBRDF_Sampler, float2(cosLo,roughness)).rg;
+
+    float3 specularIBL = (F0 * IspecularBRDF.x + IspecularBRDF.y) * specularIrradiance;
+
+    float3 ambientLighting = diffuseIBL + specularIBL;
+
+    return float4(ambientLighting,1.0f);
 }
