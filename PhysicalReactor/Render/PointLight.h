@@ -1,9 +1,8 @@
 #pragma once
 #include "Light.h"
-class PointLight
-	
+struct PointLight
 {
-public:
+
 	PointLight();
 	~PointLight();
 
@@ -13,12 +12,11 @@ public:
 	XMFLOAT3 position;
 	float Intensity;
 	XMFLOAT3 Rotaion;
-	float attenuationradius;
 	float sourceradius;
 	float softsourceradius;
 	float sourcelengh;
+	float attenuationradius;
 	float pad;
-
 
 /*	float lightfalloffexponent;
 	bool  useInverseSquaredFalloff;
