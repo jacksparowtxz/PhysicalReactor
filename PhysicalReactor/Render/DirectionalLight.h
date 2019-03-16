@@ -1,15 +1,16 @@
 #pragma once
 #include "Light.h"
-class DirectionalLight
+struct DirectionalLight
 {
-public:
+
 	DirectionalLight();
 	~DirectionalLight();
 
 	XMFLOAT4 color;
 	XMFLOAT3 direction;
 	float Intensity;
-	
+	XMFLOAT4 pading;
+	XMFLOAT4 pading1;
 	//////////////Light
 /*	float lightsourceangle;
 	
@@ -49,4 +50,4 @@ public:
 	XMFLOAT4* bloomtint; */
 };
 
-//int i = sizeof(DirectionalLight);32
+int i = sizeof(DirectionalLight);//32
