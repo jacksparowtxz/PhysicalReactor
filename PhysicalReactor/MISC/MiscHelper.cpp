@@ -166,6 +166,7 @@ void PRE::LoadSH(std::string filename, shcoeffs* cofs)
 	for (int i = 0; i < 9; i++)
 	{
 		ifs >> cofs[i].r >> cofs[i].g >> cofs[i].b;
+		cofs[i].a = 0.0;
 	}
 }
 

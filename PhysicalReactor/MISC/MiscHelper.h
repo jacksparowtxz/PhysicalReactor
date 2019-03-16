@@ -32,7 +32,7 @@ namespace PRE
 
 	struct shcoeffs
 	{
-		float r,g,b;
+		float r,g,b,a;
 	};
 
 	template<uint64_t BitSize>
