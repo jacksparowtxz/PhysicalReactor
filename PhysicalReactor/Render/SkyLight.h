@@ -28,6 +28,8 @@ public:
 	XMFLOAT4* occlusiontint;
 	XMFLOAT4 *Lowerhemispherecolor;
 
-	BaseLightInfo Light;
+	
 };
+
+//int  s = sizeof(SkyLight);
 

@@ -1,8 +1,8 @@
 #pragma once
 #include "Light.h"
-class SpotLight
+struct SpotLight
 {
-public:
+
 	SpotLight();
 	~SpotLight();
 	//////////////////////////////SpotLight
@@ -32,4 +32,4 @@ public:
 
 };
 
-int i = sizeof(SpotLight);
+//int i = sizeof(SpotLight);64
