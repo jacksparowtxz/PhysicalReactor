@@ -14,3 +14,26 @@ SpotLight::~SpotLight()
 {
 
 }
+
+SpotLight::SpotLight(XMFLOAT3 position, XMFLOAT3 rotaion) :Position(position), Rotaion(rotaion)
+{
+	color = { 1.0f,1.0f,1.0f };
+	OuterConeAngle = 0.0f;
+	Intensity = 1.0f;
+	InnerConeAngle = 0.0f;
+
+	attenuationradius = 0.0f;
+	sourceradius = 0.0f;
+	softsourceradius = 0.0f;
+	sourcelengh = 0.0f;
+}
+
+void SpotLight::SetPostion(XMFLOAT3 position)
+{
+	Position = position;
+}
+
+void SpotLight::SetRotation(XMFLOAT3 rotation)
+{
+	Rotaion = rotation;
+}

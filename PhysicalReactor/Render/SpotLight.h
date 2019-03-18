@@ -5,6 +5,7 @@ struct SpotLight
 
 	SpotLight();
 	~SpotLight();
+	SpotLight(XMFLOAT3 Position, XMFLOAT3 Rotaion);
 	//////////////////////////////SpotLight
 	XMFLOAT3 color;
 	float OuterConeAngle;
@@ -18,7 +19,8 @@ struct SpotLight
 	float softsourceradius;
 	float sourcelengh;
 	
-
+	void SetPostion(XMFLOAT3 position);
+	void SetRotation(XMFLOAT3 rotation);
 	
 /*	float lightfalloffexponent;
 	float IESIntensityScale;
