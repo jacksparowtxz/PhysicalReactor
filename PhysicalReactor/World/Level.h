@@ -24,6 +24,6 @@ public:
 	Allocator* allocator;
 	void AddStaticMesh(StaticMesh* sm);
 	void AddSky();
-	void AddLight(LightType lighttype);
+	void AddLight(LightType lighttype, XMFLOAT3 position, XMFLOAT3 rotation);
 };
 
