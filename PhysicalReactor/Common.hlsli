@@ -3,7 +3,7 @@
 
 #define PI 3.1415f
 #define Epsilon=0.00001f
-#define MAX_LIGHTS 1024
+#define MAX_LIGHTS 4
 
 struct coffies
 {
