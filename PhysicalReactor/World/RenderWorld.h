@@ -35,21 +35,15 @@ namespace PRE
 		DirectX::XMFLOAT4X4 worldinvtranspose;
 
 		DirectX::XMFLOAT4X4 model;
+		DirectX::XMFLOAT4X4 WorldViewProj;
 		DirectX::XMFLOAT4X4 pading;
 		DirectX::XMFLOAT4X4 pading1;
-		DirectX::XMFLOAT4X4 pading2;
 
-		DirectX::XMFLOAT4X4 WorldViewProj;
-		DirectX::XMFLOAT4X4 pading3;
-		DirectX::XMFLOAT4X4 pading4;
-		DirectX::XMFLOAT4X4 pading5;
-
-		SpotLight spotlights[4];
-		PointLight pointlights[4];
-		DirectionalLight directionallights[4];
+		SpotLight spotlights[1024];
+		PointLight pointlights[1024];
+		DirectionalLight directionallights;
 		DirectX::XMFLOAT4 EyePos;
-		shcoeffs COFS[15];
-		
+		shcoeffs COFS[9];
 		
 	};
 
@@ -73,7 +67,7 @@ namespace PRE
 		void RenderMaterial(SHADERSTAGE stage,SubMesh* submesh);
 		void InitViews();
 		void RenderWireframe(bool Wireframe);
-		void UpdateScene(Level* level);
+		void BuildScene(Level* level);
 		Allocator* allocator;
 
 		Vector<StaticMesh*> StaticmeshList;
@@ -99,7 +93,7 @@ namespace PRE
 		RasterizerState* rasterizerstate;
 
 		Sky* sky;
-		Sampler* SpLutSampler;
+
 
 		
 

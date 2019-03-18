@@ -27,24 +27,24 @@ void Level::AddSky()
 	allocatorFC::allocateNew<Sky>(*allocator, sky);
 }
 
-void Level::AddLight(LightType lighttype, XMFLOAT3 position, XMFLOAT3 rotation)
+void Level::AddLight(LightType lighttype)
 {
 	
 	switch (lighttype)
 	{
 	case DIRECTIONALLIGHT:
 	{
-		DirectionalLightList.Push_Back(allocatorFC::allocateNew<DirectionalLight>(*allocator,position));
+		DirectionalLightList.Push_Back(allocatorFC::allocateNew<DirectionalLight>(*allocator));
 	}
 	break;
 	case POINTLIGHT:
 	{
-		PointLightList.Push_Back(allocatorFC::allocateNew<PointLight>(*allocator,position,rotation));
+		PointLightList.Push_Back(allocatorFC::allocateNew<PointLight>(*allocator));
 	}
 	break;
 	case SPOTLIGHT:
 	{
-		SpotLightList.Push_Back(allocatorFC::allocateNew<SpotLight>(*allocator, position, rotation));
+		SpotLightList.Push_Back(allocatorFC::allocateNew<SpotLight>(*allocator));
 	}
 	break;
 	case SKYLIGHT:

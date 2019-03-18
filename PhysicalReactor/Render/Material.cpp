@@ -33,10 +33,6 @@ void Material::Init(const std::string &newName)
 
 	SamplerDesc InitSamplerDesc;
 	InitiSampler = new Sampler;
-	InitSamplerDesc.Filter = FILTER_ANISOTROPIC;
-	InitSamplerDesc.AddressU = TEXTURE_ADDRESS_WRAP;
-	InitSamplerDesc.AddressV = TEXTURE_ADDRESS_WRAP;
-	InitSamplerDesc.AddressW = TEXTURE_ADDRESS_WRAP;
 	Renderer::GetDevice()->CreateSamplerState(&InitSamplerDesc, InitiSampler);
 
 	RasterizerStateDesc RSdesc;

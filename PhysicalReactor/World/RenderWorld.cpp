@@ -37,7 +37,6 @@ namespace PRE
 		allocatorFC::deallocateDelete<RasterizerState>(*allocator, Solidstate);
 		allocatorFC::deallocateDelete<RasterizerState>(*allocator, rasterizerstate);
 		allocatorFC::deallocateDelete<GPUBuffer>(*allocator, constbuffer);
-		allocatorFC::deallocateDelete<Sampler>(*allocator, SpLutSampler);
 		allocatorFC::deallocateDelete<ShaderManager>(*allocator, Renderer::shadermanager);
 		for (uint32_t i = 0; i < 9; i++)
 		{
@@ -61,7 +60,7 @@ namespace PRE
 			Renderer::GetDevice()->UpdateBuffer(constbuffer, m_constantBufferData[ThreadID]);
 			
 			GraphicPSO PSO;
-			Renderer::shadermanager->GetPSO(TYPE_STATICMESH, &PSO);
+			Renderer::shadermanager->GetPSO(nullptr, &PSO);
 			Renderer::GetDevice()->BindGraphicsPSO(&PSO);
 			Renderer::GetDevice()->BindRasterizerState(*rasterizerstate);
 			UINT pFisrtConstant1 = 0;
@@ -70,21 +69,6 @@ namespace PRE
 			UINT pFisrtConstant2 = 16;
 			UINT pNumberConstant2 = 16;
 			Renderer::GetDevice()->BindConstantBuffer(VS_STAGE, constbuffer, 1, &pFisrtConstant2, &pNumberConstant2);
-			UINT pFisrtConstant3 =48;
-			UINT pNumberConstant3 = 64;
-			Renderer::GetDevice()->BindConstantBuffer(PS_STAGE, constbuffer, 0, &pFisrtConstant3, &pNumberConstant3);
-			UINT pFisrtConstant4 = 64;
-			UINT pNumberConstant4 = 64;
-			Renderer::GetDevice()->BindConstantBuffer(PS_STAGE, constbuffer, 1, &pFisrtConstant4, &pNumberConstant4);
-			UINT pFisrtConstant5 = 80;
-			UINT pNumberConstant5 = 16;
-			Renderer::GetDevice()->BindConstantBuffer(PS_STAGE, constbuffer, 2, &pFisrtConstant5, &pNumberConstant5);
-			UINT pFisrtConstant6 = 96;
-			UINT pNumberConstant6 = 16;
-			Renderer::GetDevice()->BindConstantBuffer(PS_STAGE, constbuffer, 3, &pFisrtConstant6, &pNumberConstant6);
-			Renderer::GetDevice()->BindSampler(PS_STAGE, SpLutSampler,15,1);
-			Renderer::GetDevice()->BindResource(PS_STAGE,sky->EnvMap,15);
-			Renderer::GetDevice()->BindResource(PS_STAGE, sky->SpLutMap, 15);
 			DirectX::XMStoreFloat4x4(&m_constantBufferData[ThreadID]->model, XMMatrixTranspose(XMMatrixRotationY(90.f)));
 			for (SubMesh* submesh : sm->Meshs)
 			{
@@ -95,11 +79,29 @@ namespace PRE
 				Renderer::GetDevice()->BindIndexBuffer(submesh->mIndexBuffer, INDEXBUFFER_32BIT, 0);
 				Renderer::GetDevice()->DrawIndexed(submesh->Indices.size(), 0, 0);
 			}
-			//Renderer::GetDevice()->FinishComanlist();
-			//SetEvent(Handle[ThreadID]);
+			Renderer::GetDevice()->FinishComanlist();
+			SetEvent(Handle[ThreadID]);
 		};
-		RenderStaticMesh = lambda;
-		JobScheduler::Wait(parallel_for(*StaticmeshList.data, StaticmeshList.Size(), RenderStaticMesh, (void*)nullptr));
+		//RenderStaticMesh = lambda;
+		//JobScheduler::Wait(parallel_for(*StaticmeshList.data, StaticmeshList.Size(), RenderStaticMesh, (void*)nullptr));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 		///////////////////RenderSky/////////////////////////////
@@ -109,11 +111,11 @@ namespace PRE
 			Renderer::GetDevice()->UpdateBuffer(constbuffer, m_constantBufferData[ThreadID]);
 		
 			GraphicPSO PSO;
-			Renderer::shadermanager->GetPSO(TYPE_SKY, &PSO);
+			Renderer::shadermanager->GetPSO(nullptr, &PSO);
 			PSO.desc.rs = sky->Skymaterial->rasterzerstate;
 			PSO.desc.dss = sky->Skymaterial->depthstencilstate;
 			Renderer::GetDevice()->BindGraphicsPSO(&PSO);
-			UINT pFisrtConstant = 32;
+			UINT pFisrtConstant = 16;
 			UINT pNumberConstant = 16;
 			Renderer::GetDevice()->BindConstantBuffer(VS_STAGE, constbuffer,0,&pFisrtConstant,&pNumberConstant);
 			XMFLOAT3 eyePos = camera->GetPosition();
@@ -131,7 +133,7 @@ namespace PRE
 
 		RenderSkyFC =RenderSkybox;
 		RenderSkyFC(sky, 1, nullptr);
-		JobScheduler::Wait(parallel_for(sky, 1, RenderSkyFC, nullptr));
+		//JobScheduler::Wait(parallel_for(sky, 1, RenderSkyFC, nullptr));
 
 	}
 
@@ -371,11 +373,11 @@ namespace PRE
 		}
 	}
 
-	void RenderWorld::UpdateScene(Level * level)
+	void RenderWorld::BuildScene(Level * level)
 	{
 		StaticmeshList = level->StaticMeshList;
 		sky = level->sky;
-	    m_constantBufferData[0]->directionallights[0] = *level->DirectionalLightList[0];
+	    m_constantBufferData[0]->directionallights = *level->DirectionalLightList[0];
 		for (uint32_t j = 0; j < level->DirectionalLightList.Size(); j++)
 		{
 			m_constantBufferData[0]->spotlights[j] = *level->SpotLightList[j];
@@ -455,26 +457,6 @@ namespace PRE
 
 		sky = allocatorFC::allocateNew<Sky>(*allocator);
 
-
-		SpLutSampler =allocatorFC::allocateNew<Sampler>(*allocator);
-		SamplerDesc splutsampler;
-		splutsampler.Filter = FILTER_ANISOTROPIC;
-		splutsampler.AddressU = TEXTURE_ADDRESS_CLAMP;
-		splutsampler.AddressV = TEXTURE_ADDRESS_CLAMP;
-		splutsampler.AddressW = TEXTURE_ADDRESS_CLAMP;
-
-		Renderer::GetDevice()->CreateSamplerState(&splutsampler,SpLutSampler);
-
-		shcoeffs COFS[15];
-
-		TextureManager::GetLoader()->MakeIadiacneMap(COFS);
-
-		for (uint32_t i = 0; i < 9; ++i)
-		{
-			for (uint32_t j = 0; j < 9; ++j)
-			m_constantBufferData[i]->COFS[j] = COFS[j];
-			
-		}
 	}
 
 }

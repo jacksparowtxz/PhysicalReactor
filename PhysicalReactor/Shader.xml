@@ -2,16 +2,9 @@
    <TYPE category="VS/">
       <Name>vs.hlsl</Name>
 	  <Name>SkyVS.hlsl</Name>
-	  <Name>ToneMappingVS.hlsl<Name>
 	</TYPE>
     <TYPE category="PS/">
       <Name>ps.hlsl</Name>
 	  <Name>SkyPS.hlsl</Name>
-	  <Name>ToneMappingPS.hlsl<Name>
-	</TYPE>
-	<TYPE category="CS/">
-      <Name>equirect2cube.hlsl</Name>
-	  <Name>PerfilterEnvMap.hlsl</Name>
-	  <Name>SpLUT.hlsl<Name>
 	</TYPE>
 </root>

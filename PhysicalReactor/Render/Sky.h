@@ -21,7 +21,5 @@ public:
 	////////////////////PBR envmap
 	Texture2D* EnvMap;
 	Texture2D* SpLutMap;
-
-	
 };
 

@@ -40,10 +40,10 @@ public:
 	void MouseButtonDown(HWND windows, int x, int y);
 	void MouseButtonUp();
 	
-	void BuildScene();
+	//void CreateDefalutLevel();
 	void AddStaticMesh(std::string path);
-	
-	void AddLight(LightType lighttype, XMFLOAT3 position, XMFLOAT3 rotation);
+	//void AddSky();
+	void Light(LightType lighttype);
 	~GameWorld();
 };
 
