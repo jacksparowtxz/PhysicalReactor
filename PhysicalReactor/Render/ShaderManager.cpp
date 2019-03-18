@@ -259,8 +259,31 @@ PRE::VertexLayout* ShaderManager::GetVertexLayout(const std::string& filename)
 
 void ShaderManager::GetPSO(Material* material, GraphicPSO* pso)
 {
-	pso->desc.vs = VSMap["SkyVS.hlsl"];
-	pso->desc.ps = PSMap["SkyPS.hlsl"];
-	pso->desc.VL = VLMap["SkyVS.hlsl"];
+			pso->desc.vs = VSMap["SkyVS.hlsl"];
+			pso->desc.ps = PSMap["SkyPS.hlsl"];
+			pso->desc.VL = VLMap["SkyVS.hlsl"];
+
+}
+
+void ShaderManager::GetPSO(OBJECTTYPE objecttype, GraphicPSO* pso)
+{
+	switch (objecttype)
+	{
+	case TYPE_VOID:
+		return;
+		break;
+	case TYPE_SKY:
+		pso->desc.vs = VSMap["SkyVS.hlsl"];
+		pso->desc.ps = PSMap["SkyPS.hlsl"];
+		pso->desc.VL = VLMap["SkyVS.hlsl"];
+		break;
+	case TYPE_STATICMESH:
+		pso->desc.vs = VSMap["vs.hlsl"];
+		pso->desc.ps = PSMap["ps.hlsl"];
+		pso->desc.VL = VLMap["vs.hlsl"];
+		break;
+	default:
+		break;
+	}
 }
 

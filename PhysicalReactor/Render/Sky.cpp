@@ -11,8 +11,8 @@ Sky::Sky()
 	SkyCubeMap = new Texture2D;
 	TextureManager::GetLoader()->LoadTexture("Re/SkyhighFluffycloudField4k.hdr", SkyCubeMap,true);
 	Skymaterial = new Material("SkyMaterial");
-	Texture2D* EnvMap=new Texture2D;
-	Texture2D* SpLutMap = new Texture2D;
+	EnvMap=new Texture2D;
+	SpLutMap = new Texture2D;
 	TextureManager::GetLoader()->MakeRadianceMap(SkyCubeMap,EnvMap,SpLutMap);
 
 	DepthStencilStateDesc dsdesc;
@@ -37,14 +37,17 @@ Sky::Sky()
 	rsdesc.DepthCilpEnable = true;
 	rsdesc.ScissorEnable = false;
 	Skymaterial->SetRasterState(rsdesc);
+
+	
+
 }
 
 
 Sky::~Sky()
 {
-	delete SkyCubeMap;
-	delete Skymaterial;
-	delete SkyMesh;
-	delete EnvMap;
-	delete SpLutMap;
+	SAFE_DELETE(SkyCubeMap);
+	SAFE_DELETE(Skymaterial);
+	SAFE_DELETE(SkyMesh);
+	SAFE_DELETE(EnvMap);
+	SAFE_DELETE(SpLutMap);
 }

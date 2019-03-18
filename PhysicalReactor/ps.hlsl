@@ -20,7 +20,7 @@ cbuffer SpotLightCB : register(b2)
 cbuffer EyePostionCB : register(b3)
 {
     float4 EyePos;
-    coffies cosf[9];
+    coffies cosf[15];
 };
 
 
@@ -55,7 +55,7 @@ Texture2D RefractionMap : register(t13);
 Texture2D PixelDepthOffset : register(t14);
 
 TextureCube specularTexture : register(t15);
-Texture2D specularBRDF_LUT : register(t17);
+Texture2D specularBRDF_LUT : register(t16);
 
 
 SamplerState BaseColorSampler : register(s0);
@@ -74,8 +74,7 @@ SamplerState AmbientSampler : register(s12);
 SamplerState RefractionSampler : register(s13);
 SamplerState PixelDepthOffsetSampler : register(s14);
 
-SamplerState spBRDF_Sampler : register(s15);
-SamplerState Lut_Sampler : register(s16);
+SamplerState Lut_Sampler : register(s15);
 
 // (内插)颜色数据的传递函数。
 float4 main(PixelShaderInput input) : SV_TARGET
@@ -131,10 +130,10 @@ float4 main(PixelShaderInput input) : SV_TARGET
 
     /////Return IBL Env map;
     uint width, height, levels;
-    uint specularTextureLevels=SpecularMap.GetDimensions(0,width,height,levels);
-    float3 specularIrradiance = SpecularMap.SampleLevel(BaseColorSampler,Lr,roughness*specularTextureLevels).rgb;
+    uint specularTextureLevels = specularTexture.GetDimensions(0, width, height, levels);
+    float3 specularIrradiance = specularTexture.SampleLevel(BaseColorSampler, Lr, roughness * specularTextureLevels).rgb;
 
-    float2 IspecularBRDF = specularBRDF_LUT.Sample(spBRDF_Sampler, float2(cosLo,roughness)).rg;
+    float2 IspecularBRDF = specularBRDF_LUT.Sample(Lut_Sampler, float2(cosLo, roughness)).rg;
 
     float3 specularIBL = (F0 * IspecularBRDF.x + IspecularBRDF.y) * specularIrradiance;
 

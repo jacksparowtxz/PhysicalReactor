@@ -27,13 +27,13 @@ GameWorld::GameWorld(HWND hwnd)
 	title = tmp;
 
 	level = allocatorFC::allocateNew<Level>(*Main_Allocator,*Main_Allocator);
-	//CreateDefalutLevel();
+	BuildScene();
 }
 
 void GameWorld::Update(double deltatime)
 {
 	renderworld->Update(deltatime);
-	renderworld->BuildScene(level);
+	renderworld->UpdateScene(level);
 }
 
 void GameWorld::Render()
@@ -73,6 +73,12 @@ void GameWorld::MouseButtonUp()
 
 
 
+void GameWorld::BuildScene()
+{
+	AddLight(LightType::DIRECTIONALLIGHT, { 1.0f,-1.0f,1.0f }, { 0.0f,0.0f,0.0f });
+	AddStaticMesh("Re/SciFiHelmet.gltf");
+}
+
 void GameWorld::AddStaticMesh(std::string path)
 {
 	StaticMesh* ImportMesh = allocatorFC::allocateNew<StaticMesh>(*Main_Allocator);
@@ -80,14 +86,9 @@ void GameWorld::AddStaticMesh(std::string path)
 	level->AddStaticMesh(ImportMesh);
 }
 
-/*void GameWorld::AddSky()
+void GameWorld::AddLight(LightType lighttype, XMFLOAT3 position, XMFLOAT3 rotation)
 {
-	level->AddSky();
-}*/
-
-void GameWorld::Light(LightType lighttype)
-{
-	level->AddLight(lighttype);
+	level->AddLight(lighttype, position, rotation);
 }
 
 GameWorld::~GameWorld()

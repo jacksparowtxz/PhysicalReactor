@@ -3,7 +3,7 @@
 ////////////spherical-harmonics Function
 /////////////////////////////////////"Simplifying-Spherical-Harmonics-for-Lighting"Dr Graham Hazel
 
-float3 spherical_harmonics_Irrandice(coffies Coefficients[9], float3 n)
+float3 spherical_harmonics_Irrandice(coffies Coefficients[15], float3 n)
 {
 
     float SHbasis[9];
