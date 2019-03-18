@@ -15,7 +15,7 @@ using namespace PRE;
 namespace PRE
 {
 
-	
+
 	struct RenderConstantBuffer
 	{
 		RenderConstantBuffer()
@@ -35,23 +35,29 @@ namespace PRE
 		DirectX::XMFLOAT4X4 worldinvtranspose;
 
 		DirectX::XMFLOAT4X4 model;
-		DirectX::XMFLOAT4X4 WorldViewProj;
 		DirectX::XMFLOAT4X4 pading;
 		DirectX::XMFLOAT4X4 pading1;
+		DirectX::XMFLOAT4X4 pading2;
 
-		SpotLight spotlights[1024];
-		PointLight pointlights[1024];
-		DirectionalLight directionallights;
+		DirectX::XMFLOAT4X4 WorldViewProj;
+		DirectX::XMFLOAT4X4 pading3;
+		DirectX::XMFLOAT4X4 pading4;
+		DirectX::XMFLOAT4X4 pading5;
+
+		SpotLight spotlights[4];
+		PointLight pointlights[4];
+		DirectionalLight directionallights[4];
 		DirectX::XMFLOAT4 EyePos;
-		shcoeffs COFS[9];
-		
+		shcoeffs COFS[15];
+
+
 	};
 
-	 
+
 	class RenderWorld
 	{
 	public:
-		RenderWorld(HWND windows,Allocator* Inallocator, DynamicLinearAllocator* allocator1);
+		RenderWorld(HWND windows, Allocator* Inallocator, DynamicLinearAllocator* allocator1);
 		~RenderWorld();
 		void BeginRender();
 		void RenderFrame();
@@ -62,12 +68,12 @@ namespace PRE
 		void ReSize(int width, int height);
 		void MoveForWard(float Direction);
 		void MoveRight(float Direction);
-		void CameraRotation(WPARAM btnState,int x, int y);
-		void SetMousePosition(HWND windows,int x, int y);
-		void RenderMaterial(SHADERSTAGE stage,SubMesh* submesh);
+		void CameraRotation(WPARAM btnState, int x, int y);
+		void SetMousePosition(HWND windows, int x, int y);
+		void RenderMaterial(SHADERSTAGE stage, SubMesh* submesh);
 		void InitViews();
 		void RenderWireframe(bool Wireframe);
-		void BuildScene(Level* level);
+		void UpdateScene(Level* level);
 		Allocator* allocator;
 
 		Vector<StaticMesh*> StaticmeshList;
@@ -93,9 +99,9 @@ namespace PRE
 		RasterizerState* rasterizerstate;
 
 		Sky* sky;
+		Sampler* SpLutSampler;
 
 
-		
 
 	};
 }
