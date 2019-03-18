@@ -20,7 +20,7 @@ cbuffer SpotLightCB : register(b2)
 cbuffer EyePostionCB : register(b3)
 {
     float4 EyePos;
-    coffies cosf[9];
+    coffies cosf[15];
 };
 
 

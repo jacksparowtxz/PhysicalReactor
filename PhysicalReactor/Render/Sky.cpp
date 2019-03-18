@@ -11,8 +11,8 @@ Sky::Sky()
 	SkyCubeMap = new Texture2D;
 	TextureManager::GetLoader()->LoadTexture("Re/SkyhighFluffycloudField4k.hdr", SkyCubeMap,true);
 	Skymaterial = new Material("SkyMaterial");
-	Texture2D* EnvMap=new Texture2D;
-	Texture2D* SpLutMap = new Texture2D;
+	EnvMap=new Texture2D;
+	SpLutMap = new Texture2D;
 	TextureManager::GetLoader()->MakeRadianceMap(SkyCubeMap,EnvMap,SpLutMap);
 
 	DepthStencilStateDesc dsdesc;
