@@ -5,12 +5,15 @@ struct DirectionalLight
 
 	DirectionalLight();
 	~DirectionalLight();
-
+	DirectionalLight(XMFLOAT3 direction);
 	XMFLOAT4 color;
-	XMFLOAT3 direction;
+	XMFLOAT3 Direction;
 	float Intensity;
 	XMFLOAT4 pading;
 	XMFLOAT4 pading1;
+
+	void SetPostion(XMFLOAT3 direction);
+
 	//////////////Light
 /*	float lightsourceangle;
 	
