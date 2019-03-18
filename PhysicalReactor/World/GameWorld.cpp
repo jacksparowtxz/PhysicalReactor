@@ -27,7 +27,7 @@ GameWorld::GameWorld(HWND hwnd)
 	title = tmp;
 
 	level = allocatorFC::allocateNew<Level>(*Main_Allocator,*Main_Allocator);
-	//CreateDefalutLevel();
+	BuildScene();
 }
 
 void GameWorld::Update(double deltatime)
@@ -85,11 +85,10 @@ void GameWorld::AddStaticMesh(std::string path)
 	level->AddSky();
 }*/
 
-void GameWorld::Light(LightType lighttype)
+void GameWorld::AddLight(LightType lighttype, XMFLOAT3 position, XMFLOAT3 rotation)
 {
-	level->AddLight(lighttype);
+	level->AddLight(lighttype, position, rotation);
 }
-
 GameWorld::~GameWorld()
 {
 	if (Main_Allocator != nullptr)
