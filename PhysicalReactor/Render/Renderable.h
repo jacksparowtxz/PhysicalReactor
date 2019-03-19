@@ -5,4 +5,6 @@
 #include"Render/Spotlight.h"
 #include"Render/SkyLight.h"
 #include"Render/DirectionalLight.h"
+#include"Render/RenderTarget.h"
+#include"Render/DepthStencilTarget.h"
 
