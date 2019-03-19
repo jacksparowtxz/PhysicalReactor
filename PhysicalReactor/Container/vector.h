@@ -57,7 +57,7 @@ namespace PRE
 		}
 		const Vector<T>& operator=(const Vector<T> &other)
 		{
-			uint32_t size = other.Size;
+			uint32_t size = other.Size();
 			Resize(size);
 
 			for (uint32_t i=0;i<size;++i)
@@ -73,7 +73,7 @@ namespace PRE
 		{
 			return mSize == 0;
 		}
-		uint32_t Size()
+		uint32_t Size() const
 		{
 			return mSize;
 		}
