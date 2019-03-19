@@ -24,7 +24,7 @@ void Level::AddStaticMesh(StaticMesh* sm)
 
 void Level::AddSky()
 {
-	allocatorFC::allocateNew<Sky>(*allocator, sky);
+   sky=allocatorFC::allocateNew<Sky>(*allocator);
 }
 
 
