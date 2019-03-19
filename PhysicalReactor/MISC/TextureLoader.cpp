@@ -92,7 +92,7 @@ void TextureLoader::LoadTexture(const string & TexturefileName, Texture2D* LoadM
 			 HRESULT chr = Renderer::GetDevice()->CreateTexture2D(&CubeMapdesc, nullptr, &LoadMap);
 			 assert(SUCCEEDED(chr));
 			 ComputerPSO CSPSO;
-			 CSPSO.desc.cs == Renderer::shadermanager->GetComputerShader("equirect2cube.hlsl");
+			 CSPSO.desc.cs = Renderer::shadermanager->GetComputerShader("equirect2cube.hlsl");
 
 			 Sampler Computersampler;
 			 Computersampler.desc.Filter = FILTER_MIN_MAG_MIP_LINEAR;
@@ -155,7 +155,7 @@ void TextureLoader::LoadTexture(const string & TexturefileName, Texture2D* LoadM
 void TextureLoader::MakeRadianceMap(Texture2D* ufilterEnvmap,Texture2D* env_Map,Texture2D* Splut)
 {
 	ComputerPSO CSPSO;
-	CSPSO.desc.cs == Renderer::shadermanager->GetComputerShader("PerfilterEnvMap.hlsl");
+	CSPSO.desc.cs = Renderer::shadermanager->GetComputerShader("PerfilterEnvMap.hlsl");
 	struct SpeularMapFilterSetting
 	{
 		float roughness;
