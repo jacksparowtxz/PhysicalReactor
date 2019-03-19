@@ -281,6 +281,11 @@ void ShaderManager::GetPSO(OBJECTTYPE objecttype, GraphicPSO* pso)
 		pso->desc.ps = PSMap["ps.hlsl"];
 		pso->desc.VL = VLMap["vs.hlsl"];
 		break;
+	case TYPE_TONEMAPPING:
+		pso->desc.vs = VSMap["ToneMappingVS.hlsl"];
+		pso->desc.ps = PSMap["ToneMappingPS.hlsl"];
+		pso->desc.VL = nullptr;
+		break;
 	default:
 		break;
 	}
