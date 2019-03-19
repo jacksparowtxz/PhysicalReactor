@@ -5,8 +5,8 @@
 	  <Name>ToneMappingVS.hlsl</Name>
 	</TYPE>
     <TYPE category="PS/">
-      <Name>ps.hlsl</Name>
-	  <Name>SkyPS.hlsl</Name>
+      <Name>SkyPS.hlsl</Name>
+	  <Name>ps.hlsl</Name>
 	  <Name>ToneMappingPS.hlsl</Name>
 	</TYPE>
 	<TYPE category="CS/">

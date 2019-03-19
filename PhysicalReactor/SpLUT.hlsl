@@ -1,5 +1,3 @@
-#include"Common.hlsli"
-#include"Mathematics.hlsli"
 #include"BRDF.hlsli"
 
 
@@ -31,7 +29,7 @@ void main(uint2 ThreadID:SV_DispatchThreadID)
         j.x = 0;
         j.y = i;
         float2 u = sampleHammersley(i, (float)1/NumSamples, j);
-        float3 Lh = ImportanceSampleGGX(u,roughness);
+        float3 Lh = ImportanceSampleGGX(u,roughness).xyz;
 
         float3 Li = 2.0 * dot(Lo, Lh) * Lh - Lo;
 

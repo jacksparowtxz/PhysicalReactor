@@ -1,4 +1,4 @@
-#include"Common.hlsli"
+#include"Mathematics.hlsli"
 
 float3 LambertDiffuse(float3 diffusecolor)
 {
@@ -6,7 +6,7 @@ float3 LambertDiffuse(float3 diffusecolor)
 }
 
 ////////////////////////////////https://blog.selfshadow.com/publications/s2012-shading-course/burley/s2012_pbs_disney_brdf_notes_v3.pdf
-float3 BurleyDiffuse(float3 diffusecolor,float3 roughness,float3 v,float3 h,float3 n)
+float3 BurleyDiffuse(float3 diffusecolor,float roughness,float3 v,float3 h,float3 n)
 {
     float VoN = dot(v, n);
     float LoN = dot(h, n);
@@ -19,7 +19,7 @@ float3 BurleyDiffuse(float3 diffusecolor,float3 roughness,float3 v,float3 h,floa
 }
 
 //////////////////////////http://www1.cs.columbia.edu/~bosun/images/research/egnp06/download/appendix.pdf
-float OrenNayarDiffuseColor(float3 diffusecolor, float3 roughness, float3 v, float3 l,float3 n)
+float OrenNayarDiffuseColor(float3 diffusecolor, float roughness, float3 v, float3 l,float3 n)
 {
     float LdotV = dot(l, v);
     float NdotL = dot(l, n);
@@ -147,7 +147,7 @@ float Vis_Simth(float a,float3 n,float3 l,float3 v)
 ////////////////////////////////////
 ///////////////////////////////////
 ///////////////////////////////////////http://jcgt.org/published/0003/02/03/paper.pdf
-float Vis_SmithJointApprox(float a,float3 nov,float3 nol)
+float Vis_SmithJointApprox(float a,float nov,float nol)
 {
     float a2 = sqrt(a);
     float Vis_SimthV = nol * (nov) * (1 - a2) + a2;

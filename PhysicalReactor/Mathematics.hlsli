@@ -126,7 +126,7 @@ float3 getSamplingVector(uint3 ThreadID, RWTexture2DArray<float4> outputtextures
     float2 st = ThreadID.xy / float2(outputWidth, outputHeight);
     float2 uv = 2.0 * float2(st.x, 1.0 - st.y) - float2(1.0f, 1.0f);
 
-    float3 ret;
+    float3 ret = {0.0f,0.0f,0.0f};
     switch (ThreadID.z)
     {
         case 0:
@@ -165,4 +165,163 @@ void HarmonicBasis(float Basis[9],float x,float y,float z,float r)
     Basis[6] = 1.f / 4.f * sqrt(5.f / PI) * (-x * x - y * y + 2 * z * z) / r2;
     Basis[7] = 1.f / 2.f * sqrt(15.f / PI) * z * x / r2;
     Basis[8] = 1.f / 4.f * sqrt(15.f / PI) * (x * x - y * y) / r2;
+}
+
+///////////Form UE4
+float ClampedPow(float X, float Y)
+{
+    return pow(max(abs(X), 0.000001f), Y);
+}
+float2 ClampedPow(float2 X, float2 Y)
+{
+    return pow(max(abs(X), float2(0.000001f, 0.000001f)), Y);
+}
+float3 ClampedPow(float3 X, float3 Y)
+{
+    return pow(max(abs(X), float3(0.000001f, 0.000001f, 0.000001f)), Y);
+}
+float4 ClampedPow(float4 X, float4 Y)
+{
+    return pow(max(abs(X), float4(0.000001f, 0.000001f, 0.000001f, 0.000001f)), Y);
+}
+
+float PhongShadingPow(float X, float Y)
+{
+
+    return ClampedPow(X, Y);
+}
+
+
+///////////////////////
+
+float Square(float x)
+{
+    return x * x;
+}
+
+float2 Square(float2 x)
+{
+    return x * x;
+}
+
+float3 Square(float3 x)
+{
+    return x * x;
+}
+
+float4 Square(float4 x)
+{
+    return x * x;
+}
+
+float Pow2(float x)
+{
+    return x * x;
+}
+
+float2 Pow2(float2 x)
+{
+    return x * x;
+}
+
+float3 Pow2(float3 x)
+{
+    return x * x;
+}
+
+float4 Pow2(float4 x)
+{
+    return x * x;
+}
+
+float Pow3(float x)
+{
+    return x * x * x;
+}
+
+float2 Pow3(float2 x)
+{
+    return x * x * x;
+}
+
+float3 Pow3(float3 x)
+{
+    return x * x * x;
+}
+
+float4 Pow3(float4 x)
+{
+    return x * x * x;
+}
+
+float Pow4(float x)
+{
+    float xx = x * x;
+    return xx * xx;
+}
+
+float2 Pow4(float2 x)
+{
+    float2 xx = x * x;
+    return xx * xx;
+}
+
+float3 Pow4(float3 x)
+{
+    float3 xx = x * x;
+    return xx * xx;
+}
+
+float4 Pow4(float4 x)
+{
+    float4 xx = x * x;
+    return xx * xx;
+}
+
+float Pow5(float x)
+{
+    float xx = x * x;
+    return xx * xx * x;
+}
+
+float2 Pow5(float2 x)
+{
+    float2 xx = x * x;
+    return xx * xx * x;
+}
+
+float3 Pow5(float3 x)
+{
+    float3 xx = x * x;
+    return xx * xx * x;
+}
+
+float4 Pow5(float4 x)
+{
+    float4 xx = x * x;
+    return xx * xx * x;
+}
+
+float Pow6(float x)
+{
+    float xx = x * x;
+    return xx * xx * xx;
+}
+
+float2 Pow6(float2 x)
+{
+    float2 xx = x * x;
+    return xx * xx * xx;
+}
+
+float3 Pow6(float3 x)
+{
+    float3 xx = x * x;
+    return xx * xx * xx;
+}
+
+float4 Pow6(float4 x)
+{
+    float4 xx = x * x;
+    return xx * xx * xx;
 }

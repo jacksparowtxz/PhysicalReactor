@@ -1,5 +1,5 @@
 #include"BRDF.hlsli"
-#include"Mathematics.hlsli"
+
 
 cbuffer DirectionalLightCB : register(b0)
 {
@@ -55,7 +55,7 @@ Texture2D RefractionMap : register(t13);
 Texture2D PixelDepthOffset : register(t14);
 
 TextureCube specularTexture : register(t15);
-Texture2D specularBRDF_LUT : register(t17);
+Texture2D specularBRDF_LUT : register(t16);
 
 
 SamplerState BaseColorSampler : register(s0);
@@ -80,7 +80,7 @@ SamplerState Lut_Sampler : register(s16);
 // (内插)颜色数据的传递函数。
 float4 main(PixelShaderInput input) : SV_TARGET
 {
-    float3 basecolor = BaseColorMap.Sample(BaseColorSampler, input.Tex);
+    float3 basecolor = BaseColorMap.Sample(BaseColorSampler, input.Tex).rgb;
     float metalness = MetalicMap.Sample(BaseColorSampler,input.Tex).g;
     float roughness = RoughnessMap.Sample(BaseColorSampler,input.Tex).b;
 
@@ -91,7 +91,7 @@ float4 main(PixelShaderInput input) : SV_TARGET
 
     float cosLo = max(0.0, dot(N, Lo));
 
-    float Lr = 2.0 * cosLo * N - Lo;
+    float3 Lr = 2.0 * cosLo * N - Lo;
 
     float3 F0 = lerp(Fdielectirc,basecolor,metalness);
 
@@ -106,15 +106,15 @@ float4 main(PixelShaderInput input) : SV_TARGET
     float cosLi = max(0.0, dot(N, Li));
     float cosLh = max(0.0, dot(N, Lh));
 
-    float F = Fresnel_Schlick(F0, Li, Lh);
+    float3 F = Fresnel_Schlick(F0, Li, Lh);
 
     float D = GGX_NDF(roughness,cosLh);
 
     float G = GGX_Schilck(roughness,Li,Lh,N);
 
-    float kd = lerp(float3(1, 1, 1) - F, float3(0,0,0),metalness);
+    float3 kd = lerp(float3(1, 1, 1) - F, float3(0,0,0),metalness);
 
-    float diffuseBRDF = kd * basecolor;
+    float3 diffuseBRDF = kd * basecolor;
 
     float3 specularBRDF = (F * D * G) / max(epsilon,4.0*cosLi*cosLo);
 

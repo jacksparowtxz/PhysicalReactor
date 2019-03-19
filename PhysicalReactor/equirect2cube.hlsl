@@ -1,12 +1,4 @@
-#include"Common.hlsli"
 #include"Mathematics.hlsli"
-
-
-struct Data
-{
-    float3 coef[9];
-};
-
 
 Texture2D inputTexture : register(t0);
 RWTexture2DArray<float4> outputtexture : register(u0);

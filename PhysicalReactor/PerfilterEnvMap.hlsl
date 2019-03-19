@@ -1,5 +1,3 @@
-#include"Mathematics.hlsli"
-#include"Common.hlsli"
 #include"BRDF.hlsli"
 
 

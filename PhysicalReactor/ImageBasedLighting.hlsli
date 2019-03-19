@@ -1,4 +1,3 @@
-#include"Mathematics.hlsli"
 #include"BRDF.hlsli"
 
 
@@ -83,7 +82,7 @@ float2 IntegrateBRDF(uint2 Random,float Roughness, float3 N,float3 V)
         float VoH = saturate(dot(V, H));
         if (NoL > 0)
         {
-            float G = Vis_SmithJointApprox(Roughness, N, V, L);
+            float G = Vis_SmithJointApprox(Roughness, dot(N, V), dot(N, L));
             float G_Vis = G * dot(V, H) / (dot(N, H) * dot(N, V));
             float Fc = pow(1 - dot(V, H), 5);
             A += (1 - Fc) * G_Vis;

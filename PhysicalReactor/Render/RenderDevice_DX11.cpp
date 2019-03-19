@@ -2613,8 +2613,9 @@ HRESULT RenderDevice_DX11::CreateVertexShader(WCHAR* filename, GraphicBlob* blob
 HRESULT RenderDevice_DX11::CreatePixelShader(WCHAR* filename, GraphicBlob* blob, PixelShader* pPixelShader)
 {
 	pPixelShader->Register(this);
-	ID3D10Blob* ERRORMESSAGE;
-	HRESULT hr = D3DCompileFromFile(filename, NULL, NULL, "main", "ps_5_0", D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, NULL, (ID3D10Blob**)&blob->resourceDX, &ERRORMESSAGE);
+	ID3D10Blob* ERRORMESSAGE=NULL;
+	HRESULT hr = D3DCompileFromFile(filename, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, NULL, (ID3D10Blob**)&blob->resourceDX, &ERRORMESSAGE);
+	OutputDebugStringA((char*)ERRORMESSAGE->GetBufferPointer());
 	if (FAILED(hr))
 	{
 		ASSERT("ps create fail");
@@ -2661,7 +2662,7 @@ HRESULT RenderDevice_DX11::CreateComputerShader(WCHAR* filename, GraphicBlob* bl
 {
 	pComputerShader->Register(this);
 	ID3D10Blob* ERRORMESSAGE = NULL;
-	HRESULT hr = D3DCompileFromFile(filename, NULL, NULL, "main", "cs_5_0", D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, NULL, (ID3D10Blob**)&blob->resourceDX, &ERRORMESSAGE);
+	HRESULT hr = D3DCompileFromFile(filename, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "cs_5_0", D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, NULL, (ID3D10Blob**)&blob->resourceDX, &ERRORMESSAGE);
 	if (FAILED(hr))
 	{
 		ASSERT("cs create fail");
