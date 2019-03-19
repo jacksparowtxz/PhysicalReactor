@@ -9,11 +9,11 @@ RenderTarget::RenderTarget()
 	depthstencil = nullptr;
 }
 
-RenderTarget::RenderTarget(UINT width, UINT height, bool hasdepth, FORMAT format, UINT mipMapLevelCount, UINT MSAAC, bool depthonly)
+RenderTarget::RenderTarget(UINT width, UINT height, bool hasdepth, FORMAT format, UINT mipMapLevelCount, UINT MSAAC, UINT MSAAQUALITY, bool depthonly)
 {
 	numviews = 0;
 	depthstencil = nullptr;
-	Initialize(width, height, hasdepth, format, mipMapLevelCount, MSAAC,depthonly);
+	Initialize(width, height, hasdepth, format, mipMapLevelCount, MSAAC, MSAAQUALITY,depthonly);
 }
 
 void RenderTarget::CleanUp()
@@ -32,7 +32,7 @@ void RenderTarget::CleanUp()
 	resolvedMSAAUptodate.clear();
 }
 
-void RenderTarget::Initialize(UINT width, UINT height, bool hasDepth, FORMAT format, UINT mipMapLevelCount, UINT MSAAC, bool depthOnly)
+void RenderTarget::Initialize(UINT width, UINT height, bool hasDepth, FORMAT format, UINT mipMapLevelCount, UINT MSAAC, UINT MSAAQUALITY, bool depthOnly)
 {
 	CleanUp();
 
@@ -46,6 +46,7 @@ void RenderTarget::Initialize(UINT width, UINT height, bool hasDepth, FORMAT for
 		texturedesc.ArraySize = 1;
 		texturedesc.Format = format;
 		texturedesc.SampleDesc.Count = MSAAC;
+		texturedesc.SampleDesc.Quality = MSAAQUALITY;
 		texturedesc.Usage = USAGE_DEFAULT;
 		texturedesc.BindFlags = BIND_RENDER_TARGET | BIND_SHADER_RESOURCE;
 		texturedesc.CPUAccessFlags = 0;
@@ -85,6 +86,7 @@ void RenderTarget::Initialize(UINT width, UINT height, bool hasDepth, FORMAT for
 	if (hasDepth)
 	{
 		depthstencil = new DepthStencilTarget();
+		depthstencil->Initialize(width,height,MSAAC, MSAAQUALITY);
 	}
 }
 
@@ -250,6 +252,14 @@ void RenderTarget::Set(DepthStencilTarget *getDepth, bool disableColor, int view
 		}
 	}
 
+}
+
+void PRE::RenderTarget::ConvertoResolve()
+{
+	for (uint32_t i = 0; i < numviews; i++)
+	{
+		Renderer::GetDevice()->MSAAResolve(resolve_rendertargets[i], rendertargets[i]);
+	}
 }
 
 PRE::Texture2D * RenderTarget::GetTextureResolvedMSAA( int viewID)
