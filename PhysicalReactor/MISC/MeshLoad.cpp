@@ -201,7 +201,7 @@ std::vector<Texture2D*> GameMeshImport::loadMaterialTexture(aiMaterial* mat, aiT
 		   filename = directory + "/" + filename;
 		   std::string name = std::string(filename.begin(), filename.end());
 		   const char* szname = name.c_str();
-		   TextureManager::GetLoader()->LoadTexture(name, texture2d);
+		   TextureManager::GetLoader()->LoadTexture(name, texture2d,false);
 		   textures.push_back(texture2d);
 		   lastname = std::move(str.C_Str());
 		 
