@@ -81,8 +81,8 @@ SamplerState Lut_Sampler : register(s16);
 float4 main(PixelShaderInput input) : SV_TARGET
 {
     float3 basecolor = BaseColorMap.Sample(BaseColorSampler, input.Tex);
-    float metalness = MetalicMap.Sample(BaseColorSampler,input.Tex).r;
-    float roughness = RoughnessMap.Sample(BaseColorSampler,input.Tex).r;
+    float metalness = MetalicMap.Sample(BaseColorSampler,input.Tex).g;
+    float roughness = RoughnessMap.Sample(BaseColorSampler,input.Tex).b;
 
     float3 Lo = normalize(EyePos.xyz - input.PosW);
 
@@ -130,8 +130,8 @@ float4 main(PixelShaderInput input) : SV_TARGET
     float3 diffuseIBL = Ikd * basecolor * irradiance;
 
     /////Return IBL Env map;
-    uint width, height, levels;
-    uint specularTextureLevels=SpecularMap.GetDimensions(0,width,height,levels);
+    uint width, height, specularTextureLevels;
+     SpecularMap.GetDimensions(0, width, height, specularTextureLevels);
     float3 specularIrradiance = SpecularMap.SampleLevel(BaseColorSampler,Lr,roughness*specularTextureLevels).rgb;
 
     float2 IspecularBRDF = specularBRDF_LUT.Sample(spBRDF_Sampler, float2(cosLo,roughness)).rg;
