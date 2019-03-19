@@ -13,7 +13,7 @@ public:
 	Texture2D* texture;
 	Texture2D* Reslovetexture;
 
-	void Initialize(int width, int height, UINT MSAAC);
+	void Initialize(int width, int height, UINT MSAAC,UINT MSAAQUALITY);
 	void InitializeCube(int size, bool independentFaces = false);
 	void Clear();
 	void CopyFrom(const DepthStencilTarget&);

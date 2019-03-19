@@ -16,7 +16,7 @@ DepthStencilTarget::~DepthStencilTarget()
 	SAFE_DELETE(Reslovetexture);
 }
 
-void DepthStencilTarget::Initialize(int width, int height, UINT MSAAC)
+void DepthStencilTarget::Initialize(int width, int height, UINT MSAAC, UINT MSAAQUALITY)
 {
 	SAFE_DELETE(texture);
 	SAFE_DELETE(Reslovetexture);
@@ -30,7 +30,8 @@ void DepthStencilTarget::Initialize(int width, int height, UINT MSAAC)
 	depthstencildesc.Format=PRE::FORMAT_R32G8X24_TYPELESS;
 	depthstencildesc.CPUAccessFlags = 0;
 	depthstencildesc.MiscFlags = 0;
-
+	depthstencildesc.SampleDesc.Count = MSAAC;
+	depthstencildesc.SampleDesc.Quality = MSAAQUALITY;
 	Renderer::GetDevice()->CreateTexture2D(&depthstencildesc,nullptr,&texture);
 
 	if (MSAAC > 1)
