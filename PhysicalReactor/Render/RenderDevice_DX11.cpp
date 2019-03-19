@@ -1503,6 +1503,7 @@ RenderDevice_DX11::RenderDevice_DX11(HWND mainscreen,bool fullscreen, bool debug
 		}
 	}
 
+	Basedevice->CheckMultisampleQualityLevels(DXGI_FORMAT_R16G16B16A16_FLOAT, 4, &M4XMSAAQUALITY);
 
 	DXGI_SWAP_CHAIN_DESC1 sd = { 0 };
 	sd.Width = SCREENWIDTH;
@@ -3225,6 +3226,7 @@ void RenderDevice_DX11::CreateRenderTargetAndDepthStencil()
 	Basedevice->CreateTexture2D(&depthStencilDesc, NULL, &depthbuffer);
 	Basedevice->CreateDepthStencilView(depthbuffer, NULL, &DepthStecilView);
 }
+
 
 void RenderDevice_DX11::BindScissorRects(UINT numRects, const Rect* rect)
 {

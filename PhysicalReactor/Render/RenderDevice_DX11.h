@@ -135,7 +135,7 @@ namespace PRE
 
 		virtual Texture2D GetBackBuffer()override;
 
-
+		
 		virtual void BindScissorRects(UINT numRects, const Rect* rect)override;
 		virtual void BindViewports(UINT NumViewports, const ViewPort* pViewports)override;
 		virtual void BindRenderTargets(UINT NumViews, Texture2D* const *ppRenderTargets, Texture2D* depthStencilTexture,int arrayIndex = -1)override;
