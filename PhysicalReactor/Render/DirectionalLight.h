@@ -53,4 +53,4 @@ struct DirectionalLight
 	XMFLOAT4* bloomtint; */
 };
 
-int i = sizeof(DirectionalLight);//32
+//int i = sizeof(DirectionalLight);//32
