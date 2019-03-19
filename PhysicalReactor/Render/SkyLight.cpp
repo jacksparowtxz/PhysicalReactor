@@ -9,7 +9,7 @@ SkyLight::SkyLight():skysourcetype(SLSSpecifiedCubemap),SourceCubemapangle(0.0f)
 	occlusiontint = new XMFLOAT4;
 	Lowerhemispherecolor = new XMFLOAT4;
 
-	lightype = SKYLIGHT;
+
 
 }
 
