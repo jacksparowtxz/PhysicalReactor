@@ -31,9 +31,10 @@ namespace PRE
 		bool CONSERVATIVE_RASTERIZATION;
 		bool RASTERIZER_ORDERED_VIEWS;
 		bool UNORDEREDACCESSTEXTURE_LOAD_EXT;
+		UINT M4XMSAAQUALITY;
 	public:
 		RenderDevice() :FRAMECOUNT(0), VSYNC(true), SCREENHEIGHT(0), FULLSCREEN(false), RESOLUTIONCHANGED(false),
-			BACKBUFFER_FORMAT(FORMAT_R10G10B10A2_UNORM), TESSELLATION(false), MULTITHREAD_RENDERING(false), CONSERVATIVE_RASTERIZATION(false), RASTERIZER_ORDERED_VIEWS(false), UNORDEREDACCESSTEXTURE_LOAD_EXT(false)
+			BACKBUFFER_FORMAT(FORMAT_R16G16B16A16_FLOAT), TESSELLATION(false), MULTITHREAD_RENDERING(false), CONSERVATIVE_RASTERIZATION(false), RASTERIZER_ORDERED_VIEWS(false), UNORDEREDACCESSTEXTURE_LOAD_EXT(false),M4XMSAAQUALITY(0)
 		{
 		
 		}
@@ -62,7 +63,7 @@ namespace PRE
 		virtual HRESULT CreateGraphicPSO(const GraphicsShaderDesc* pDesc, GraphicPSO* pso) = 0;
 		virtual HRESULT CreateComputerPSO(const ComputerPSODesc* pDesc, ComputerPSO* pso) = 0;
 	
-
+		
 
 		virtual void DestroyResource(GPUResource* pResource) = 0;
 		virtual void DestroyBuffer(GPUBuffer* pBuffer) = 0;
@@ -124,6 +125,10 @@ namespace PRE
 			return RESOLUTIONCHANGED;
 		}
 
+		int GetMSAAQUALITY()
+		{
+			return M4XMSAAQUALITY;
+		}
 		virtual void SetResolution(int width, int Height) = 0;
 
 		virtual Texture2D GetBackBuffer() = 0;
