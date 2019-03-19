@@ -416,6 +416,9 @@
     <FxCompile Include="ToneMappingVS.hlsl">
       <Filter>头文件\Shader</Filter>
     </FxCompile>
+    <FxCompile Include="resolveMSAADepthStencilCS.hlsl">
+      <Filter>头文件\Shader</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="BRDF.hlsli">
