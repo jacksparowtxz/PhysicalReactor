@@ -15,7 +15,7 @@ cbuffer SpecularMapFilterSetting : register(b0)
 TextureCube inputTexture : register(t0);
 RWTexture2DArray<float4> outputTexture : register(u0);
 
-SamplerState defaulteSampler : register(so);
+SamplerState defaulteSampler : register(s0);
 
 
 
