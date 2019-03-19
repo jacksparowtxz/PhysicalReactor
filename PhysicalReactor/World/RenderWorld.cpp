@@ -38,7 +38,10 @@ namespace PRE
 		allocatorFC::deallocateDelete<RasterizerState>(*allocator, rasterizerstate);
 		allocatorFC::deallocateDelete<GPUBuffer>(*allocator, constbuffer);
 		allocatorFC::deallocateDelete<Sampler>(*allocator, SpLutSampler);
+		allocatorFC::deallocateDelete<Sampler>(*allocator, tonemappingsampler);
+		allocatorFC::deallocateDelete<RenderTarget>(*allocator, rendertarget);
 		allocatorFC::deallocateDelete<ShaderManager>(*allocator, Renderer::shadermanager);
+
 		for (uint32_t i = 0; i < 9; i++)
 		{
 			allocatorFC::deallocateDelete<RenderConstantBuffer>(*allocator, m_constantBufferData[i]);
@@ -84,7 +87,7 @@ namespace PRE
 			Renderer::GetDevice()->BindConstantBuffer(PS_STAGE, constbuffer, 3, &pFisrtConstant6, &pNumberConstant6);
 			Renderer::GetDevice()->BindSampler(PS_STAGE, SpLutSampler, 15, 1);
 			Renderer::GetDevice()->BindResource(PS_STAGE, sky->EnvMap, 15);
-			Renderer::GetDevice()->BindResource(PS_STAGE, sky->SpLutMap, 15);
+			Renderer::GetDevice()->BindResource(PS_STAGE, sky->SpLutMap, 16);
 			DirectX::XMStoreFloat4x4(&m_constantBufferData[ThreadID]->model, XMMatrixTranspose(XMMatrixRotationY(90.f)));
 			for (SubMesh* submesh : sm->Meshs)
 			{
@@ -126,13 +129,27 @@ namespace PRE
 			Renderer::GetDevice()->BindVertexBuffers(&sky->SkyMesh->Meshs[0]->mVertexBuffer, 0, 1, &stride, &offset);
 			Renderer::GetDevice()->BindIndexBuffer(sky->SkyMesh->Meshs[0]->mIndexBuffer, INDEXBUFFER_32BIT, 0);
 			Renderer::GetDevice()->DrawIndexed(sky->SkyMesh->Meshs[0]->Indices.size(), 0, 0);
-			Renderer::GetDevice()->FinishComanlist();
+			
 		};
 
 		RenderSkyFC = RenderSkybox;
 		RenderSkyFC(sky, 1, nullptr);
 		JobScheduler::Wait(parallel_for(sky, 1, RenderSkyFC, nullptr));
 
+		auto tonemapping = [&, this]() {
+			Texture2D *const rt[1] = { rendertarget->GetTextureResolvedMSAA() };
+			Renderer::GetDevice()->BindRenderTargets(1, rt, rendertarget->depthstencil->GetTextureResolvedMSAA());
+
+			GraphicPSO PSO;
+			Renderer::shadermanager->GetPSO(OBJECTTYPE::TYPE_TONEMAPPING,&PSO);
+			Renderer::GetDevice()->BindGraphicsPSO(&PSO);
+			Renderer::GetDevice()->BindResource(PS_STAGE, *rt, 0);
+			Renderer::GetDevice()->BindSampler(PS_STAGE,tonemappingsampler,0,1);
+			Renderer::GetDevice()->Draw(3,0);
+			Renderer::GetDevice()->FinishComanlist();
+		};
+
+		tonemapping();
 	}
 
 	void RenderWorld::EndRender()
@@ -150,7 +167,7 @@ namespace PRE
 		{
 			DirectX::XMStoreFloat4x4(&m_constantBufferData[i]->projection, XMMatrixTranspose(camera->Proj()));
 			DirectX::XMStoreFloat4x4(&m_constantBufferData[i]->view, XMMatrixTranspose(camera->View()));
-			DirectX::XMStoreFloat4(&m_constantBufferData[i]->EyePos, { (camera->GetPositionXM),1.0f });
+			DirectX::XMStoreFloat4(&m_constantBufferData[i]->EyePos, camera->GetPositionXM());
 		}
 	}
 
@@ -426,7 +443,7 @@ namespace PRE
 		mLastMousePos.x = 0;
 		mLastMousePos.y = 0;
 
-
+		
 		JobScheduler::Initialize();
 		for (uint32_t i = 0; i < 9; ++i)
 		{
@@ -465,6 +482,14 @@ namespace PRE
 
 		Renderer::GetDevice()->CreateSamplerState(&splutsampler, SpLutSampler);
 
+		tonemappingsampler = allocatorFC::allocateNew<Sampler>(*allocator);
+		SamplerDesc tonemappingdesc;
+		tonemappingdesc.Filter = FILTER_MIN_MAG_MIP_LINEAR;
+		tonemappingdesc.AddressU = tonemappingdesc.AddressV = tonemappingdesc.AddressW = TEXTURE_ADDRESS_WRAP;
+
+		Renderer::GetDevice()->CreateSamplerState(&tonemappingdesc, tonemappingsampler);
+
+
 		shcoeffs COFS[15];
 
 		TextureManager::GetLoader()->MakeIadiacneMap(COFS);
@@ -475,6 +500,21 @@ namespace PRE
 				m_constantBufferData[i]->COFS[j] = COFS[j];
 
 		}
+
+		UINT screenwidth = Renderer::GetDevice()->GetScreenWidth();
+		UINT screenheight = Renderer::GetDevice()->GetScreenHeight();
+		FORMAT format = Renderer::GetDevice()->GetBackBufferFormat();
+		UINT QUALITY = Renderer::GetDevice()->GetMSAAQUALITY();
+
+		rendertarget = allocatorFC::allocateNew<RenderTarget>(*allocator,screenwidth,screenheight,true,format,1,4,QUALITY,false);
+
+		Texture2D *const rt[1] = { rendertarget->GetTexture()};
+		Renderer::GetDevice()->BindRenderTargets(1, rt,rendertarget->depthstencil->GetTexture());
+
+	
+
+
 	}
 
+	
 }

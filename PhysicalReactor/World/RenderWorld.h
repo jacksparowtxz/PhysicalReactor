@@ -11,6 +11,8 @@
 #include "Render/sky.h"
 #include<windows.h>
 
+
+
 using namespace PRE;
 namespace PRE
 {
@@ -98,9 +100,12 @@ namespace PRE
 		RasterizerState* Solidstate;
 		RasterizerState* rasterizerstate;
 
+
+		RenderTarget* rendertarget;
+	
 		Sky* sky;
 		Sampler* SpLutSampler;
-
+		Sampler* tonemappingsampler;
 
 
 	};
