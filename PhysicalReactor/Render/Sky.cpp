@@ -21,7 +21,7 @@ Sky::Sky()
 	dsdesc.DepthWriteMask = DEPTH_WRITE_MASK_ALL;
 
 	Skymaterial->SetDepthStencilState(dsdesc);
-	Skymaterial->EmissiveMap = SkyCubeMap;
+	Skymaterial->EmissiveMap = EnvMap;
 
 	SamplerDesc spdesc;
 	spdesc.Filter = FILTER_MIN_MAG_MIP_LINEAR;

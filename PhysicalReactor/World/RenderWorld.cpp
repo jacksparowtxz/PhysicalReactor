@@ -53,6 +53,7 @@ namespace PRE
 	{
 		Renderer::GetDevice()->PresentBegin();
 		Renderer::GetDevice()->SetResolution(1920, 1080);
+		RenderWireframe(false);
 	}
 
 
@@ -101,8 +102,8 @@ namespace PRE
 			//Renderer::GetDevice()->FinishComanlist();
 			//SetEvent(Handle[ThreadID]);
 		};
-		RenderStaticMesh = lambda;
-		JobScheduler::Wait(parallel_for(*StaticmeshList.data, StaticmeshList.Size(), RenderStaticMesh, (void*)nullptr));
+		//RenderStaticMesh = lambda;
+		//JobScheduler::Wait(parallel_for(*StaticmeshList.data, StaticmeshList.Size(), RenderStaticMesh, (void*)nullptr));
 
 
 		///////////////////RenderSky/////////////////////////////
@@ -134,7 +135,7 @@ namespace PRE
 
 		RenderSkyFC = RenderSkybox;
 		RenderSkyFC(sky, 1, nullptr);
-		JobScheduler::Wait(parallel_for(sky, 1, RenderSkyFC, nullptr));
+		//JobScheduler::Wait(parallel_for(sky, 1, RenderSkyFC, nullptr));
 
 		auto tonemapping = [&, this]() {
 			Texture2D *const rt[1] = { rendertarget->GetTextureResolvedMSAA() };
@@ -389,15 +390,17 @@ namespace PRE
 	}
 
 	void RenderWorld::UpdateScene(Level * level)
-	{
-		StaticmeshList = level->StaticMeshList;
+	{	
+		
+		StaticmeshList=level->StaticMeshList;
+		
 		sky = level->sky;
 		m_constantBufferData[0]->directionallights[0] = *level->DirectionalLightList[0];
-		for (uint32_t j = 0; j < level->DirectionalLightList.Size(); j++)
+		for (uint32_t j = 0; j < level->SpotLightList.Size(); j++)
 		{
 			m_constantBufferData[0]->spotlights[j] = *level->SpotLightList[j];
 		}
-		for (uint32_t j = 0; j < level->DirectionalLightList.Size(); j++)
+		for (uint32_t j = 0; j < level->PointLightList.Size(); j++)
 		{
 			m_constantBufferData[0]->pointlights[j] = *level->PointLightList[j];
 		}
@@ -470,7 +473,7 @@ namespace PRE
 		Renderer::GetDevice()->CreateRasterizerState(&Wireframedesc, Wireframestate);
 
 
-		sky = allocatorFC::allocateNew<Sky>(*allocator);
+		//sky = allocatorFC::allocateNew<Sky>(*allocator);
 
 
 		SpLutSampler = allocatorFC::allocateNew<Sampler>(*allocator);

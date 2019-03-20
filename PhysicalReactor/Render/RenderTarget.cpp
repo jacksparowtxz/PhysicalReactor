@@ -46,7 +46,7 @@ void RenderTarget::Initialize(UINT width, UINT height, bool hasDepth, FORMAT for
 		texturedesc.ArraySize = 1;
 		texturedesc.Format = format;
 		texturedesc.SampleDesc.Count = MSAAC;
-		texturedesc.SampleDesc.Quality = MSAAQUALITY;
+		texturedesc.SampleDesc.Quality = MSAAQUALITY-1;
 		texturedesc.Usage = USAGE_DEFAULT;
 		texturedesc.BindFlags = BIND_RENDER_TARGET | BIND_SHADER_RESOURCE;
 		texturedesc.CPUAccessFlags = 0;

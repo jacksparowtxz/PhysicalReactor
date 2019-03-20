@@ -1,12 +1,13 @@
 #include "stdafx.h"
 #include "Level.h"
 
-Level::Level(Allocator *allocator) :StaticMeshList(*allocator), 
-                                    DirectionalLightList(*allocator), 
-                                    SpotLightList(*allocator), 
-                                    PointLightList(*allocator), 
-                                    SkyLightList(*allocator),
-                                    sky(nullptr)
+Level::Level(Allocator *Inallocator) :StaticMeshList(*Inallocator),
+                                    DirectionalLightList(*Inallocator),
+                                    SpotLightList(*Inallocator),
+                                    PointLightList(*Inallocator),
+                                    SkyLightList(*Inallocator),
+                                    sky(nullptr),
+	                                allocator(Inallocator)
 {
 	AddSky();
 }

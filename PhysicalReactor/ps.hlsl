@@ -131,8 +131,8 @@ float4 main(PixelShaderInput input) : SV_TARGET
 
     /////Return IBL Env map;
     uint width, height, specularTextureLevels;
-     SpecularMap.GetDimensions(0, width, height, specularTextureLevels);
-    float3 specularIrradiance = SpecularMap.SampleLevel(BaseColorSampler,Lr,roughness*specularTextureLevels).rgb;
+    specularTexture.GetDimensions(0, width, height, specularTextureLevels);
+    float3 specularIrradiance = specularTexture.SampleLevel(BaseColorSampler, Lr, roughness * specularTextureLevels).rgb;
 
     float2 IspecularBRDF = specularBRDF_LUT.Sample(spBRDF_Sampler, float2(cosLo,roughness)).rg;
 

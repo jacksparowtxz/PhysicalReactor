@@ -5,7 +5,7 @@
 
 GameWorld::GameWorld(HWND hwnd)
 {
-	size_t memory_size = 128 * 1024 * 1024;
+	size_t memory_size = 512 * 1024 * 1024;
 	memory = malloc(memory_size);
 	Main_Allocator = new (memory)FreeListAllocator(memory_size - sizeof(FreeListAllocator), add(memory, sizeof(FreeListAllocator)));
 	ASSERT(Main_Allocator != nullptr);
@@ -26,14 +26,13 @@ GameWorld::GameWorld(HWND hwnd)
 	memcpy(tmp, tmptitle, sizeof(char)*titlelength);
 	title = tmp;
 
-	level = allocatorFC::allocateNew<Level>(*Main_Allocator,Main_Allocator);
+	level = allocatorFC::allocateNew<Level>(*Main_Allocator, dynamiclinearallocator);
 	BuildScene();
 }
 
 void GameWorld::Update(double deltatime)
 {
 	renderworld->Update(deltatime);
-	renderworld->UpdateScene(level);
 }
 
 void GameWorld::Render()
@@ -77,6 +76,7 @@ void GameWorld::BuildScene()
 {
 	AddLight(LightType::DIRECTIONALLIGHT, { 1.0f,-1.0f,1.0f }, { 0.0f,0.0f,0.0f });
 	AddStaticMesh("Re/SciFiHelmet.gltf");
+	renderworld->UpdateScene(level);
 }
 
 void GameWorld::AddStaticMesh(std::string path)

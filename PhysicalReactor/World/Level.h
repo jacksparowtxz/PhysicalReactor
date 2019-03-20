@@ -9,7 +9,7 @@ using namespace PRE;
 class Level
 {
 public:
-	Level(Allocator* allocator);
+	Level(Allocator* Inallocator);
 	~Level();
 	
 	Vector<StaticMesh*> StaticMeshList;
