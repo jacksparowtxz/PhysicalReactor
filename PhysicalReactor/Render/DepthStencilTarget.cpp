@@ -31,7 +31,8 @@ void DepthStencilTarget::Initialize(int width, int height, UINT MSAAC, UINT MSAA
 	depthstencildesc.CPUAccessFlags = 0;
 	depthstencildesc.MiscFlags = 0;
 	depthstencildesc.SampleDesc.Count = MSAAC;
-	depthstencildesc.SampleDesc.Quality = MSAAQUALITY;
+	depthstencildesc.SampleDesc.Quality = MSAAQUALITY-1;
+	depthstencildesc.BindFlags = BIND_DEPTH_STENCIL | BIND_SHADER_RESOURCE;
 	Renderer::GetDevice()->CreateTexture2D(&depthstencildesc,nullptr,&texture);
 
 	if (MSAAC > 1)
