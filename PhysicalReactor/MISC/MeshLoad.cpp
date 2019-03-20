@@ -164,9 +164,15 @@ void GameMeshImport::ProcessMesh(aiMesh* mesh, const aiScene* scene, StaticMesh 
 		}
 
 		Maps = loadMaterialTexture(material, aiTextureType_HEIGHT, "texture_height");
-		Maps.clear();
 
-		Maps = loadMaterialTexture(material, aiTextureType_AMBIENT, "texture_ambient");
+		Maps = loadMaterialTexture(material, aiTextureType_UNKNOWN, "texture_unkonw");
+		if (Maps.size() > 0)
+		{
+			meshmaterial->MetalicMap = std::move(Maps[0]);
+			meshmaterial->MetalicMapName = std::move(string("texture_metalic"));
+		}
+
+		Maps = loadMaterialTexture(material, aiTextureType_LIGHTMAP, "texture_ambient");
 		if (Maps.size() > 0)
 		{
 			meshmaterial->AmbientMap = std::move(Maps[0]);
