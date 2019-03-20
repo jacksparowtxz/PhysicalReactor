@@ -73,17 +73,61 @@ namespace PRE
 		{
 			flag |= D3D11_RESOURCE_MISC_DRAWINDIRECT_ARGS;
 		}
-		if (value & RESOUCRE_MISC_BUFFER_ALLOW_RAW_VIEWS)
+		if (value & RESOURCE_MISC_BUFFER_ALLOW_RAW_VIEWS)
 		{
 			flag |= D3D11_RESOURCE_MISC_BUFFER_ALLOW_RAW_VIEWS;
 		}
-		if (value & RESOUCRE_MISC_BUFFER_STRUCTURED)
+		if (value &RESOURCE_MISC_BUFFER_STRUCTURED)
 		{
 			flag |= D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
 		}
-		if (value & RESOUCR_MISC_TILED)
+		if (value & RESOURCE_MISC_TILED)
 		{
 			flag |= D3D11_RESOURCE_MISC_TILED;
+		}
+		if (value&RESOURCE_MISC_GENERATE_MIPS)
+		{
+			flag |= D3D11_RESOURCE_MISC_GENERATE_MIPS;
+		}
+		if (value&RESOURCE_MISC_RESOURCE_CLAMP)
+		{
+			flag |= D3D11_RESOURCE_MISC_RESOURCE_CLAMP;
+		}
+		if (value&RESOURCE_MISC_SHARED_KEYEDMUTEX)
+		{
+			flag |= D3D11_RESOURCE_MISC_SHARED_KEYEDMUTEX;
+		}
+		if (value&RESOURCE_MISC_GDI_COMPATIBLE)
+		{
+			flag |= D3D11_RESOURCE_MISC_GDI_COMPATIBLE;
+		}
+		if (value&RESOURCE_MISC_SHARED_NTHANDLE)
+		{
+			flag |= D3D11_RESOURCE_MISC_SHARED_NTHANDLE;
+		}
+		if (value&RESOURCE_MISC_RESTRICTED_CONTENT)
+		{
+			flag |= D3D11_RESOURCE_MISC_RESTRICTED_CONTENT;
+		}
+		if (value&RESOURCE_MISC_RESTRICT_SHARED_RESOURCE)
+		{
+			flag |= D3D11_RESOURCE_MISC_RESTRICT_SHARED_RESOURCE;
+		}
+		if (value&RESOURCE_MISC_RESTRICT_SHARED_RESOURCE_DRIVER)
+		{
+			flag |= D3D11_RESOURCE_MISC_RESTRICT_SHARED_RESOURCE_DRIVER;
+		}
+		if (value&RESOURCE_MISC_GUARDED)
+		{
+			flag |= D3D11_RESOURCE_MISC_GUARDED;
+		}
+		if (value&RESOURCE_MISC_TILE_POOL)
+		{
+			flag |= D3D11_RESOURCE_MISC_TILE_POOL;
+		}
+		if (value&RESOURCE_MISC_HW_PROTECTED)
+		{
+			flag |= D3D11_RESOURCE_MISC_HW_PROTECTED;
 		}
 
 		return flag;
@@ -976,11 +1020,11 @@ namespace PRE
 		if (value & D3D11_RESOURCE_MISC_DRAWINDIRECT_ARGS)
 			flag |= RESOURCE_MISC_DRAWINDIRECT_ARGS;
 		if (value & D3D11_RESOURCE_MISC_BUFFER_ALLOW_RAW_VIEWS)
-			flag |= RESOUCRE_MISC_BUFFER_ALLOW_RAW_VIEWS;
+			flag |= RESOURCE_MISC_BUFFER_ALLOW_RAW_VIEWS;
 		if (value & D3D11_RESOURCE_MISC_BUFFER_STRUCTURED)
-			flag |= RESOUCRE_MISC_BUFFER_STRUCTURED;
+			flag |= RESOURCE_MISC_BUFFER_STRUCTURED;
 		if (value & D3D11_RESOURCE_MISC_TILED)
-			flag |= D3D11_RESOURCE_MISC_TILED;
+			flag |= RESOURCE_MISC_TILED;
 
 		return flag;
 	}
@@ -2178,7 +2222,7 @@ HRESULT RenderDevice_DX11::CreateShaderResourceView(Texture2D* pTexture)
 		 {
 			 if (multisampled)
 			 {
-				 shaderResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+				 shaderResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DMS;
 				 hr = device->CreateShaderResourceView((ID3D11Resource*)pTexture->resource, &shaderResourceViewDesc, (ID3D11ShaderResourceView**)&pTexture->SRV);
 				 assert(SUCCEEDED(hr) && "ShaderResourceView Creation failed!");
 			 }
@@ -2615,7 +2659,11 @@ HRESULT RenderDevice_DX11::CreatePixelShader(WCHAR* filename, GraphicBlob* blob,
 	pPixelShader->Register(this);
 	ID3D10Blob* ERRORMESSAGE=NULL;
 	HRESULT hr = D3DCompileFromFile(filename, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, NULL, (ID3D10Blob**)&blob->resourceDX, &ERRORMESSAGE);
-	OutputDebugStringA((char*)ERRORMESSAGE->GetBufferPointer());
+	if (ERRORMESSAGE!=nullptr)
+	{
+		OutputDebugStringA((char*)ERRORMESSAGE->GetBufferPointer());
+	}
+	
 	if (FAILED(hr))
 	{
 		ASSERT("ps create fail");
