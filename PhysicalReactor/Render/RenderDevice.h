@@ -209,7 +209,55 @@ namespace PRE
 		virtual void SetMarker(const std::string &name) = 0;
 		virtual void GenerateMips(GPUResource* ShaderResourceView)=0;
 
+		///////////////////////////////////////////////Immediate
+		virtual void BindScissorRects_Immediate(UINT numRects, const Rect* rect) = 0;
+		virtual void BindViewports_Immediate(UINT NumViewports, const ViewPort* pViewports) = 0;
+		virtual void BindRenderTargets_Immediate(UINT NumViews, Texture2D* const *ppRenderTargets, Texture2D* depthStencilTexture, int arrayIndex = -1) = 0;
+		virtual void ClearRenderTarget_Immediate(Texture* pTexture, const FLOAT ColorRGBA[4], int arrayIndex = -1) = 0;
+		virtual void ClearDepthStencil_Immediate(Texture2D* pTexture, UINT ClearFlags, FLOAT Depth, UINT8 Stencil, int arrayIndex = -1) = 0;
+		virtual void BindResource_Immediate(SHADERSTAGE stage, GPUResource* resource, int slot, int arrayIndex = -1) = 0;
+		virtual void BindResources_Immediate(SHADERSTAGE stage, GPUResource *const* resources, int slot, int count) = 0;
+		virtual void BindUAV_Immediate(SHADERSTAGE stage, GPUResource *resources, int slot, int arrayIndex = -1) = 0;
+		virtual void BindUAVS_Immediate(SHADERSTAGE stage, GPUResource* const* resource, int slot, int count) = 0;
+		virtual void UnbindResources_Immediate(int slot, int num) = 0;
+		virtual void UnbindUAVs_Immediate(int slot, int num) = 0;
+		virtual void BindSampler_Immediate(SHADERSTAGE stage, Sampler* sampler, int slot, int count) = 0;
+		virtual void BindConstantBuffer_Immediate(SHADERSTAGE stage, GPUBuffer* buffer, int slot, const UINT *pFirstConstant, const UINT *pNumberConstant) = 0;
+		virtual void BindVertexBuffers_Immediate(GPUBuffer* const *vertexBuffers, int slot, int count, const UINT* strides, const UINT*offsets) = 0;
+		virtual void BindIndexBuffer_Immediate(GPUBuffer* indexBuffer, const INDEXBUFFER_FORMAT format, UINT offset) = 0;
+		virtual void BindStencilRef_Immediate(UINT value) = 0;
+		virtual void BindBlendFactor_Immediate(XMFLOAT4 value) = 0;
+		///////////////////////////////////////////////////////////////////////////////////
+		virtual void BindGraphicsPSO_Immediate(GraphicPSO* pso) = 0;
+		//////////////////////////////////////////////////////////////////////////////////
+		virtual void BindRasterizerState_Immediate(RasterizerState RSstate) = 0;
+		virtual void BindComputerPSO_Immediate(ComputerPSO* pso) = 0;
+		virtual void Draw_Immediate(int vertexCount, UINT startVertexLociotn) = 0;
+		virtual void DrawIndexed_Immediate(UINT Indexcount, UINT startVertexLocation, UINT baseVertexLocation) = 0;
+		virtual void DrawInstanced_Immediate(int vertexCount, int instanceCount, UINT startVertexLocation, UINT startInstanceLocation) = 0;
+		virtual void DrawIndexedInstanced_Immediate(int indexCount, int instanceCount, UINT startIndexLocation, UINT baseVertexLocation, UINT startInstanced) = 0;
+		virtual void DrawInstancedIndirect_Immediate(GPUBuffer* args, UINT args_offset) = 0;
+		virtual void Dispatch_Immediate(UINT threadGruopCountX, UINT threadGruopCountY, UINT threadGruopCountZ) = 0;
+		virtual void DispatchIndirect_Immediate(GPUBuffer* args, UINT args_offset) = 0;
+		virtual void CopyTexture2D_Immediate(Texture2D* pDest, Texture2D* pSrc) = 0;
+		virtual void CopyTexture2D_Region_Immediate(Texture2D* pDest, UINT dstMip, UINT dstX, UINT dstY, Texture2D* pSrc, UINT srcMip, UINT ArraySize) = 0;
+		virtual void MSAAResolve_Immediate(Texture2D* pDst, Texture2D* pSrc) = 0;
+		virtual void UpdateBuffer_Immediate(GPUBuffer* buffer, const void* data, int datasize = -1) = 0;
+		virtual void *AllocateFromRingBuffer_Immediate(GPURingBuffer* buffer, size_t dataSize, UINT& offsetIntoBuffer) = 0;
+		virtual void InvalidateBufferAccess_Immediate(GPUBuffer* buffer) = 0;
+		virtual bool DownloadResource_Immediate(GPUBuffer* resurceToDownload, GPUResource* resourceDest, void* dataDest) = 0;
+		virtual void QueryBegin_Immediate(GPUQuery *query) = 0;
+		virtual void QueryEnd_Immediate(GPUQuery* query) = 0;
+		virtual bool QueryRead_Immediate(GPUQuery* query) = 0;
+		virtual void UAVBarrier_Immediate(GPUResource* const* uavs, UINT NumBarries) = 0;
+		virtual void TransitionBarrier_Immediate(GPUResource* const* resource, UINT NumBarrires, RESOUCRCE_STATES stateBefore, RESOUCRCE_STATES stateAFTER) = 0;
 
+		virtual void WaitForGPU_Immediate() = 0;
+		virtual void EventBegin_Immediate(const std::string& name) = 0;
+		virtual void EventEnd_Immediate() = 0;
+		virtual void SetMarker_Immediate(const std::string &name) = 0;
+		virtual void GenerateMips_Immediate(GPUResource* ShaderResourceView) = 0;
+		/////////////////////////////////////////////////////////////////////////////////
 
 		virtual void* GetDevice() = 0;
 
