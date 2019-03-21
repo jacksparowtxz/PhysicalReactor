@@ -130,21 +130,21 @@ namespace PRE
 			Renderer::GetDevice()->BindVertexBuffers(&sky->SkyMesh->Meshs[0]->mVertexBuffer, 0, 1, &stride, &offset);
 			Renderer::GetDevice()->BindIndexBuffer(sky->SkyMesh->Meshs[0]->mIndexBuffer, INDEXBUFFER_32BIT, 0);
 			Renderer::GetDevice()->DrawIndexed(sky->SkyMesh->Meshs[0]->Indices.size(), 0, 0);
-			
+			Renderer::GetDevice()->FinishComanlist();
 		};
 
-		RenderSkyFC = RenderSkybox;
-		RenderSkyFC(sky, 1, nullptr);
+		//RenderSkyFC = RenderSkybox;
+		//RenderSkyFC(sky, 1, nullptr);
 		//JobScheduler::Wait(parallel_for(sky, 1, RenderSkyFC, nullptr));
 
 		auto tonemapping = [&, this]() {
-			Texture2D *const rt[1] = { rendertarget->GetTextureResolvedMSAA() };
-			Renderer::GetDevice()->BindRenderTargets(1, rt, rendertarget->depthstencil->GetTextureResolvedMSAA());
+			//Texture2D *const rt[1] = { rendertarget->GetTextureResolvedMSAA() };
+			//Renderer::GetDevice()->BindRenderTargets(1, rt, rendertarget->depthstencil->GetTextureResolvedMSAA());
 
 			GraphicPSO PSO;
 			Renderer::shadermanager->GetPSO(OBJECTTYPE::TYPE_TONEMAPPING,&PSO);
 			Renderer::GetDevice()->BindGraphicsPSO(&PSO);
-			Renderer::GetDevice()->BindResource(PS_STAGE, *rt, 0);
+			Renderer::GetDevice()->BindResource(PS_STAGE, sky->SkyCubeMap, 0);
 			Renderer::GetDevice()->BindSampler(PS_STAGE,tonemappingsampler,0,1);
 			Renderer::GetDevice()->Draw(3,0);
 			Renderer::GetDevice()->FinishComanlist();
@@ -472,10 +472,6 @@ namespace PRE
 		Renderer::GetDevice()->CreateRasterizerState(&Soliddesc, Solidstate);
 		Renderer::GetDevice()->CreateRasterizerState(&Wireframedesc, Wireframestate);
 
-
-		//sky = allocatorFC::allocateNew<Sky>(*allocator);
-
-
 		SpLutSampler = allocatorFC::allocateNew<Sampler>(*allocator);
 		SamplerDesc splutsampler;
 		splutsampler.Filter = FILTER_ANISOTROPIC;
@@ -509,10 +505,10 @@ namespace PRE
 		FORMAT format = Renderer::GetDevice()->GetBackBufferFormat();
 		UINT QUALITY = Renderer::GetDevice()->GetMSAAQUALITY();
 
-		rendertarget = allocatorFC::allocateNew<RenderTarget>(*allocator,screenwidth,screenheight,true,format,1,4,QUALITY,false);
+		//rendertarget = allocatorFC::allocateNew<RenderTarget>(*allocator,screenwidth,screenheight,true,format,1,4,QUALITY,false);
 
-		Texture2D *const rt[1] = { rendertarget->GetTexture()};
-		Renderer::GetDevice()->BindRenderTargets(1, rt,rendertarget->depthstencil->GetTexture());
+		//Texture2D *const rt[1] = { rendertarget->GetTexture()};
+		//Renderer::GetDevice()->BindRenderTargets(1, rt,rendertarget->depthstencil->GetTexture());
 
 	
 
