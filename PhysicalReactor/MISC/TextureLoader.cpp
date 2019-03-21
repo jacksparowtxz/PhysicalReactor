@@ -48,7 +48,7 @@ void TextureLoader::LoadTexture(const string & TexturefileName, Texture2D* LoadM
 		 int width = 0;
 		 int height = 0;
 		 int channelcount = 0;
-		 unsigned char* data = stbi_load(szname, &width, &height, &channelcount, 4);
+		 float* data = stbi_loadf(szname, &width, &height, &channelcount, 0);
 		 Texture2D* EnvTexture = new Texture2D;
 		 TextureDesc desc;
 		 desc.ArraySize = 1;
@@ -71,7 +71,17 @@ void TextureLoader::LoadTexture(const string & TexturefileName, Texture2D* LoadM
 		 }
 		 EnvTexture->RequestIndepentShaderReourcesForMIPs(true);
 		 EnvTexture->RequesIndenpentUnorderedAccessResoucesForMips(true);
-		 HRESULT hr = Renderer::GetDevice()->CreateTexture2D(&desc, InitData, &EnvTexture);
+		 HRESULT hr;
+		 if (UseCubeMap)
+		 {
+			hr = Renderer::GetDevice()->CreateTexture2D(&desc, InitData, &EnvTexture);
+		 }
+		 else
+		 {
+			 hr = Renderer::GetDevice()->CreateTexture2D(&desc, InitData, &LoadMap);
+			 delete EnvTexture;
+		 }
+		
 		 assert(SUCCEEDED(hr));
 		 stbi_image_free(data);
 		 delete InitData;
@@ -109,18 +119,14 @@ void TextureLoader::LoadTexture(const string & TexturefileName, Texture2D* LoadM
 
 			 Renderer::GetDevice()->CreateSamplerState(&computerdesc,&Computersampler);
 
-			 Renderer::GetDevice()->BindResource(CS_STAGE, EnvTexture, 0);
-			 Renderer::GetDevice()->BindUAV(CS_STAGE, LoadMap, 0);
-			 Renderer::GetDevice()->BindSampler(CS_STAGE, &Computersampler, 0, 1);
-			 Renderer::GetDevice()->BindComputerPSO(&CSPSO);
-			 Renderer::GetDevice()->Dispatch(LoadMap->GetDesc().Width / 32, LoadMap->GetDesc().Height / 32, 6);
-			 Renderer::GetDevice()->BindUAV(CS_STAGE, &NullResource, 0);
-			 Renderer::GetDevice()->GenerateMips(LoadMap);
+			 Renderer::GetDevice()->BindResource_Immediate(CS_STAGE, EnvTexture, 0);
+			 Renderer::GetDevice()->BindUAV_Immediate(CS_STAGE, LoadMap, 0);
+			 Renderer::GetDevice()->BindSampler_Immediate(CS_STAGE, &Computersampler, 0, 1);
+			 Renderer::GetDevice()->BindComputerPSO_Immediate(&CSPSO);
+			 Renderer::GetDevice()->Dispatch_Immediate(LoadMap->GetDesc().Width / 32, LoadMap->GetDesc().Height / 32, 6);
+			 Renderer::GetDevice()->BindUAV_Immediate(CS_STAGE, &NullResource, 0);
+			 Renderer::GetDevice()->GenerateMips_Immediate(LoadMap);
 			 delete EnvTexture;
-		 }
-		 else
-		 {
-			 LoadMap = std::move(EnvTexture);
 		 }
 	 }
 	 else
@@ -197,7 +203,7 @@ void TextureLoader::MakeRadianceMap(Texture2D* ufilterEnvmap,Texture2D* env_Map,
 
 	for (int arraySlice = 0; arraySlice < 6; ++arraySlice)
 	{
-		Renderer::GetDevice()->CopyTexture2D_Region(env_Map,0,0,0, ufilterEnvmap,0,arraySlice);
+		Renderer::GetDevice()->CopyTexture2D_Region_Immediate(env_Map,0,0,0, ufilterEnvmap,0,arraySlice);
 	}
 	Sampler Computersampler;
 	SamplerDesc computerdesc;
@@ -209,9 +215,9 @@ void TextureLoader::MakeRadianceMap(Texture2D* ufilterEnvmap,Texture2D* env_Map,
 	computerdesc.MinLOD = 0;
 	computerdesc.MaxLOD = FLT_MAX;
 	Renderer::GetDevice()->CreateSamplerState(&computerdesc, &Computersampler);
-	Renderer::GetDevice()->BindComputerPSO(&CSPSO);
-	Renderer::GetDevice()->BindResource(CS_STAGE,ufilterEnvmap,0);
-	Renderer::GetDevice()->BindSampler(CS_STAGE, &Computersampler, 0,1);
+	Renderer::GetDevice()->BindComputerPSO_Immediate(&CSPSO);
+	Renderer::GetDevice()->BindResource_Immediate(CS_STAGE,ufilterEnvmap,0);
+	Renderer::GetDevice()->BindSampler_Immediate(CS_STAGE, &Computersampler, 0,1);
 	
 
 	const float deltaRoughness = 1.0f / PRE::fmax(float(env_Map->GetDesc().MipLevels - 1), 1.0f);
@@ -219,13 +225,13 @@ void TextureLoader::MakeRadianceMap(Texture2D* ufilterEnvmap,Texture2D* env_Map,
 	{
 		const UINT numGroups = MathHelper::Max<int>(1, size / 32);
 		const SpeularMapFilterSetting spmfs = { level*deltaRoughness };
-		Renderer::GetDevice()->UpdateBuffer(SpeularMapFilterSettingCB,&spmfs);
-		Renderer::GetDevice()->BindConstantBuffer(CS_STAGE,SpeularMapFilterSettingCB,0,nullptr,nullptr);
-		Renderer::GetDevice()->BindUAV(CS_STAGE,env_Map,0);
-		Renderer::GetDevice()->Dispatch(numGroups, numGroups, 6);
+		Renderer::GetDevice()->UpdateBuffer_Immediate(SpeularMapFilterSettingCB,&spmfs);
+		Renderer::GetDevice()->BindConstantBuffer_Immediate(CS_STAGE,SpeularMapFilterSettingCB,0,nullptr,nullptr);
+		Renderer::GetDevice()->BindUAV_Immediate(CS_STAGE,env_Map,0);
+		Renderer::GetDevice()->Dispatch_Immediate(numGroups, numGroups, 6);
 	}
-	Renderer::GetDevice()->BindConstantBuffer(CS_STAGE, nullptr, 0, NULL, NULL);
-	Renderer::GetDevice()->BindUAV(CS_STAGE, &NullResource, 0);
+	Renderer::GetDevice()->BindConstantBuffer_Immediate(CS_STAGE, nullptr, 0, NULL, NULL);
+	Renderer::GetDevice()->BindUAV_Immediate(CS_STAGE, &NullResource, 0);
 
 
 	ComputerPSO ComputeSpLut;
@@ -244,9 +250,9 @@ void TextureLoader::MakeRadianceMap(Texture2D* ufilterEnvmap,Texture2D* env_Map,
 	Renderer::GetDevice()->CreateTexture2D(&sptexturedesc,nullptr,&Splut);
 
 
-	Renderer::GetDevice()->BindResource(CS_STAGE, Splut, 0);
-	Renderer::GetDevice()->BindComputerPSO(&ComputeSpLut);
-	Renderer::GetDevice()->Dispatch(Splut->desc.Width/32, Splut->desc.Height / 32,1);
+	Renderer::GetDevice()->BindResource_Immediate(CS_STAGE, Splut, 0);
+	Renderer::GetDevice()->BindComputerPSO_Immediate(&ComputeSpLut);
+	Renderer::GetDevice()->Dispatch_Immediate(Splut->desc.Width/32, Splut->desc.Height / 32,1);
 
 	
 	
