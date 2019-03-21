@@ -48,7 +48,7 @@ void TextureLoader::LoadTexture(const string & TexturefileName, Texture2D* LoadM
 		 int width = 0;
 		 int height = 0;
 		 int channelcount = 0;
-		 float* data = stbi_loadf(szname, &width, &height, &channelcount, 0);
+		 float* data = stbi_loadf(szname, &width, &height, &channelcount, 4);
 		 Texture2D* EnvTexture = new Texture2D;
 		 TextureDesc desc;
 		 desc.ArraySize = 1;
@@ -57,34 +57,32 @@ void TextureLoader::LoadTexture(const string & TexturefileName, Texture2D* LoadM
 		 desc.Format = FORMAT_R32G32B32A32_FLOAT;
 		 desc.Height = static_cast<uint32_t>(height);
 		 desc.Width = static_cast<uint32_t>(width);
-		 desc.MipLevels = (UINT)log2(max(width, height));
+		 desc.MipLevels = 1;
 		 desc.MiscFlags =0;
 		 desc.Usage = USAGE_DEFAULT;
-
 		 UINT mipwidth = width;
-		 SubresourceData* InitData = new SubresourceData[desc.MipLevels];
-		 for (UINT mip = 0; mip < desc.MipLevels; ++mip)
-		 {
-			 InitData[mip].pSysMem = data;
-			 InitData[mip].SysMemPitch = static_cast<UINT>(mipwidth*(channelcount));
-			 mipwidth = max(1, mipwidth / 2);
-		 }
-		 EnvTexture->RequestIndepentShaderReourcesForMIPs(true);
-		 EnvTexture->RequesIndenpentUnorderedAccessResoucesForMips(true);
+		 SubresourceData dataDesc = {};
+		 SubresourceData* pDataDesc = nullptr;
+		
+		 dataDesc.pSysMem = data;
+		 dataDesc.SysMemPitch = static_cast<UINT>(mipwidth*16);
+		 pDataDesc = &dataDesc;
+		 EnvTexture->RequestIndepentShaderReourcesForMIPs(false);
+		 EnvTexture->RequesIndenpentUnorderedAccessResoucesForMips(false);
 		 HRESULT hr;
 		 if (UseCubeMap)
 		 {
-			hr = Renderer::GetDevice()->CreateTexture2D(&desc, InitData, &EnvTexture);
+			hr = Renderer::GetDevice()->CreateTexture2D(&desc, pDataDesc, &EnvTexture);
 		 }
 		 else
 		 {
-			 hr = Renderer::GetDevice()->CreateTexture2D(&desc, InitData, &LoadMap);
+			 hr = Renderer::GetDevice()->CreateTexture2D(&desc, pDataDesc, &LoadMap);
 			 delete EnvTexture;
 		 }
 		
 		 assert(SUCCEEDED(hr));
 		 stbi_image_free(data);
-		 delete InitData;
+		
 		 
 		
 		 if (UseCubeMap)
