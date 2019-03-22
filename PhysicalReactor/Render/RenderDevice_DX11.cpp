@@ -4529,8 +4529,9 @@ void RenderDevice_DX11::CopyTexture2D_Immediate(Texture2D* pDest, Texture2D* pSr
 
 void RenderDevice_DX11::CopyTexture2D_Region_Immediate(Texture2D* pDest, UINT dstMip, UINT dstX, UINT dstY, Texture2D* pSrc, UINT srcMip, UINT ArraySize)
 {
-	ImmediatedeviceContext->CopySubresourceRegion((ID3D11Resource*)pDest->resource, D3D11CalcSubresource(dstMip, 0, pDest->GetDesc().MipLevels), dstX, dstY, 0,
-		(ID3D11Resource*)pSrc->resource, D3D11CalcSubresource(srcMip, ArraySize, pSrc->GetDesc().MipLevels), nullptr);
+	const UINT subresourceIndex = D3D11CalcSubresource(0,ArraySize, pDest->GetDesc().MipLevels);
+	ImmediatedeviceContext->CopySubresourceRegion((ID3D11Resource*)pDest->resource, subresourceIndex, dstX, dstY, 0,
+		(ID3D11Resource*)pSrc->resource, subresourceIndex, nullptr);
 }
 
 void RenderDevice_DX11::MSAAResolve_Immediate(Texture2D* pDst, Texture2D* pSrc)

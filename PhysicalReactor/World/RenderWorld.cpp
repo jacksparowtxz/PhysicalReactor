@@ -133,9 +133,9 @@ namespace PRE
 			Renderer::GetDevice()->FinishComanlist();
 		};
 
-		//RenderSkyFC = RenderSkybox;
+		RenderSkyFC = RenderSkybox;
 		//RenderSkyFC(sky, 1, nullptr);
-		//JobScheduler::Wait(parallel_for(sky, 1, RenderSkyFC, nullptr));
+		JobScheduler::Wait(parallel_for(sky, 1, RenderSkyFC, nullptr));
 
 		auto tonemapping = [&, this]() {
 			//Texture2D *const rt[1] = { rendertarget->GetTextureResolvedMSAA() };
@@ -150,7 +150,7 @@ namespace PRE
 			Renderer::GetDevice()->FinishComanlist();
 		};
 
-		tonemapping();
+		//tonemapping();
 	}
 
 	void RenderWorld::EndRender()

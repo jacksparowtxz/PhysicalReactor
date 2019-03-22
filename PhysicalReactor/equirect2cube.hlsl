@@ -12,7 +12,7 @@ SamplerState defaultSampler : register(s0);
 [numthreads(32, 32, 1)]
 void main(uint3 ThreadID:SV_DispatchThreadID)
 {
-    float3 v = getSamplingVector(ThreadID,outputtexture);
+    float3 v = getSamplingVector(ThreadID, outputtexture);
 
     float phi = atan2(v.z, v.x);
     float theta = acos(v.y);

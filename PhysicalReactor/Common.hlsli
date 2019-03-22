@@ -1,4 +1,4 @@
-#define PI 3.1415f
+#define PI 3.141592f
 #define Epsilon=0.00001f
 #define MAX_LIGHTS 4
 

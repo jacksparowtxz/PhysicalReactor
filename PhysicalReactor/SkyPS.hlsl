@@ -15,6 +15,5 @@ SamplerState samTriLinearSam : register(s4);
 
 float4 main(PixelShaderInput PSInput) : SV_TARGET
 {
-  
     return SkyCubemap.Sample(samTriLinearSam, PSInput.PosL);
 }
