@@ -138,8 +138,9 @@ namespace PRE
 		JobScheduler::Wait(parallel_for(sky, 1, RenderSkyFC, nullptr));
 
 		auto tonemapping = [&, this]() {
-			//Texture2D *const rt[1] = { rendertarget->GetTextureResolvedMSAA() };
-			//Renderer::GetDevice()->BindRenderTargets(1, rt, rendertarget->depthstencil->GetTextureResolvedMSAA());
+			Texture2D *const rt[1] = { rendertarget->GetTextureResolvedMSAA() };
+			Texture2D *sdt = rendertarget->depthstencil->GetTextureResolvedMSAA();
+			Renderer::GetDevice()->BindRenderTargets(1, rt, sdt);
 
 			GraphicPSO PSO;
 			Renderer::shadermanager->GetPSO(OBJECTTYPE::TYPE_TONEMAPPING,&PSO);
@@ -150,7 +151,7 @@ namespace PRE
 			Renderer::GetDevice()->FinishComanlist();
 		};
 
-		//tonemapping();
+		tonemapping();
 	}
 
 	void RenderWorld::EndRender()
@@ -505,10 +506,10 @@ namespace PRE
 		FORMAT format = Renderer::GetDevice()->GetBackBufferFormat();
 		UINT QUALITY = Renderer::GetDevice()->GetMSAAQUALITY();
 
-		//rendertarget = allocatorFC::allocateNew<RenderTarget>(*allocator,screenwidth,screenheight,true,format,1,4,QUALITY,false);
+		rendertarget = allocatorFC::allocateNew<RenderTarget>(*allocator,screenwidth,screenheight,true,format,1,4,QUALITY,false);
 
-		//Texture2D *const rt[1] = { rendertarget->GetTexture()};
-		//Renderer::GetDevice()->BindRenderTargets(1, rt,rendertarget->depthstencil->GetTexture());
+		Texture2D *const rt[1] = { rendertarget->GetTexture()};
+	    Renderer::GetDevice()->BindRenderTargets(1, rt,rendertarget->depthstencil->GetTexture());
 
 	
 
