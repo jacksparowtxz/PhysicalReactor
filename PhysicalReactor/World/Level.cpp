@@ -14,7 +14,16 @@ Level::Level(Allocator *Inallocator) :StaticMeshList(*Inallocator),
 
 Level::~Level()
 {
-	allocatorFC::deallocateDelete(*allocator, sky);
+	if (sky != nullptr)
+	{
+		allocatorFC::deallocateDelete(*allocator, sky);
+	}
+	StaticMeshList.~Vector();
+	DirectionalLightList.~Vector();
+	SpotLightList.~Vector();
+	PointLightList.~Vector();
+	SkyLightList.~Vector();
+	
 }
 
 

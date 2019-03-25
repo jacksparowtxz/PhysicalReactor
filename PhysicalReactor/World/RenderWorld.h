@@ -102,7 +102,7 @@ namespace PRE
 
 
 		RenderTarget* rendertarget;
-	
+	    
 		Sky* sky;
 		Sampler* SpLutSampler;
 		Sampler* tonemappingsampler;

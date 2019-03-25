@@ -13,7 +13,7 @@ namespace PRE
 	{
 	public:
 		RenderTarget();
-		RenderTarget(UINT width, UINT height, bool hasdepth, FORMAT format, UINT mipMapLevelCount, UINT MSAAC, UINT MSAAQUALITY, bool depthonly);
+		RenderTarget(UINT width, UINT height, bool hasdepth, FORMAT format, UINT mipMapLevelCount, UINT MSAAC, UINT MSAAQUALITY,bool depthonly);
 		void CleanUp();
 
 		void Initialize(UINT width, UINT height, bool hasDepth = false, FORMAT format = FORMAT_R8G8B8A8_UNORM, UINT mipMapLevelCount = 1, UINT MSAAC = 1, UINT MSAAQUALITY = 0, bool depthOnly = false);

@@ -31,6 +31,7 @@ namespace PRE
 	RenderWorld::~RenderWorld()
 	{
 		JobScheduler::Shutdown();
+		
 		allocatorFC::deallocateDelete<Sky>(*allocator, sky);
 		allocatorFC::deallocateDelete<Camera>(*allocator, camera);
 		allocatorFC::deallocateDelete<RasterizerState>(*allocator, Wireframestate);
@@ -41,18 +42,21 @@ namespace PRE
 		allocatorFC::deallocateDelete<Sampler>(*allocator, tonemappingsampler);
 		allocatorFC::deallocateDelete<RenderTarget>(*allocator, rendertarget);
 		allocatorFC::deallocateDelete<ShaderManager>(*allocator, Renderer::shadermanager);
-
-		for (uint32_t i = 0; i < 9; i++)
-		{
-			allocatorFC::deallocateDelete<RenderConstantBuffer>(*allocator, m_constantBufferData[i]);
-		}
+		allocatorFC::deallocateArray(*allocator, m_constantBufferData);
 		allocatorFC::deallocateDelete<RenderDevice>(*allocator, Renderer::renderdevice);
+		StaticmeshList.~Vector();
+		VisiblityMesh.~Vector();
+		TVisiblityMesh.~Vector();
+		PointLights.~Vector();
+		DirectionalLights.~Vector();
+		//SkyLights.~Vector();
 	}
 
 	void RenderWorld::BeginRender()
 	{
 		Renderer::GetDevice()->PresentBegin();
 		Renderer::GetDevice()->SetResolution(1920, 1080);
+		rendertarget->Set(false,0);
 		RenderWireframe(false);
 	}
 
@@ -130,22 +134,21 @@ namespace PRE
 			Renderer::GetDevice()->BindVertexBuffers(&sky->SkyMesh->Meshs[0]->mVertexBuffer, 0, 1, &stride, &offset);
 			Renderer::GetDevice()->BindIndexBuffer(sky->SkyMesh->Meshs[0]->mIndexBuffer, INDEXBUFFER_32BIT, 0);
 			Renderer::GetDevice()->DrawIndexed(sky->SkyMesh->Meshs[0]->Indices.size(), 0, 0);
-			Renderer::GetDevice()->FinishComanlist();
+			//Renderer::GetDevice()->FinishComanlist();
 		};
 
 		RenderSkyFC = RenderSkybox;
-		//RenderSkyFC(sky, 1, nullptr);
-		JobScheduler::Wait(parallel_for(sky, 1, RenderSkyFC, nullptr));
+		RenderSkyFC(sky, 1, nullptr);
+		//JobScheduler::Wait(parallel_for(sky, 1, RenderSkyFC, nullptr));
 
 		auto tonemapping = [&, this]() {
-			Texture2D *const rt[1] = { rendertarget->GetTextureResolvedMSAA() };
 			Texture2D *sdt = rendertarget->depthstencil->GetTextureResolvedMSAA();
-			Renderer::GetDevice()->BindRenderTargets(1, rt, sdt);
-
+			Renderer::GetDevice()->BindBackBufferRenderTargets(sdt);
+			Renderer::GetDevice()->SetResolution(1920,1080);
 			GraphicPSO PSO;
 			Renderer::shadermanager->GetPSO(OBJECTTYPE::TYPE_TONEMAPPING,&PSO);
 			Renderer::GetDevice()->BindGraphicsPSO(&PSO);
-			Renderer::GetDevice()->BindResource(PS_STAGE, sky->SkyCubeMap, 0);
+			Renderer::GetDevice()->BindResource(PS_STAGE, rendertarget->GetTextureResolvedMSAA(), 0);
 			Renderer::GetDevice()->BindSampler(PS_STAGE,tonemappingsampler,0,1);
 			Renderer::GetDevice()->Draw(3,0);
 			Renderer::GetDevice()->FinishComanlist();
@@ -507,12 +510,8 @@ namespace PRE
 		UINT QUALITY = Renderer::GetDevice()->GetMSAAQUALITY();
 
 		rendertarget = allocatorFC::allocateNew<RenderTarget>(*allocator,screenwidth,screenheight,true,format,1,4,QUALITY,false);
-
-		Texture2D *const rt[1] = { rendertarget->GetTexture()};
-	    Renderer::GetDevice()->BindRenderTargets(1, rt,rendertarget->depthstencil->GetTexture());
-
-	
-
+		
+		
 
 	}
 

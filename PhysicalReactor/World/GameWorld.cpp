@@ -103,6 +103,7 @@ GameWorld::~GameWorld()
 			allocatorFC::deallocateDelete(*Main_Allocator, TextureManager::TextureImport);
 			allocatorFC::deallocateDelete(*RenderAllocator, renderworld);
 			allocatorFC::deallocateDelete(*Main_Allocator, RenderAllocator);
+			allocatorFC::deallocateDelete(*Main_Allocator, dynamiclinearallocator);
 		}
 		allocatorFC::deallocateArray(*Main_Allocator, (char*)title);
 		free(memory);

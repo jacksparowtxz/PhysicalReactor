@@ -132,8 +132,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 break;
             case IDM_EXIT:
 			{
-				gw->~GameWorld();
-				gametimer->~Timer();
+				//gw->~GameWorld();
+				//gametimer->~Timer();
 				delete gw;
 				delete gametimer;
 				DestroyWindow(hWnd);

@@ -11,11 +11,12 @@ void main( uint3 DTid : SV_DispatchThreadID )
     uint2 dim;
     uint sampleCount;
     input.GetDimensions(dim.x, dim.y, sampleCount);
+    ///////////////////////////////OUT OF BOUND IN COMPUTE SHADER RETURN 0
     if (DTid.x>dim.x||DTid.y>dim.y)
     {
         return;
     }
-
+    ///////////////////////////////////////////////////////////NEED NOT TO CHECK OUT OF BOUND
     float result = 0;
     for (uint i = 0; i < sampleCount;++i)
     {
