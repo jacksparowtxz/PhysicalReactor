@@ -87,6 +87,7 @@ namespace PRE
 		/////////////////////////
 
 		virtual void SetName(GPUResource* pResource, const std::string&name) = 0;
+		virtual void SetName(RenderDeviceChild* pResource, const std::string&name) = 0;
 		///////////////////////////////
 		virtual void PresentBegin() = 0;
 		virtual void PresentEnd() = 0;

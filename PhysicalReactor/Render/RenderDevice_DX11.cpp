@@ -1506,7 +1506,10 @@ RenderDevice_DX11::RenderDevice_DX11(HWND mainscreen,bool fullscreen, bool debug
 		driverType = driverTypes[driverTypeIndex];
 		hr = D3D11CreateDevice(nullptr, driverType, nullptr, createDeviceFlags, featureLevels, numFeatureLevels,
 			D3D11_SDK_VERSION, &Basedevice, &featureLevel, &BasedeviceContexts);
-	
+#ifdef PREDEBUG
+		static const char c_szName[] = "Basedevice";
+		 Basedevice->SetPrivateData(WKPDID_D3DDebugObjectName, sizeof(c_szName) - 1, c_szName);
+#endif // PREDEBUG
 		if(SUCCEEDED(hr))
 			break;
 	}
@@ -1546,7 +1549,12 @@ RenderDevice_DX11::RenderDevice_DX11(HWND mainscreen,bool fullscreen, bool debug
 		   hr=BasedeviceContexts->QueryInterface(__uuidof(ID3D11DeviceContext3), reinterpret_cast<void**>(&ImmediatedeviceContext));
 		}
 	}
-
+#ifdef PREDEBUG
+	static const char c_szName1[] = "device";
+	static const char c_szName2[] = "BasedeviceContexts";
+	device->SetPrivateData(WKPDID_D3DDebugObjectName, sizeof(c_szName1) - 1, c_szName1);
+	device->SetPrivateData(WKPDID_D3DDebugObjectName, sizeof(c_szName2) - 1, c_szName2);
+#endif // PREDEBUG
 	Basedevice->CheckMultisampleQualityLevels(DXGI_FORMAT_R16G16B16A16_FLOAT, 4, &M4XMSAAQUALITY);
 
 	DXGI_SWAP_CHAIN_DESC1 sd = { 0 };
@@ -1572,7 +1580,10 @@ RenderDevice_DX11::RenderDevice_DX11(HWND mainscreen,bool fullscreen, bool debug
 	fullscreenDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_PROGRESSIVE;
 	fullscreenDesc.Windowed = !fullscreen;
 	hr = DXGIFactory->CreateSwapChainForHwnd(device, mainscreen, &sd, &fullscreenDesc, nullptr, &swapChain);
-	
+#ifdef PREDEBUG
+	static const char c_szName3[] = "swapChain";
+	swapChain->SetPrivateData(WKPDID_D3DDebugObjectName, sizeof(c_szName3) - 1, c_szName3);
+#endif // PREDEBUG
 	if (FAILED(hr))
 	{
 		MessageBox(NULL,
@@ -1590,7 +1601,10 @@ RenderDevice_DX11::RenderDevice_DX11(HWND mainscreen,bool fullscreen, bool debug
 		reinterpret_cast<void**>(&userDefinedAnnotations[0]));
 	D3D_FEATURE_LEVEL aquiredFeatureLevel = device->GetFeatureLevel();
 	TESSELLATION = ((aquiredFeatureLevel > D3D_FEATURE_LEVEL_11_0) ? true : false);
-
+#ifdef PREDEBUG
+	static const char c_szName4[] = "ImmediatedeviceContext";
+	ImmediatedeviceContext->SetPrivateData(WKPDID_D3DDebugObjectName, sizeof(c_szName4) - 1, c_szName4);
+#endif // PREDEBUG
 	D3D11_FEATURE_DATA_D3D11_OPTIONS2 features_2;
 	hr = device->CheckFeatureSupport(D3D11_FEATURE_D3D11_OPTIONS2, &features_2, sizeof(features_2));//
 	CONSERVATIVE_RASTERIZATION = features_2.ConservativeRasterizationTier >= D3D11_CONSERVATIVE_RASTERIZATION_TIER_1;
@@ -2650,7 +2664,7 @@ HRESULT RenderDevice_DX11::CreateInputLayout(const VertexLayoutDesc *pInputEleme
 		pInputLayout->desc.push_back(pInputElementDescs[i]);
 	}
 
-	HRESULT hr = device->CreateInputLayout(desc, NumElements, ((ID3D10Blob*)(blob->resourceDX))->GetBufferPointer(), ((ID3D10Blob*)(blob->resourceDX))->GetBufferSize(), (ID3D11InputLayout**)&pInputLayout->resource);
+	HRESULT hr = device->CreateInputLayout(desc, NumElements, ((ID3D10Blob*)(blob->resource))->GetBufferPointer(), ((ID3D10Blob*)(blob->resource))->GetBufferSize(), (ID3D11InputLayout**)&pInputLayout->resource);
 
 	SAFE_DELETE_ARRAY(desc);
 
@@ -2662,19 +2676,19 @@ HRESULT RenderDevice_DX11::CreateVertexShader(WCHAR* filename, GraphicBlob* blob
 
 	pVertexShader->Register(this);
 	ID3D10Blob* ERRORMESSAGE;
-	HRESULT hr = D3DCompileFromFile(filename, NULL, NULL, "main", "vs_5_0", D3DCOMPILE_ENABLE_STRICTNESS|D3DCOMPILE_DEBUG|D3DCOMPILE_SKIP_OPTIMIZATION, NULL, (ID3D10Blob**)&blob->resourceDX, &ERRORMESSAGE);
+	HRESULT hr = D3DCompileFromFile(filename, NULL, NULL, "main", "vs_5_0", D3DCOMPILE_ENABLE_STRICTNESS|D3DCOMPILE_DEBUG|D3DCOMPILE_SKIP_OPTIMIZATION, NULL, (ID3D10Blob**)&blob->resource, &ERRORMESSAGE);
 	if (FAILED(hr))
 	{
 		ASSERT("vs create fail");
 	}
-	return device->CreateVertexShader(((ID3D10Blob*)(blob->resourceDX))->GetBufferPointer(), ((ID3D10Blob*)(blob->resourceDX))->GetBufferSize(), nullptr, (ID3D11VertexShader**)&pVertexShader->resource);
+	return device->CreateVertexShader(((ID3D10Blob*)(blob->resource))->GetBufferPointer(), ((ID3D10Blob*)(blob->resource))->GetBufferSize(), nullptr, (ID3D11VertexShader**)&pVertexShader->resource);
 }
 
 HRESULT RenderDevice_DX11::CreatePixelShader(WCHAR* filename, GraphicBlob* blob, PixelShader* pPixelShader)
 {
 	pPixelShader->Register(this);
 	ID3D10Blob* ERRORMESSAGE=NULL;
-	HRESULT hr = D3DCompileFromFile(filename, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, NULL, (ID3D10Blob**)&blob->resourceDX, &ERRORMESSAGE);
+	HRESULT hr = D3DCompileFromFile(filename, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, NULL, (ID3D10Blob**)&blob->resource, &ERRORMESSAGE);
 	if (ERRORMESSAGE!=nullptr)
 	{
 		OutputDebugStringA((char*)ERRORMESSAGE->GetBufferPointer());
@@ -2684,54 +2698,54 @@ HRESULT RenderDevice_DX11::CreatePixelShader(WCHAR* filename, GraphicBlob* blob,
 	{
 		ASSERT("ps create fail");
 	}
-	return device->CreatePixelShader(((ID3D10Blob*)(blob->resourceDX))->GetBufferPointer(), ((ID3D10Blob*)(blob->resourceDX))->GetBufferSize(), nullptr, (ID3D11PixelShader**)&pPixelShader->resource);
+	return device->CreatePixelShader(((ID3D10Blob*)(blob->resource))->GetBufferPointer(), ((ID3D10Blob*)(blob->resource))->GetBufferSize(), nullptr, (ID3D11PixelShader**)&pPixelShader->resource);
 }
 
 HRESULT RenderDevice_DX11::CreateGemotryShader(WCHAR* filename, GraphicBlob* blob, GeometryShader* pGeometryShader)
 {
 	pGeometryShader->Register(this);
 	ID3D10Blob* ERRORMESSAGE = NULL;
-	HRESULT hr = D3DCompileFromFile(filename, NULL, NULL, "main", "gs_5_0", D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, NULL, (ID3D10Blob**)&blob->resourceDX, &ERRORMESSAGE);
+	HRESULT hr = D3DCompileFromFile(filename, NULL, NULL, "main", "gs_5_0", D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, NULL, (ID3D10Blob**)&blob->resource, &ERRORMESSAGE);
 	if (FAILED(hr))
 	{
 		ASSERT("gs create fail");
 	}
-	return device->CreateGeometryShader(((ID3D10Blob*)(blob->resourceDX))->GetBufferPointer(), ((ID3D10Blob*)(blob->resourceDX))->GetBufferSize(), nullptr, (ID3D11GeometryShader**)&pGeometryShader->resource);
+	return device->CreateGeometryShader(((ID3D10Blob*)(blob->resource))->GetBufferPointer(), ((ID3D10Blob*)(blob->resource))->GetBufferSize(), nullptr, (ID3D11GeometryShader**)&pGeometryShader->resource);
 }
 
 HRESULT RenderDevice_DX11::CreateHullShader(WCHAR* filename, GraphicBlob* blob, HullShader* pHullShader)
 {
 	pHullShader->Register(this);
 	ID3D10Blob* ERRORMESSAGE = NULL;
-	HRESULT hr = D3DCompileFromFile(filename, NULL, NULL, "main", "hs_5_0", D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, NULL, (ID3D10Blob**)&blob->resourceDX, &ERRORMESSAGE);
+	HRESULT hr = D3DCompileFromFile(filename, NULL, NULL, "main", "hs_5_0", D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, NULL, (ID3D10Blob**)&blob->resource, &ERRORMESSAGE);
 	if (FAILED(hr))
 	{
 		ASSERT("hs create fail");
 	}
-	return device->CreateHullShader(((ID3D10Blob*)(blob->resourceDX))->GetBufferPointer(), ((ID3D10Blob*)(blob->resourceDX))->GetBufferSize(), nullptr, (ID3D11HullShader**)&pHullShader->resource);
+	return device->CreateHullShader(((ID3D10Blob*)(blob->resource))->GetBufferPointer(), ((ID3D10Blob*)(blob->resource))->GetBufferSize(), nullptr, (ID3D11HullShader**)&pHullShader->resource);
 }
 
 HRESULT RenderDevice_DX11::CreateDomainShader(WCHAR* filename, GraphicBlob* blob, DomainShader* pDomainShader)
 {
 	pDomainShader->Register(this);
 	ID3D10Blob* ERRORMESSAGE = NULL;
-	HRESULT hr = D3DCompileFromFile(filename, NULL, NULL, "main", "ds_5_0", D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, NULL, (ID3D10Blob**)&blob->resourceDX, &ERRORMESSAGE);
+	HRESULT hr = D3DCompileFromFile(filename, NULL, NULL, "main", "ds_5_0", D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, NULL, (ID3D10Blob**)&blob->resource, &ERRORMESSAGE);
 	if (FAILED(hr))
 	{
 		ASSERT("ds create fail");
 	}
-	return device->CreateDomainShader(((ID3D10Blob*)(blob->resourceDX))->GetBufferPointer(), ((ID3D10Blob*)(blob->resourceDX))->GetBufferSize(), nullptr, (ID3D11DomainShader**)&pDomainShader->resource);
+	return device->CreateDomainShader(((ID3D10Blob*)(blob->resource))->GetBufferPointer(), ((ID3D10Blob*)(blob->resource))->GetBufferSize(), nullptr, (ID3D11DomainShader**)&pDomainShader->resource);
 }
 HRESULT RenderDevice_DX11::CreateComputerShader(WCHAR* filename, GraphicBlob* blob, ComputerShader* pComputerShader)
 {
 	pComputerShader->Register(this);
 	ID3D10Blob* ERRORMESSAGE = NULL;
-	HRESULT hr = D3DCompileFromFile(filename, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "cs_5_0", D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, NULL, (ID3D10Blob**)&blob->resourceDX, &ERRORMESSAGE);
+	HRESULT hr = D3DCompileFromFile(filename, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "cs_5_0", D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, NULL, (ID3D10Blob**)&blob->resource, &ERRORMESSAGE);
 	if (FAILED(hr))
 	{
 		ASSERT("cs create fail");
 	}
-	return device->CreateComputeShader(((ID3D10Blob*)(blob->resourceDX))->GetBufferPointer(), ((ID3D10Blob*)(blob->resourceDX))->GetBufferSize(), nullptr, (ID3D11ComputeShader**)&pComputerShader->resource);
+	return device->CreateComputeShader(((ID3D10Blob*)(blob->resource))->GetBufferPointer(), ((ID3D10Blob*)(blob->resource))->GetBufferSize(), nullptr, (ID3D11ComputeShader**)&pComputerShader->resource);
 }
 
 HRESULT RenderDevice_DX11::CreateBlendState(const BlendStateDesc *pBlendStateDesc, BlendState *pBlendState)
@@ -2907,19 +2921,19 @@ HRESULT RenderDevice_DX11::CreateQuery(const GPUQueryDesc *pDesc, GPUQuery *pQue
 
 	if (pQuery->desc.async_Latnce > 0)
 	{
-		pQuery->resource.resize(pQuery->desc.async_Latnce + 1);
+		pQuery->resources.resize(pQuery->desc.async_Latnce + 1);
 		pQuery->active.resize(pQuery->desc.async_Latnce + 1);
-		for (size_t i=0;i<pQuery->resource.size();++i) 
+		for (size_t i=0;i<pQuery->resources.size();++i) 
 		{
-			hr = device->CreateQuery(&desc, (ID3D11Query**)&pQuery->resource[i]);
+			hr = device->CreateQuery(&desc, (ID3D11Query**)&pQuery->resources[i]);
 			assert(SUCCEEDED(hr) && "GPUQuery creation failed!");
 		}
 	}
 	else
 	{
-		pQuery->resource.resize(1);
+		pQuery->resources.resize(1);
 		pQuery->active.resize(1);
-		hr = device->CreateQuery(&desc, (ID3D11Query**)&pQuery->resource[0]);
+		hr = device->CreateQuery(&desc, (ID3D11Query**)&pQuery->resources[0]);
 		assert(SUCCEEDED(hr) && "GPUQuery creation failed!");
 	}
 	return hr;
@@ -3131,7 +3145,7 @@ void RenderDevice_DX11::DestroySamplerState(Sampler* pSamplerState)
 
 void RenderDevice_DX11::DestroyQuery(GPUQuery *pQuey)
 {
-	for (auto& x : pQuey->resource)
+	for (auto& x : pQuey->resources)
 	{
 		if (x != NUll_Handle)
 		{
@@ -3153,6 +3167,11 @@ void RenderDevice_DX11::DestroyComputerPSO(ComputerPSO* pso)
 void RenderDevice_DX11::SetName(GPUResource* pResource, const std::string&name)
 {
 	((ID3D11Resource*)pResource->resource)->SetPrivateData(WKPDID_D3DDebugObjectName, (UINT)name.length(), name.c_str());
+}
+
+void RenderDevice_DX11::SetName(RenderDeviceChild * pResource, const std::string & name)
+{
+	((ID3D11DeviceChild*)pResource->resource)->SetPrivateData(WKPDID_D3DDebugObjectName, (UINT)name.length(), name.c_str());
 }
 
 void RenderDevice_DX11::PresentBegin()
@@ -3961,13 +3980,13 @@ void RenderDevice_DX11::WaitForGPU()
 
 void RenderDevice_DX11::QueryBegin(GPUQuery *query)
 {
-	deviceContexts[ThreadID]->Begin((ID3D11Query*)query->resource[query->async_frameshift]);
+	deviceContexts[ThreadID]->Begin((ID3D11Query*)query->resources[query->async_frameshift]);
 	query->active[query->async_frameshift] = true;
 }
 
 void RenderDevice_DX11::QueryEnd(GPUQuery* query)
 {
-	deviceContexts[ThreadID]->End((ID3D11Query*)query->resource[query->async_frameshift]);
+	deviceContexts[ThreadID]->End((ID3D11Query*)query->resources[query->async_frameshift]);
 	query->active[query->async_frameshift] = true;
 }
 
@@ -3988,22 +4007,22 @@ bool RenderDevice_DX11::QueryRead(GPUQuery* query)
 	switch (query->desc.Type)
 	{
 	case PRE::GPU_QUERY_TYPE_TIMESTAMP:
-		hr = deviceContexts[ThreadID]->GetData((ID3D11Query*)query->resource[readQueryID], &query->result_timestamp, sizeof(query->result_timestamp), flag);
+		hr = deviceContexts[ThreadID]->GetData((ID3D11Query*)query->resources[readQueryID], &query->result_timestamp, sizeof(query->result_timestamp), flag);
 		break;
 	case  GPU_QUERY_TYPE_TIMESTAMP_DISJOINT:
 		{
 			D3D11_QUERY_DATA_TIMESTAMP_DISJOINT temp;
-			hr = deviceContexts[ThreadID]->GetData((ID3D11Query*)query->resource[readQueryID], &temp, sizeof(temp), flag);
+			hr = deviceContexts[ThreadID]->GetData((ID3D11Query*)query->resources[readQueryID], &temp, sizeof(temp), flag);
 			query->result_disjoint = temp.Disjoint;
 			query->result_timestamp = temp.Frequency;
 		}
 		break;
 	case GPU_QUERY_TYPE_OCCLUSION:
-		hr = deviceContexts[ThreadID]->GetData((ID3D11Query*)query->resource[readQueryID], &query->result_passed_sample_count, sizeof(query->result_passed_sample_count), flag);
+		hr = deviceContexts[ThreadID]->GetData((ID3D11Query*)query->resources[readQueryID], &query->result_passed_sample_count, sizeof(query->result_passed_sample_count), flag);
 		break;
 	case GPU_QUERY_TYPE_OCCLUSION_PREDICATE:
 	default:
-		hr = deviceContexts[ThreadID]->GetData((ID3D11Query*)query->resource[readQueryID], &query->result_passed, sizeof(query->result_passed), flag);
+		hr = deviceContexts[ThreadID]->GetData((ID3D11Query*)query->resources[readQueryID], &query->result_passed, sizeof(query->result_passed), flag);
 		break;
 	}
 
@@ -4716,13 +4735,13 @@ void RenderDevice_DX11::SetMarker_Immediate(const std::string & name)
 
 void RenderDevice_DX11::QueryBegin_Immediate(GPUQuery *query)
 {
-	ImmediatedeviceContext->Begin((ID3D11Query*)query->resource[query->async_frameshift]);
+	ImmediatedeviceContext->Begin((ID3D11Query*)query->resources[query->async_frameshift]);
 	query->active[query->async_frameshift] = true;
 }
 
 void RenderDevice_DX11::QueryEnd_Immediate(GPUQuery* query)
 {
-	ImmediatedeviceContext->End((ID3D11Query*)query->resource[query->async_frameshift]);
+	ImmediatedeviceContext->End((ID3D11Query*)query->resources[query->async_frameshift]);
 	query->active[query->async_frameshift] = true;
 }
 
@@ -4743,22 +4762,22 @@ bool RenderDevice_DX11::QueryRead_Immediate(GPUQuery* query)
 	switch (query->desc.Type)
 	{
 	case PRE::GPU_QUERY_TYPE_TIMESTAMP:
-		hr = ImmediatedeviceContext->GetData((ID3D11Query*)query->resource[readQueryID], &query->result_timestamp, sizeof(query->result_timestamp), flag);
+		hr = ImmediatedeviceContext->GetData((ID3D11Query*)query->resources[readQueryID], &query->result_timestamp, sizeof(query->result_timestamp), flag);
 		break;
 	case  GPU_QUERY_TYPE_TIMESTAMP_DISJOINT:
 	{
 		D3D11_QUERY_DATA_TIMESTAMP_DISJOINT temp;
-		hr = ImmediatedeviceContext->GetData((ID3D11Query*)query->resource[readQueryID], &temp, sizeof(temp), flag);
+		hr = ImmediatedeviceContext->GetData((ID3D11Query*)query->resources[readQueryID], &temp, sizeof(temp), flag);
 		query->result_disjoint = temp.Disjoint;
 		query->result_timestamp = temp.Frequency;
 	}
 	break;
 	case GPU_QUERY_TYPE_OCCLUSION:
-		hr = ImmediatedeviceContext->GetData((ID3D11Query*)query->resource[readQueryID], &query->result_passed_sample_count, sizeof(query->result_passed_sample_count), flag);
+		hr = ImmediatedeviceContext->GetData((ID3D11Query*)query->resources[readQueryID], &query->result_passed_sample_count, sizeof(query->result_passed_sample_count), flag);
 		break;
 	case GPU_QUERY_TYPE_OCCLUSION_PREDICATE:
 	default:
-		hr = ImmediatedeviceContext->GetData((ID3D11Query*)query->resource[readQueryID], &query->result_passed, sizeof(query->result_passed), flag);
+		hr = ImmediatedeviceContext->GetData((ID3D11Query*)query->resources[readQueryID], &query->result_passed, sizeof(query->result_passed), flag);
 		break;
 	}
 

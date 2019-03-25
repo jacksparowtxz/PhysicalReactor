@@ -1,6 +1,6 @@
 #pragma once
 
-
+#define PREDEBUG 
 
 // Platform specific:
 #include <SDKDDKVer.h>

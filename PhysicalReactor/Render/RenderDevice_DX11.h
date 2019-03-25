@@ -125,6 +125,7 @@ namespace PRE
 
 
 		virtual void SetName(GPUResource* pResource, const std::string&name)override;
+		virtual void SetName(RenderDeviceChild* pResource, const std::string&name)override;
 		///////////////////////////////
 		virtual void PresentBegin()override;
 		virtual void PresentEnd()override;

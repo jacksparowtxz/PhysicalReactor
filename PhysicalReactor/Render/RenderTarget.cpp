@@ -63,11 +63,17 @@ void RenderTarget::Initialize(UINT width, UINT height, bool hasDepth, FORMAT for
 
 		rendertargets.push_back(texture);
 		Renderer::GetDevice()->CreateTexture2D(&texturedesc,nullptr,&rendertargets[0]);
+#ifdef PREDEBUG
+		Renderer::GetDevice()->SetName(rendertargets[0], "rendertargets");
+#endif // DEBUG
 		if (MSAAC > 1)
 		{
 			texturedesc.SampleDesc.Count = 1;
 			resolve_rendertargets.push_back(nullptr);
 			Renderer::GetDevice()->CreateTexture2D(&texturedesc, nullptr, &resolve_rendertargets[0]);
+#ifdef PREDEBUG
+			Renderer::GetDevice()->SetName(resolve_rendertargets[0], "resolve_rendertargets");
+#endif // DEBUG
 			resolvedMSAAUptodate.push_back(false);
 		}
 		else
