@@ -436,7 +436,9 @@ namespace PRE
 		constantdesc.StructureByteStride = 0;
 		constbuffer = allocatorFC::allocateNew<GPUBuffer>(*allocator);
 		Renderer::GetDevice()->CreateBuffer(&constantdesc, nullptr, constbuffer);
-
+#ifdef PREDEBUG
+		Renderer::GetDevice()->SetName(constbuffer, "constantbuffer");
+#endif // DEBUG
 
 		RECT rect = RECT();
 		GetClientRect(windows, &rect);
@@ -475,7 +477,10 @@ namespace PRE
 		Wireframedesc.DepthCilpEnable = true;
 		Renderer::GetDevice()->CreateRasterizerState(&Soliddesc, Solidstate);
 		Renderer::GetDevice()->CreateRasterizerState(&Wireframedesc, Wireframestate);
-
+#ifdef PREDEBUG
+		Renderer::GetDevice()->SetName(Solidstate, "Solidstate");
+		Renderer::GetDevice()->SetName(Wireframestate, "Wireframestate");
+#endif // DEBUG
 		SpLutSampler = allocatorFC::allocateNew<Sampler>(*allocator);
 		SamplerDesc splutsampler;
 		splutsampler.Filter = FILTER_ANISOTROPIC;
@@ -484,14 +489,18 @@ namespace PRE
 		splutsampler.AddressW = TEXTURE_ADDRESS_CLAMP;
 
 		Renderer::GetDevice()->CreateSamplerState(&splutsampler, SpLutSampler);
-
+#ifdef PREDEBUG
+		Renderer::GetDevice()->SetName(SpLutSampler, "SpLutSampler");
+#endif // DEBUG
 		tonemappingsampler = allocatorFC::allocateNew<Sampler>(*allocator);
 		SamplerDesc tonemappingdesc;
 		tonemappingdesc.Filter = FILTER_MIN_MAG_MIP_LINEAR;
 		tonemappingdesc.AddressU = tonemappingdesc.AddressV = tonemappingdesc.AddressW = TEXTURE_ADDRESS_WRAP;
 
 		Renderer::GetDevice()->CreateSamplerState(&tonemappingdesc, tonemappingsampler);
-
+#ifdef PREDEBUG
+		Renderer::GetDevice()->SetName(tonemappingsampler, "tonemappingsampler");
+#endif // DEBUG
 
 		shcoeffs COFS[15];
 

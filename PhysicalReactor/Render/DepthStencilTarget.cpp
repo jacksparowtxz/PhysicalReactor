@@ -34,13 +34,20 @@ void DepthStencilTarget::Initialize(int width, int height, UINT MSAAC, UINT MSAA
 	depthstencildesc.SampleDesc.Quality = MSAAQUALITY-1;
 	depthstencildesc.BindFlags = BIND_DEPTH_STENCIL | BIND_SHADER_RESOURCE;
 	Renderer::GetDevice()->CreateTexture2D(&depthstencildesc,nullptr,&texture);
+#ifdef PREDEBUG
+	Renderer::GetDevice()->SetName(texture, "depthstenciltarget");
+#endif // DEBUG
 
+	
 	if (MSAAC > 1)
 	{
 		depthstencildesc.SampleDesc.Count = 1;
 		depthstencildesc.Format = FORMAT_R32_FLOAT;
 		depthstencildesc.BindFlags = BIND_SHADER_RESOURCE | BIND_UNORDERED_ACCESS;
 		Renderer::GetDevice()->CreateTexture2D(&depthstencildesc, nullptr, &Reslovetexture);
+#ifdef PREDEBUG
+		Renderer::GetDevice()->SetName(texture, "depthstencilReslovetarget");
+#endif // DEBUG
 	}
 
 
@@ -73,7 +80,9 @@ void DepthStencilTarget::InitializeCube(int size, bool independentFaces)
 	texture = new Texture2D;
 	texture->RequestIndepentRenderTargetCubemapFaces(independentFaces);
 	Renderer::GetDevice()->CreateTexture2D(&depthGPUBufferDesc, nullptr, &texture);
-
+#ifdef PREDEBUG
+	Renderer::GetDevice()->SetName(texture, "depthstencilcube");
+#endif // DEBUG
 }
 
 void DepthStencilTarget::Clear()
@@ -99,7 +108,7 @@ Texture2D * DepthStencilTarget::GetTextureResolvedMSAA()
 
 			TextureDesc desc = Reslovetexture->GetDesc();
 			ComputerPSO computerpso;
-			computerpso.desc.cs=Renderer::shadermanager->GetComputerShader("ResloveDepthStencil.hlsl");
+			computerpso.desc.cs=Renderer::shadermanager->GetComputerShader("resolveMSAADepthStencilCS.hlsl");
 			Renderer::GetDevice()->BindComputerPSO(&computerpso);
 			Renderer::GetDevice()->Dispatch((UINT)ceilf(desc.Width / 16.f), (UINT)ceilf(desc.Height / 16.f), 1);
 

@@ -75,10 +75,16 @@ void TextureLoader::LoadTexture(const string & TexturefileName, Texture2D* LoadM
 		 if (UseCubeMap)
 		 {
 			hr = Renderer::GetDevice()->CreateTexture2D(&desc, pDataDesc, &EnvTexture);
+#ifdef PREDEBUG
+			Renderer::GetDevice()->SetName(EnvTexture, "EnvTexture");
+#endif // DEBUG
 		 }
 		 else
 		 {
 			 hr = Renderer::GetDevice()->CreateTexture2D(&desc, pDataDesc, &LoadMap);
+#ifdef PREDEBUG
+			 Renderer::GetDevice()->SetName(LoadMap, "LoadMap1");
+#endif // DEBUG
 			 delete EnvTexture;
 		 }
 		
@@ -102,6 +108,9 @@ void TextureLoader::LoadTexture(const string & TexturefileName, Texture2D* LoadM
 			 CubeMapdesc.SampleDesc.Count = 1;
 			 CubeMapdesc.SampleDesc.Quality = 0;
 			 HRESULT chr = Renderer::GetDevice()->CreateTexture2D(&CubeMapdesc, nullptr, &LoadMap);
+#ifdef PREDEBUG
+			 Renderer::GetDevice()->SetName(LoadMap, "LoadMap2");
+#endif // DEBUG
 			 assert(SUCCEEDED(chr));
 			 ComputerPSO CSPSO;
 			 CSPSO.desc.cs = Renderer::shadermanager->GetComputerShader("equirect2cube.hlsl");
@@ -120,7 +129,9 @@ void TextureLoader::LoadTexture(const string & TexturefileName, Texture2D* LoadM
 			 computerdesc.MaxLOD = FLT_MAX;
 
 			 Renderer::GetDevice()->CreateSamplerState(&computerdesc,&Computersampler);
-
+#ifdef PREDEBUG
+			 Renderer::GetDevice()->SetName(&Computersampler,"Computersampler");
+#endif // DEBUG
 			 Renderer::GetDevice()->BindResource_Immediate(CS_STAGE, EnvTexture, 0);
 			 Renderer::GetDevice()->BindUAV_Immediate(CS_STAGE, LoadMap, 0);
 			 Renderer::GetDevice()->BindSampler_Immediate(CS_STAGE, &Computersampler, 0, 1);
@@ -161,6 +172,9 @@ void TextureLoader::LoadTexture(const string & TexturefileName, Texture2D* LoadM
 		 LoadMap->RequestIndepentShaderReourcesForMIPs(true);
 		 LoadMap->RequesIndenpentUnorderedAccessResoucesForMips(true);
 		 HRESULT hr = Renderer::GetDevice()->CreateTexture2D(&desc, InitData, &LoadMap);
+#ifdef PREDEBUG
+		 Renderer::GetDevice()->SetName(LoadMap, TexturefileName);
+#endif // DEBUG
 		 assert(SUCCEEDED(hr));
 		 stbi_image_free(data);
 		 delete InitData;
