@@ -15,6 +15,22 @@ Material::~Material()
 	SAFE_DELETE(MaterialID);
 	SAFE_DELETE(rasterzerstate);
 	SAFE_DELETE(depthstencilstate);
+	SAFE_DELETE(BaseColorMap);
+	SAFE_DELETE(MetalicMap);
+	SAFE_DELETE(SpecularMap);
+	SAFE_DELETE(RoughnessMap);
+	//SAFE_DELETE(EmissiveMap);
+	SAFE_DELETE(OpacityMap);
+	SAFE_DELETE(OpcaityMaskMap);
+	SAFE_DELETE(NormalMap);
+	SAFE_DELETE(WorldPositionOffset);
+	SAFE_DELETE(WorldDisplacement);
+	SAFE_DELETE(TessellationMultiplerMap);
+	SAFE_DELETE(SubsurfaceMap);
+	SAFE_DELETE(AmbientMap);
+	SAFE_DELETE(RefractionMap);
+	SAFE_DELETE(PixelDepthOffset);
+	SAFE_DELETE(SubsurfaceMap);
 }
 
 Material::Material(const std::string &newName)
@@ -38,15 +54,21 @@ void Material::Init(const std::string &newName)
 	InitSamplerDesc.AddressV = TEXTURE_ADDRESS_WRAP;
 	InitSamplerDesc.AddressW = TEXTURE_ADDRESS_WRAP;
 	Renderer::GetDevice()->CreateSamplerState(&InitSamplerDesc, InitiSampler);
-
+#ifdef PREDEBUG
+	Renderer::GetDevice()->SetName(InitiSampler, "InitiSampler");
+#endif // DEBUG
 	RasterizerStateDesc RSdesc;
 	rasterzerstate = new RasterizerState;
 	Renderer::GetDevice()->CreateRasterizerState(&RSdesc,rasterzerstate);
-
+#ifdef PREDEBUG
+	Renderer::GetDevice()->SetName(rasterzerstate, "rasterzerstate");
+#endif // DEBUG
 	DepthStencilStateDesc DSdesc;
 	depthstencilstate = new DepthStencilState;
 	Renderer::GetDevice()->CreateDepthStencilState(&DSdesc,depthstencilstate);
-
+#ifdef PREDEBUG
+	Renderer::GetDevice()->SetName(depthstencilstate, "depthstencilstate");
+#endif // DEBUG
 
 	BaseColorMap=nullptr;
 	BaseColorMapName="";
