@@ -94,8 +94,8 @@ Texture2D * DepthStencilTarget::GetTextureResolvedMSAA()
 		if (!resolvedMSAAUptodate)
 		{
 			Renderer::GetDevice()->EventBegin("Resolve MSAA DepthBuffer");
-			Renderer::GetDevice()->BindResource(CS_STAGE, Reslovetexture, TEXSLOT_ONDEMAND0);/////////////////////////////////
-			Renderer::GetDevice()->BindUAV(CS_STAGE, texture, 0);
+			Renderer::GetDevice()->BindResource(CS_STAGE, texture , 0);/////////////////////////////////
+			Renderer::GetDevice()->BindUAV(CS_STAGE, Reslovetexture, 0);
 
 			TextureDesc desc = Reslovetexture->GetDesc();
 			ComputerPSO computerpso;
@@ -103,12 +103,12 @@ Texture2D * DepthStencilTarget::GetTextureResolvedMSAA()
 			Renderer::GetDevice()->BindComputerPSO(&computerpso);
 			Renderer::GetDevice()->Dispatch((UINT)ceilf(desc.Width / 16.f), (UINT)ceilf(desc.Height / 16.f), 1);
 
-			Renderer::GetDevice()->UnbindResources(TEXSLOT_ONDEMAND0, 1);
+			Renderer::GetDevice()->UnbindResources(0, 1);
 			Renderer::GetDevice()->UnbindUAVs(0,1);
 
 			Renderer::GetDevice()->EventEnd();
 
 		}
 	}
-	return texture;
+	return Reslovetexture;
 }
