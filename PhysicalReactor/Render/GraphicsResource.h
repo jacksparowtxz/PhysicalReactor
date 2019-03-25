@@ -98,6 +98,7 @@ namespace PRE
 	struct RenderDeviceChild
 	{
 		RenderDevice* device = nullptr;
+		CPUHandle resource = NUll_Handle;
 		void Register(RenderDevice* dev)
 		{
 			device = dev;
@@ -121,7 +122,7 @@ namespace PRE
 	struct GraphicBlob :public RenderDeviceChild
 	{
 	
-		CPUHandle resourceDX=NUll_Handle;
+	
 
 		GraphicBlob();
 		~GraphicBlob();
@@ -129,8 +130,7 @@ namespace PRE
 
 	struct VertexShader:public RenderDeviceChild
 	{
-		CPUHandle resource = NUll_Handle;
-		CPUHandle sf = NUll_Handle;
+		//CPUHandle resource = NUll_Handle;
 		VertexShader();
 		~VertexShader();
 		
@@ -141,8 +141,7 @@ namespace PRE
 	struct PixelShader:public RenderDeviceChild
 	{
 		
-		CPUHandle resource = NUll_Handle;
-		CPUHandle sf = NUll_Handle;
+		//CPUHandle resource = NUll_Handle;
 		PixelShader();
 		~PixelShader();
 		
@@ -154,48 +153,42 @@ namespace PRE
 	struct GeometryShader : public RenderDeviceChild
 	{
 	
-		CPUHandle resource = NUll_Handle;
+		//CPUHandle resource = NUll_Handle;
 		GeometryShader();
 		~GeometryShader();
-		CPUHandle sf = NUll_Handle;
-	//	ShaderByteCode code;
 	};
 
 
 	struct HullShader : public RenderDeviceChild
 	{
 	
-		CPUHandle resource = NUll_Handle;
+		//CPUHandle resource = NUll_Handle;
 		HullShader();
 		~HullShader();
-		CPUHandle sf=NUll_Handle;
-	//	ShaderByteCode code;
 	};
 
 	struct DomainShader : public RenderDeviceChild
 	{
 		
-		CPUHandle resource = NUll_Handle;
+		//CPUHandle resource = NUll_Handle;
 
 		DomainShader();
 		~DomainShader();
-		CPUHandle sf = NUll_Handle;
-	//	ShaderByteCode code;
+
 	};
 
 	struct ComputerShader : public RenderDeviceChild
 	{
 		
-		CPUHandle resource = NUll_Handle;
+		//CPUHandle resource = NUll_Handle;
 		ComputerShader();
 		~ComputerShader();
-		CPUHandle sf = NUll_Handle;
-	//	ShaderByteCode code;
+
 	};
 
 	struct Sampler :public RenderDeviceChild
 	{
-		CPUHandle resource = NUll_Handle;
+		//CPUHandle resource = NUll_Handle;
 		SamplerDesc desc;
 	
 	
@@ -220,7 +213,7 @@ namespace PRE
 		std::vector<CPUHandle> additionalSRVs;
 		CPUHandle UAV=NUll_Handle;
 		std::vector<CPUHandle> additionalUAVs;
-		CPUHandle resource;
+		//CPUHandle resource;
 		CPUHandle resourceMemory;
 		GPUResource();
 		virtual ~GPUResource();
@@ -258,7 +251,7 @@ namespace PRE
 
 	struct VertexLayout : public RenderDeviceChild
 	{
-		CPUHandle resource =NUll_Handle;
+		//CPUHandle resource =NUll_Handle;
 		std::vector<VertexLayoutDesc> desc;
 		VertexLayout();
 		~VertexLayout();
@@ -267,7 +260,7 @@ namespace PRE
 	struct BlendState :public RenderDeviceChild
 	{
 	
-		CPUHandle resource = NUll_Handle;
+		//CPUHandle resource = NUll_Handle;
 		BlendStateDesc desc;
 
 		BlendState();
@@ -282,7 +275,7 @@ namespace PRE
 	struct DepthStencilState :public RenderDeviceChild
 	{
 	
-		CPUHandle resource=NUll_Handle;
+		//CPUHandle resource=NUll_Handle;
 		DepthStencilStateDesc desc;
 
 		DepthStencilState();
@@ -297,7 +290,7 @@ namespace PRE
 	struct RasterizerState:public RenderDeviceChild
 	{
 		
-		CPUHandle resource=NUll_Handle;
+		//CPUHandle resource=NUll_Handle;
 		RasterizerStateDesc desc;
 		RasterizerState();
 		~RasterizerState();
@@ -370,7 +363,7 @@ namespace PRE
 	struct GPUQuery :public RenderDeviceChild
 	{
 	
-		std::vector<CPUHandle> resource;
+		std::vector<CPUHandle> resources;
 		std::vector<int> active;
 		GPUQueryDesc desc;
 		int async_frameshift;
@@ -381,7 +374,7 @@ namespace PRE
 
 		bool IsValid()
 		{
-			return !resource.empty() && resource[0] != NUll_Handle;
+			return !resources.empty() && resources[0] != NUll_Handle;
 		}
 
 		GPUQueryDesc GetDesc() const {
