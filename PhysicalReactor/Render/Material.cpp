@@ -11,10 +11,10 @@ Material::Material()
 
 Material::~Material()
 {
-	delete InitiSampler;
-	delete MaterialID;
-	delete rasterzerstate;
-	delete depthstencilstate;
+	SAFE_DELETE(InitiSampler);
+	SAFE_DELETE(MaterialID);
+	SAFE_DELETE(rasterzerstate);
+	SAFE_DELETE(depthstencilstate);
 }
 
 Material::Material(const std::string &newName)

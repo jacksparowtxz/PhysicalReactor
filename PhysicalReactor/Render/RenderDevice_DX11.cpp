@@ -1615,7 +1615,7 @@ RenderDevice_DX11::RenderDevice_DX11(HWND mainscreen,bool fullscreen, bool debug
 
 
 	CreateRenderTargetAndDepthStencil();
-
+	
 	
 
 }
@@ -1626,13 +1626,28 @@ RenderDevice_DX11::~RenderDevice_DX11()
 
     SAFE_RELEASE(renderTargetView);
     SAFE_RELEASE(swapChain);
+	SAFE_RELEASE(offscreenRTV);
+	SAFE_RELEASE(offscreenDSV);
+	SAFE_RELEASE(backbuffer);
+	SAFE_RELEASE(depthbuffer);
 
 	for (int i=0;i<JobScheduler::NumThreads;i++)
 	{
 		SAFE_RELEASE(commandlists[i]);
+		SAFE_RELEASE(userDefinedAnnotations[i]);
+		SAFE_RELEASE(deviceContexts[i]);
+		SAFE_RELEASE(prev_vs[i]);
+		SAFE_RELEASE(prev_ps[i]);
+		SAFE_RELEASE(prev_hs[i]);
+		SAFE_RELEASE(prev_ds[i]);
+		SAFE_RELEASE(prev_gs[i]);
+		SAFE_RELEASE(prev_bs[i]);
+		SAFE_RELEASE(prev_rs[i]);
+		SAFE_RELEASE(prev_dss[i]);
+		SAFE_RELEASE(prev_vl[i]);
 	}
 	SAFE_RELEASE(BasedeviceContexts);
-	SAFE_DELETE_ARRAY(deviceContexts[9]);
+	SAFE_RELEASE(ImmediatedeviceContext);;
 	ID3D11Debug* d3dDebug;
 	HRESULT hr = device->QueryInterface(__uuidof(ID3D11Debug), reinterpret_cast<void**>(&d3dDebug));
 	if (SUCCEEDED(hr))
@@ -1643,6 +1658,7 @@ RenderDevice_DX11::~RenderDevice_DX11()
 		d3dDebug->Release();
 	SAFE_RELEASE(device);
 	SAFE_RELEASE(Basedevice);
+	
 }
 
 void RenderDevice_DX11::SetResolution(int width, int height)
@@ -1675,10 +1691,10 @@ void RenderDevice_DX11::SetResolution(int width, int height)
 	
 	
 
-	for (int i = 0; i < JobScheduler::NumThreads; i++)
+	/*for (int i = 0; i < JobScheduler::NumThreads; i++)
 	{
 		deviceContexts[i]->OMSetRenderTargets(1, &renderTargetView, DepthStecilView);
-	}
+	}*/
 }
 	
 Texture2D RenderDevice_DX11::GetBackBuffer()
@@ -3355,6 +3371,19 @@ void RenderDevice_DX11::BindRenderTargets(UINT NumViews, Texture2D* const *ppRen
 		deviceContexts[ThreadID]->OMSetRenderTargets(NumViews, rendertargetViews, depthStencilView);
 	}
 
+}
+
+void RenderDevice_DX11::BindBackBufferRenderTargets(Texture2D* depthStencilTexture)
+{
+	ID3D11DepthStencilView* depthStencilView = nullptr;
+	if (depthStencilView != nullptr)
+	{
+			depthStencilView = (ID3D11DepthStencilView*)depthStencilTexture->DSV;
+	}
+	for (int i = 0; i < JobScheduler::NumThreads; i++)
+	{
+		deviceContexts[i]->OMSetRenderTargets(1, &renderTargetView, depthStencilView);
+	}
 }
 
 

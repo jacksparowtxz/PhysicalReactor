@@ -38,6 +38,9 @@ namespace PRE
 		IDXGISwapChain1* swapChain = nullptr;
 		ID3D11RenderTargetView* renderTargetView = nullptr;
 		ID3D11DepthStencilView* DepthStecilView = nullptr;
+		ID3D11RenderTargetView* offscreenRTV = nullptr;
+		ID3D11RenderTargetView* offscreenDSV = nullptr;
+
 		ID3D11Texture2D* backbuffer = nullptr;
 		ID3D11Texture2D* depthbuffer = nullptr;
 		ViewPort viewport;
@@ -139,6 +142,7 @@ namespace PRE
 		virtual void BindScissorRects(UINT numRects, const Rect* rect)override;
 		virtual void BindViewports(UINT NumViewports, const ViewPort* pViewports)override;
 		virtual void BindRenderTargets(UINT NumViews, Texture2D* const *ppRenderTargets, Texture2D* depthStencilTexture,int arrayIndex = -1)override;
+		virtual void BindBackBufferRenderTargets(Texture2D* depthStencilTexture)override;
 		virtual void ClearRenderTarget(Texture* pTexture, const FLOAT ColorRGBA[4], int arrayIndex = -1)override;
 		virtual void ClearDepthStencil(Texture2D* pTexture, UINT ClearFlags, FLOAT Depth, UINT8 Stencil,  int arrayIndex = -1)override;
 		virtual void BindResource(SHADERSTAGE stage, GPUResource* resource, int slot, int arrayIndex = -1) override;

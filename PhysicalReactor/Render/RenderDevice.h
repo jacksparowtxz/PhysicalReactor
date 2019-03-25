@@ -164,6 +164,8 @@ namespace PRE
 		virtual void BindScissorRects(UINT numRects, const Rect* rect) = 0;
 		virtual void BindViewports(UINT NumViewports, const ViewPort* pViewports) = 0;
 		virtual void BindRenderTargets(UINT NumViews, Texture2D* const *ppRenderTargets, Texture2D* depthStencilTexture, int arrayIndex = -1)=0;
+
+		virtual void BindBackBufferRenderTargets(Texture2D* depthStencilTexture) = 0;
 		virtual void ClearRenderTarget(Texture* pTexture, const FLOAT ColorRGBA[4], int arrayIndex = -1) = 0;
 		virtual void ClearDepthStencil(Texture2D* pTexture, UINT ClearFlags, FLOAT Depth, UINT8 Stencil, int arrayIndex=-1) = 0;
 		virtual void BindResource(SHADERSTAGE stage, GPUResource* resource, int slot, int arrayIndex = -1) = 0;
