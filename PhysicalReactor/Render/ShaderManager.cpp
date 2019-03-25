@@ -25,7 +25,30 @@ ShaderManager::ShaderManager()
 
 ShaderManager::~ShaderManager()
 {
-	
+	for (auto cs : CSMap)
+	{
+		cs.second->~ComputerShader();
+	}
+	for (auto vs : VSMap)
+	{
+		vs.second->~VertexShader();
+	}
+	for (auto hs : HSMap)
+	{
+		hs.second->~HullShader();
+	}
+	for (auto gs : GSMap)
+	{
+		gs.second->~GeometryShader();
+	}
+	for (auto ps : PSMap)
+	{
+		ps.second->~PixelShader();
+	}
+	for (auto vl : VLMap)
+	{
+		vl.second->~VertexLayout();
+	}
 }
 
 
@@ -54,6 +77,9 @@ void ShaderManager::LoadShader(const std::string& pathfilename,SHADERSTAGE type)
 		Renderer::GetDevice()->CreateVertexShader(wfilename, shaderblob, vs);
 		VSMap[filename]=vs;
 		CreateVertexLayout(filename,shaderblob);
+#ifdef PREDEBUG
+		Renderer::GetDevice()->SetName(vs, filename);
+#endif // DEBUG
 	}
 	break;
 	case PRE::HS_STAGE:
@@ -61,6 +87,9 @@ void ShaderManager::LoadShader(const std::string& pathfilename,SHADERSTAGE type)
 		HullShader* hs = new HullShader;
 		Renderer::GetDevice()->CreateHullShader(wfilename, shaderblob, hs);
 		HSMap[filename]=hs;
+#ifdef PREDEBUG
+		Renderer::GetDevice()->SetName(hs, filename);
+#endif // DEBUG
 	}
 	break;
 	case PRE::DS_STAGE:
@@ -68,6 +97,9 @@ void ShaderManager::LoadShader(const std::string& pathfilename,SHADERSTAGE type)
 		DomainShader* ds = new DomainShader;
 		Renderer::GetDevice()->CreateDomainShader(wfilename, shaderblob, ds);
 		DSMap[filename]= ds;
+#ifdef PREDEBUG
+		Renderer::GetDevice()->SetName(ds, filename);
+#endif // DEBUG
 	}
 	break;
 	case PRE::GS_STAGE:
@@ -75,6 +107,9 @@ void ShaderManager::LoadShader(const std::string& pathfilename,SHADERSTAGE type)
 		GeometryShader* gs = new GeometryShader;
 		Renderer::GetDevice()->CreateGemotryShader(wfilename, shaderblob, gs);
 		GSMap[filename]=gs;
+#ifdef PREDEBUG
+		Renderer::GetDevice()->SetName(gs, filename);
+#endif // DEBUG
 	}
 	break;
 	case PRE::PS_STAGE:
@@ -82,6 +117,9 @@ void ShaderManager::LoadShader(const std::string& pathfilename,SHADERSTAGE type)
 	    PixelShader* ps = new PixelShader;
 		Renderer::GetDevice()->CreatePixelShader(wfilename, shaderblob, ps);
 		PSMap[filename]= ps;
+#ifdef PREDEBUG
+		Renderer::GetDevice()->SetName(ps, filename);
+#endif // DEBUG
 	}
 	break;
 	case PRE::CS_STAGE:
@@ -89,6 +127,9 @@ void ShaderManager::LoadShader(const std::string& pathfilename,SHADERSTAGE type)
 	    ComputerShader* cs =  new ComputerShader;
 		Renderer::GetDevice()->CreateComputerShader(wfilename, shaderblob, cs);
 		CSMap[filename]= cs;
+#ifdef PREDEBUG
+		Renderer::GetDevice()->SetName(cs, filename);
+#endif // DEBUG
 	}
 	break;
 	default:
@@ -220,6 +261,9 @@ void ShaderManager::CreateVertexLayout(const std::string& filename,GraphicBlob* 
 	};
 	Renderer::GetDevice()->CreateInputLayout(vertexDesc, ARRAYSIZE(vertexDesc), Graphicblob, vertexlayout);
 	VLMap[filename] = vertexlayout;
+#ifdef PREDEBUG
+	Renderer::GetDevice()->SetName(vertexlayout, filename+"vl");
+#endif // DEBUG
 }
 
 PRE::VertexShader* ShaderManager::GetVertexShader(const std::string& filename)
