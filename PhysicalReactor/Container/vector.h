@@ -38,9 +38,10 @@ namespace PRE
 		}
 		~Vector()
 		{
-		    for (uint32_t i=0;i<mSize;++i)
+			
+		    for (uint32_t index = 0; index<mSize; index++)
 		    {
-				data[i].~T();
+				data[index].~T();
 		    }
 			if (data!=nullptr)
 			{
