@@ -66,6 +66,7 @@ struct SubMesh
 		SAFE_DELETE(material);
 		SAFE_DELETE(mVertexBuffer);
 		SAFE_DELETE(mIndexBuffer);
+		OutputDebugStringA("test");
 	}
 
 };
@@ -78,7 +79,6 @@ public:
 	string directory;
 	AABB* aabb;
 	vector<SubMesh*> Meshs;
-	//VertexLayout* vertexlayout;
 	XMFLOAT4X4* Transformation;
 	DrawKey* drawkey;
 

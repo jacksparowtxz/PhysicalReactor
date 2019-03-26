@@ -2,7 +2,7 @@
 #include "StaticMesh.h"
 
 
-StaticMesh::StaticMesh():directory(""),aabb(nullptr)
+StaticMesh::StaticMesh() :directory(""), aabb(nullptr)
 {
 	XMFLOAT3 zero = { 0,0,0 };
 	XMFLOAT4 Id = { 0,0,0,1 };

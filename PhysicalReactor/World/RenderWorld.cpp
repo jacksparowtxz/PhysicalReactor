@@ -66,7 +66,7 @@ namespace PRE
 		function<void(StaticMesh*, uint32_t, void*)> RenderStaticMesh;
 		auto lambda = [&, this](StaticMesh* sm, uint32_t size, void* ExtraData) {
 
-			Renderer::GetDevice()->UpdateBuffer(constbuffer, m_constantBufferData[ThreadID]);
+		Renderer::GetDevice()->UpdateBuffer(constbuffer, m_constantBufferData[ThreadID]);
 
 			GraphicPSO PSO;
 			Renderer::shadermanager->GetPSO(TYPE_STATICMESH, &PSO);

@@ -18,7 +18,11 @@ Level::~Level()
 	{
 		allocatorFC::deallocateDelete(*allocator, sky);
 	}
-	StaticMeshList.~Vector();
+	for (uint32_t i = 0; i < StaticMeshList.Size(); i++)
+	{
+		allocatorFC::deallocateDelete(*allocator, StaticMeshList.operator[](i));
+	}
+//	StaticMeshList.~Vector();
 	DirectionalLightList.~Vector();
 	SpotLightList.~Vector();
 	PointLightList.~Vector();
