@@ -3236,6 +3236,7 @@ void RenderDevice_DX11::ExcuteDeferredContexts()
 			if (commandlists[i]!=nullptr)
 			{
 				ImmediatedeviceContext->ExecuteCommandList(commandlists[i], false);
+				commandlists[i]->Release();
 				commandlists[i] = nullptr;
 			}
 			
