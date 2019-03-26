@@ -25,9 +25,23 @@ public:
 	BLENDMODE GetBlendMode() const;
 	void SetRasterState(RasterizerStateDesc rsdesc);
 	void SetDepthStencilState(DepthStencilStateDesc dsdesc);
-	void SetSampleState(SamplerDesc spdesc);
-	
+	void SetBaseColorSampler(SamplerDesc spdesc);
+	void SetMetalicSampler(SamplerDesc spdesc);
+	void SetSpecularSampler(SamplerDesc spdesc);
+	void SetRoughnessSampler(SamplerDesc spdesc);
+	void SetEmissiveSampler(SamplerDesc spdesc);
+	void SetOpacitySampler(SamplerDesc spdesc);
+	void SetOpcaityMaskSampler(SamplerDesc spdesc);
 
+	void SetNormalSampler(SamplerDesc spdesc);
+	void SetWorldPositionOffsetSampler(SamplerDesc spdesc);
+	void SetWorldDisplacementSampler(SamplerDesc spdesc);
+	void SetTessellationMultiplerSampler(SamplerDesc spdesc);
+	void SetSubsurfaceSampler(SamplerDesc spdesc);
+	void SetAmbientSampler(SamplerDesc spdesc);
+	void SetRefractionSampler(SamplerDesc spdesc);
+	void SetPixelDepthOffsetSampler(SamplerDesc spdesc);
+	
 
 	RENDERTYPE MaterialType;
 	SHADINGMODEL Shadingmodel;
@@ -96,7 +110,6 @@ public:
 	string PixelDepthOffsetName;
 	Sampler* PixelDepthOffsetSampler;
 
-	Sampler* InitiSampler;
 	RasterizerState* rasterzerstate;
 	DepthStencilState* depthstencilstate;
 

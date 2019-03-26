@@ -7,10 +7,11 @@ using namespace PRE;
 Sky::Sky()
 {
 	SkyMesh = new StaticMesh;
+	Skymaterial = new Material("SkyMaterial");
 	AssetManager::GetDevice()->Import("Re/smsphere.obj",SkyMesh);
 	SkyCubeMap = new Texture2D;
 	TextureManager::GetLoader()->LoadTexture("Re/SkyhighFluffycloudField4k.hdr", SkyCubeMap,true);
-	Skymaterial = new Material("SkyMaterial");
+	
 	EnvMap=new Texture2D;
 	SpLutMap = new Texture2D;
 	//TextureManager::GetLoader()->MakeRadianceMap(SkyCubeMap,EnvMap,SpLutMap);
@@ -19,16 +20,15 @@ Sky::Sky()
 	dsdesc.DepthEnable = true;
 	dsdesc.DepthFunc = COMPARSION_LESS_EQUAL;
 	dsdesc.DepthWriteMask = DEPTH_WRITE_MASK_ALL;
-
+	Skymaterial->EmissiveMap = std::move(SkyCubeMap);
 	Skymaterial->SetDepthStencilState(dsdesc);
-	Skymaterial->EmissiveMap = SkyCubeMap;
 
 	SamplerDesc spdesc;
 	spdesc.Filter = FILTER_MIN_MAG_MIP_LINEAR;
 	spdesc.AddressU = TEXTURE_ADDRESS_WRAP;
 	spdesc.AddressV = TEXTURE_ADDRESS_WRAP;
 
-	Skymaterial->SetSampleState(spdesc);
+	Skymaterial->SetEmissiveSampler(spdesc);
 	SkyMesh->Meshs[0]->material = Skymaterial;
 
 
@@ -42,7 +42,7 @@ Sky::Sky()
 
 Sky::~Sky()
 {
-	SAFE_DELETE(SkyCubeMap);
+	//SAFE_DELETE(SkyCubeMap);
 	SAFE_DELETE(Skymaterial);
 	SAFE_DELETE(SkyMesh);
 	SAFE_DELETE(EnvMap);

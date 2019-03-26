@@ -111,12 +111,19 @@ void GameMeshImport::ProcessMesh(aiMesh* mesh, const aiScene* scene, StaticMesh 
 		aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 		vector<Texture2D*> Maps;
 		
+		SamplerDesc InitSamplerDesc;
+		InitSamplerDesc.Filter = FILTER_ANISOTROPIC;
+		InitSamplerDesc.AddressU = TEXTURE_ADDRESS_WRAP;
+		InitSamplerDesc.AddressV = TEXTURE_ADDRESS_WRAP;
+		InitSamplerDesc.AddressW = TEXTURE_ADDRESS_WRAP;
+
 
 		Maps = loadMaterialTexture(material, aiTextureType_DIFFUSE, "texture_diffuse");
 		if (Maps.size() > 0)
 		{
 			meshmaterial->BaseColorMap = std::move(Maps[0]);
 			meshmaterial->BaseColorMapName = std::move(string("texture_diffuse"));
+			meshmaterial->SetBaseColorSampler(InitSamplerDesc);
 		}
 
 		Maps = loadMaterialTexture(material, aiTextureType_SPECULAR, "texture_specular");
@@ -124,6 +131,7 @@ void GameMeshImport::ProcessMesh(aiMesh* mesh, const aiScene* scene, StaticMesh 
 		{
 			meshmaterial->SpecularMap = std::move(Maps[0]);
 			meshmaterial->SpecularMapName = std::move(string("texture_specular"));
+			meshmaterial->SetSpecularSampler(InitSamplerDesc);
 		}
 
 
@@ -132,7 +140,7 @@ void GameMeshImport::ProcessMesh(aiMesh* mesh, const aiScene* scene, StaticMesh 
 		{
 			meshmaterial->NormalMap = std::move(Maps[0]);
 			meshmaterial->NormalMapName = std::move(string("texture_normal"));
-
+			meshmaterial->SetNormalSampler(InitSamplerDesc);
 		}
 
 		Maps = loadMaterialTexture(material, aiTextureType_EMISSIVE, "texture_emissive");
@@ -140,6 +148,7 @@ void GameMeshImport::ProcessMesh(aiMesh* mesh, const aiScene* scene, StaticMesh 
 		{
 			meshmaterial->EmissiveMap = std::move(Maps[0]);
 			meshmaterial->EmissiveMapName = std::move(string("texture_emissive"));
+			meshmaterial->SetEmissiveSampler(InitSamplerDesc);
 
 		}
 		Maps = loadMaterialTexture(material, aiTextureType_OPACITY, "texture_opacity");
@@ -147,6 +156,7 @@ void GameMeshImport::ProcessMesh(aiMesh* mesh, const aiScene* scene, StaticMesh 
 		{
 			meshmaterial->OpacityMap = std::move(Maps[0]);
 			meshmaterial->OpacityMapName = std::move(string("texture_opacity"));
+			meshmaterial->SetOpacitySampler(InitSamplerDesc);
 		}
 	
 		Maps = loadMaterialTexture(material, aiTextureType_DISPLACEMENT, "texture_displacement");
@@ -154,6 +164,7 @@ void GameMeshImport::ProcessMesh(aiMesh* mesh, const aiScene* scene, StaticMesh 
 		{
 			meshmaterial->WorldDisplacement = std::move(Maps[0]);
 			meshmaterial->WorldDisplacementName = std::move(string("texture_displacement"));
+			meshmaterial->SetWorldDisplacementSampler(InitSamplerDesc);
 		}
 
 		Maps = loadMaterialTexture(material, aiTextureType_REFLECTION, "texture_reflection");
@@ -161,21 +172,28 @@ void GameMeshImport::ProcessMesh(aiMesh* mesh, const aiScene* scene, StaticMesh 
 		{
 			meshmaterial->RefractionMap = std::move(Maps[0]);
 			meshmaterial->RefractionMapname = std::move(string("texture_reflection"));
+			meshmaterial->SetRefractionSampler(InitSamplerDesc);
 		}
 
 		Maps = loadMaterialTexture(material, aiTextureType_HEIGHT, "texture_height");
+		{
+		
+		}
 
 		Maps = loadMaterialTexture(material, aiTextureType_UNKNOWN, "texture_unkonw");
 		if (Maps.size() > 0)
 		{
 			meshmaterial->MetalicMap = std::move(Maps[0]);
 			meshmaterial->MetalicMapName = std::move(string("texture_metalic"));
+			meshmaterial->SetMetalicSampler(InitSamplerDesc);
 		}
 
 		Maps = loadMaterialTexture(material, aiTextureType_LIGHTMAP, "texture_ambient");
 		if (Maps.size() > 0)
 		{
 			meshmaterial->AmbientMap = std::move(Maps[0]);
+			meshmaterial->AmbientMapname = std::move(string("texture_Ambient"));
+			meshmaterial->SetAmbientSampler(InitSamplerDesc);
 		}
 
 		XMFLOAT3 basefactor = GetVectorFactorAssimp(AI_MATKEY_COLOR_DIFFUSE, material);
