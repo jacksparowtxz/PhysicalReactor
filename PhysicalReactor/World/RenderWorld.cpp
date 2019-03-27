@@ -8,8 +8,8 @@
 #include <functional>
 
 using namespace std;
-thread_local std::vector<StaticMesh*> LStaticMeshList;
-thread_local std::vector<StaticMesh*> LTStaticMeshList;
+thread_local std::vector<StaticMesh> LStaticMeshList;
+thread_local std::vector<StaticMesh> LTStaticMeshList;
 
 
 namespace PRE
@@ -308,13 +308,13 @@ namespace PRE
 					{
 						DrawKey drawkey = DrawKey::GenerateKey(0, ViewLayerType::e3D, 1, sm->GetMaterialID().data, Depth.data, TranslucencyType::eOpaque, false);
 						*sm->drawkey = std::move(drawkey);
-						LStaticMeshList.push_back(&sm[i]);
+						LStaticMeshList.push_back(sm[i]);
 					}
 					else
 					{
 						DrawKey drawkey = DrawKey::GenerateKey(0, ViewLayerType::e3D, 1, sm->GetMaterialID().data, Depth.data, TranslucencyType::eNormal, false);
 						*sm->drawkey = std::move(drawkey);
-						LTStaticMeshList.push_back(&sm[i]);
+						LTStaticMeshList.push_back(sm[i]);
 					}
 				}
 			}
