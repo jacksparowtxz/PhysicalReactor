@@ -29,7 +29,7 @@ Sky::Sky()
 	spdesc.AddressV = TEXTURE_ADDRESS_WRAP;
 
 	Skymaterial->SetEmissiveSampler(spdesc);
-	SkyMesh->Meshs[0]->material = Skymaterial;
+	SkyMesh->Meshs[0]->material =std::move(Skymaterial);
 
 
 	RasterizerStateDesc rsdesc;
@@ -42,8 +42,6 @@ Sky::Sky()
 
 Sky::~Sky()
 {
-	//SAFE_DELETE(SkyCubeMap);
-	SAFE_DELETE(Skymaterial);
 	SAFE_DELETE(SkyMesh);
 	SAFE_DELETE(EnvMap);
 	SAFE_DELETE(SpLutMap);

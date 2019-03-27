@@ -1,8 +1,5 @@
 #pragma once
 #include "Render/GraphicsResource.h"
-#include "Allocator/Allocator.h"
-#include "Allocator/DynamicLinearAllocator.h"
-#include "Container/vector.h"
 #include "World/Level.h"
 #include "Render/Renderable.h"
 #include "Render/Camera.h"
@@ -10,9 +7,9 @@
 #include "MISC/MiscHelper.h"
 #include "Render/sky.h"
 #include<windows.h>
+#include<vector>
 
-
-
+using namespace std;
 using namespace PRE;
 namespace PRE
 {
@@ -59,36 +56,36 @@ namespace PRE
 	class RenderWorld
 	{
 	public:
-		RenderWorld(HWND windows, Allocator* Inallocator, DynamicLinearAllocator* allocator1);
+		RenderWorld(HWND windows);
 		~RenderWorld();
 		void BeginRender();
 		void RenderFrame();
 		void EndRender();
 		void Update(double deltatime);
 		void RenderScene();
-		void Initilize(HWND windows, Allocator* allocator);
+		void Initilize(HWND windows);
 		void ReSize(int width, int height);
 		void MoveForWard(float Direction);
 		void MoveRight(float Direction);
 		void CameraRotation(WPARAM btnState, int x, int y);
 		void SetMousePosition(HWND windows, int x, int y);
 		void RenderMaterial(SHADERSTAGE stage, SubMesh* submesh);
-		void InitViews();
+		void InitViews(Level* currentlevel);
 		void RenderWireframe(bool Wireframe);
 		void UpdateScene(Level* level);
-		Allocator* allocator;
+		
 
-		Vector<StaticMesh> StaticmeshList;
+		//Vector<StaticMesh> StaticmeshList;
 
-		Vector<StaticMesh> VisiblityMesh;
-		Vector<StaticMesh> TVisiblityMesh;
-		Vector<PointLight> PointLights;
-		Vector<SpotLight> SpotLights;
-		Vector<DirectionalLight> DirectionalLights;
-		Vector<SkyLight> SkyLights;
+		vector<StaticMesh> VisiblityMesh;
+		vector<StaticMesh> TVisiblityMesh;
+		vector<PointLight*> PointLights;
+		vector<SpotLight*> SpotLights;
+		vector<DirectionalLight*> DirectionalLights;
+		vector<SkyLight*> SkyLights;
 
 
-		RenderConstantBuffer* m_constantBufferData[9];
+		RenderConstantBuffer** m_constantBufferData=nullptr;
 		GPUBuffer* constbuffer;
 		Camera *camera;
 		POINT mLastMousePos;

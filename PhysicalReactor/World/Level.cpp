@@ -1,41 +1,25 @@
 #include "stdafx.h"
 #include "Level.h"
 
-Level::Level(Allocator *Inallocator) :StaticMeshList(*Inallocator),
-                                    DirectionalLightList(*Inallocator),
-                                    SpotLightList(*Inallocator),
-                                    PointLightList(*Inallocator),
-                                    SkyLightList(*Inallocator),
-                                    sky(nullptr),
-	                                allocator(Inallocator)
+Level::Level() :sky(nullptr)                    
 {
 	AddSky();
 }
 
 Level::~Level()
-{
-	if (sky != nullptr)
-	{
-		allocatorFC::deallocateDelete(*allocator, sky);
-	}
-
-	StaticMeshList.~Vector();
-	DirectionalLightList.~Vector();
-	SpotLightList.~Vector();
-	PointLightList.~Vector();
-	SkyLightList.~Vector();
-	
+{	
+	SAFE_DELETE(sky);
 }
 
 
 void Level::AddStaticMesh(StaticMesh* sm)
 {
-	StaticMeshList.Push_Back(*sm);
+	StaticMeshList.push_back(sm);
 }
 
 void Level::AddSky()
 {
-   sky=allocatorFC::allocateNew<Sky>(*allocator);
+   sky=new Sky;
 }
 
 
@@ -46,22 +30,26 @@ void Level::AddLight(LightType lighttype, XMFLOAT3 position, XMFLOAT3 rotation)
 	{
 	case DIRECTIONALLIGHT:
 	{
-		DirectionalLightList.Push_Back(*(allocatorFC::allocateNew<DirectionalLight>(*allocator, position)));
+		DirectionalLight *dl = new DirectionalLight(position);
+		DirectionalLightList.emplace_back(dl);
 	}
 	break;
 	case POINTLIGHT:
 	{
-		PointLightList.Push_Back(*(allocatorFC::allocateNew<PointLight>(*allocator, position, rotation)));
+		PointLight* pl = new PointLight(position,rotation);
+		PointLightList.emplace_back(pl);
 	}
 	break;
 	case SPOTLIGHT:
 	{
-		SpotLightList.Push_Back(*(allocatorFC::allocateNew<SpotLight>(*allocator, position, rotation)));
+		SpotLight* sl = new SpotLight(position, rotation);
+		SpotLightList.emplace_back(sl);
 	}
 	break;
 	case SKYLIGHT:
 	{
-		SkyLightList.Push_Back(*(allocatorFC::allocateNew<SkyLight>(*allocator)));
+		SkyLight* skl = new SkyLight;
+		SkyLightList.emplace_back(skl);
 	}
 	default:
 		break;

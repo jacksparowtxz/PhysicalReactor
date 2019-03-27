@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="头文件\Allocator">
-      <UniqueIdentifier>{e3f2451c-fa6c-4573-8bed-ee13ed2b837f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="头文件\Jobsystem">
       <UniqueIdentifier>{dcc2af01-1f8e-40d8-b563-a43d70ef9df4}</UniqueIdentifier>
     </Filter>
@@ -47,45 +44,6 @@
     </ClInclude>
     <ClInclude Include="PhysicalReactor.h">
       <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Allocator\Allocator.h">
-      <Filter>头文件\Allocator</Filter>
-    </ClInclude>
-    <ClInclude Include="Allocator\AllocatorProxy.h">
-      <Filter>头文件\Allocator</Filter>
-    </ClInclude>
-    <ClInclude Include="Allocator\BlockAllocator.h">
-      <Filter>头文件\Allocator</Filter>
-    </ClInclude>
-    <ClInclude Include="Allocator\BlockAllocatorProxy.h">
-      <Filter>头文件\Allocator</Filter>
-    </ClInclude>
-    <ClInclude Include="Allocator\DynamicLinearAllocator.h">
-      <Filter>头文件\Allocator</Filter>
-    </ClInclude>
-    <ClInclude Include="Allocator\EndAllocator.h">
-      <Filter>头文件\Allocator</Filter>
-    </ClInclude>
-    <ClInclude Include="Allocator\FixedLinearAllocator.h">
-      <Filter>头文件\Allocator</Filter>
-    </ClInclude>
-    <ClInclude Include="Allocator\FreeListAllocator.h">
-      <Filter>头文件\Allocator</Filter>
-    </ClInclude>
-    <ClInclude Include="Allocator\LinearAllocator.h">
-      <Filter>头文件\Allocator</Filter>
-    </ClInclude>
-    <ClInclude Include="Allocator\ProxyAllocator.h">
-      <Filter>头文件\Allocator</Filter>
-    </ClInclude>
-    <ClInclude Include="Allocator\ScopeStack.h">
-      <Filter>头文件\Allocator</Filter>
-    </ClInclude>
-    <ClInclude Include="Allocator\SmallBlockAllocator.h">
-      <Filter>头文件\Allocator</Filter>
-    </ClInclude>
-    <ClInclude Include="Allocator\MemoryUtil.h">
-      <Filter>头文件\Allocator</Filter>
     </ClInclude>
     <ClInclude Include="JobSystem\Delegate.h">
       <Filter>头文件\Jobsystem</Filter>
@@ -171,9 +129,6 @@
     <ClInclude Include="MISC\stb_image_write.h">
       <Filter>头文件\MISC</Filter>
     </ClInclude>
-    <ClInclude Include="Container\vector.h">
-      <Filter>头文件\Container</Filter>
-    </ClInclude>
     <ClInclude Include="Container\GameType.h">
       <Filter>头文件\Container</Filter>
     </ClInclude>
@@ -241,36 +196,6 @@
     </ClCompile>
     <ClCompile Include="PhysicalReactor.cpp">
       <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Allocator\Allocator.cpp">
-      <Filter>头文件\Allocator</Filter>
-    </ClCompile>
-    <ClCompile Include="Allocator\BlockAllocator.cpp">
-      <Filter>头文件\Allocator</Filter>
-    </ClCompile>
-    <ClCompile Include="Allocator\BlockAllocatorProxy.cpp">
-      <Filter>头文件\Allocator</Filter>
-    </ClCompile>
-    <ClCompile Include="Allocator\DynamicLinearAllocator.cpp">
-      <Filter>头文件\Allocator</Filter>
-    </ClCompile>
-    <ClCompile Include="Allocator\EndAllocator.cpp">
-      <Filter>头文件\Allocator</Filter>
-    </ClCompile>
-    <ClCompile Include="Allocator\FixedLinearAllocator.cpp">
-      <Filter>头文件\Allocator</Filter>
-    </ClCompile>
-    <ClCompile Include="Allocator\FreeListAllocator.cpp">
-      <Filter>头文件\Allocator</Filter>
-    </ClCompile>
-    <ClCompile Include="Allocator\LinearAllocator.cpp">
-      <Filter>头文件\Allocator</Filter>
-    </ClCompile>
-    <ClCompile Include="Allocator\ProxyAllocator.cpp">
-      <Filter>头文件\Allocator</Filter>
-    </ClCompile>
-    <ClCompile Include="Allocator\SmallBlockAllocator.cpp">
-      <Filter>头文件\Allocator</Filter>
     </ClCompile>
     <ClCompile Include="JobSystem\JobScheduler.cpp">
       <Filter>头文件\Jobsystem</Filter>

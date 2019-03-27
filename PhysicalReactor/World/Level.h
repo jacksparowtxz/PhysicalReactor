@@ -1,27 +1,27 @@
 #pragma once
-#include"Container/vector.h"
+
 #include"Render/Renderable.h"
 #include"Render/Sky.h"
-#include"Allocator/Allocator.h"
+#include<vector>
 
 using namespace PRE;
-
+using namespace std;
 class Level
 {
 public:
-	Level(Allocator* Inallocator);
+	Level();
 	~Level();
 	
-	Vector<StaticMesh> StaticMeshList;
-	Vector<DirectionalLight> DirectionalLightList;
-	Vector<SpotLight> SpotLightList;
-	Vector<PointLight> PointLightList;
-	Vector<SkyLight> SkyLightList;
+	vector<StaticMesh*> StaticMeshList;
+	vector<DirectionalLight*> DirectionalLightList;
+	vector<SpotLight*> SpotLightList;
+	vector<PointLight*> PointLightList;
+	vector<SkyLight*> SkyLightList;
 
 	Sky* sky;
 
 
-	Allocator* allocator;
+
 	void AddStaticMesh(StaticMesh* sm);
 	void AddSky();
 	void AddLight(LightType lighttype, XMFLOAT3 position, XMFLOAT3 rotation);

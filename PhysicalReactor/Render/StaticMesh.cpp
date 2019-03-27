@@ -34,6 +34,11 @@ StaticMesh::~StaticMesh()
 	SAFE_DELETE(aabb);
 	SAFE_DELETE(drawkey);
 	SAFE_DELETE(Transformation);
+	
+	for (auto sm : Meshs)
+	{
+		sm->~SubMesh();
+	}
 }
 
 XMVECTOR StaticMesh::GetTransInformation(int index)

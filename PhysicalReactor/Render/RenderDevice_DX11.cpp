@@ -2679,7 +2679,7 @@ HRESULT RenderDevice_DX11::CreateVertexShader(WCHAR* filename, GraphicBlob* blob
 	HRESULT hr = D3DCompileFromFile(filename, NULL, NULL, "main", "vs_5_0", D3DCOMPILE_ENABLE_STRICTNESS|D3DCOMPILE_DEBUG|D3DCOMPILE_SKIP_OPTIMIZATION, NULL, (ID3D10Blob**)&blob->resource, &ERRORMESSAGE);
 	if (FAILED(hr))
 	{
-		ASSERT("vs create fail");
+		assert("vs create fail");
 	}
 	return device->CreateVertexShader(((ID3D10Blob*)(blob->resource))->GetBufferPointer(), ((ID3D10Blob*)(blob->resource))->GetBufferSize(), nullptr, (ID3D11VertexShader**)&pVertexShader->resource);
 }
@@ -2696,7 +2696,7 @@ HRESULT RenderDevice_DX11::CreatePixelShader(WCHAR* filename, GraphicBlob* blob,
 	
 	if (FAILED(hr))
 	{
-		ASSERT("ps create fail");
+		assert("ps create fail");
 	}
 	return device->CreatePixelShader(((ID3D10Blob*)(blob->resource))->GetBufferPointer(), ((ID3D10Blob*)(blob->resource))->GetBufferSize(), nullptr, (ID3D11PixelShader**)&pPixelShader->resource);
 }
@@ -2708,7 +2708,7 @@ HRESULT RenderDevice_DX11::CreateGemotryShader(WCHAR* filename, GraphicBlob* blo
 	HRESULT hr = D3DCompileFromFile(filename, NULL, NULL, "main", "gs_5_0", D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, NULL, (ID3D10Blob**)&blob->resource, &ERRORMESSAGE);
 	if (FAILED(hr))
 	{
-		ASSERT("gs create fail");
+		OutputDebugStringA("gs create fail");
 	}
 	return device->CreateGeometryShader(((ID3D10Blob*)(blob->resource))->GetBufferPointer(), ((ID3D10Blob*)(blob->resource))->GetBufferSize(), nullptr, (ID3D11GeometryShader**)&pGeometryShader->resource);
 }
@@ -2720,7 +2720,7 @@ HRESULT RenderDevice_DX11::CreateHullShader(WCHAR* filename, GraphicBlob* blob, 
 	HRESULT hr = D3DCompileFromFile(filename, NULL, NULL, "main", "hs_5_0", D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, NULL, (ID3D10Blob**)&blob->resource, &ERRORMESSAGE);
 	if (FAILED(hr))
 	{
-		ASSERT("hs create fail");
+		assert("hs create fail");
 	}
 	return device->CreateHullShader(((ID3D10Blob*)(blob->resource))->GetBufferPointer(), ((ID3D10Blob*)(blob->resource))->GetBufferSize(), nullptr, (ID3D11HullShader**)&pHullShader->resource);
 }
@@ -2732,7 +2732,7 @@ HRESULT RenderDevice_DX11::CreateDomainShader(WCHAR* filename, GraphicBlob* blob
 	HRESULT hr = D3DCompileFromFile(filename, NULL, NULL, "main", "ds_5_0", D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, NULL, (ID3D10Blob**)&blob->resource, &ERRORMESSAGE);
 	if (FAILED(hr))
 	{
-		ASSERT("ds create fail");
+		assert("ds create fail");
 	}
 	return device->CreateDomainShader(((ID3D10Blob*)(blob->resource))->GetBufferPointer(), ((ID3D10Blob*)(blob->resource))->GetBufferSize(), nullptr, (ID3D11DomainShader**)&pDomainShader->resource);
 }
@@ -2743,7 +2743,7 @@ HRESULT RenderDevice_DX11::CreateComputerShader(WCHAR* filename, GraphicBlob* bl
 	HRESULT hr = D3DCompileFromFile(filename, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "cs_5_0", D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, NULL, (ID3D10Blob**)&blob->resource, &ERRORMESSAGE);
 	if (FAILED(hr))
 	{
-		ASSERT("cs create fail");
+		assert("cs create fail");
 	}
 	return device->CreateComputeShader(((ID3D10Blob*)(blob->resource))->GetBufferPointer(), ((ID3D10Blob*)(blob->resource))->GetBufferSize(), nullptr, (ID3D11ComputeShader**)&pComputerShader->resource);
 }

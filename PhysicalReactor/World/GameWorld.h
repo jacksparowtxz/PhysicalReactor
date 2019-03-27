@@ -1,9 +1,5 @@
 #pragma once
-#include"Allocator/Allocator.h"
-#include"Allocator/ProxyAllocator.h"
-#include"Allocator/DynamicLinearAllocator.h"
-#include"Allocator/FreeListAllocator.h"
-#include"Allocator/DynamicLinearAllocator.h"
+
 #include "World/RenderWorld.h"
 #include "MISC/MeshLoad.h"
 #include "Render/Renderable.h"
@@ -20,11 +16,6 @@ class GameWorld
 {
 public:
 
-	Allocator* Main_Allocator;
-	ProxyAllocator* RenderAllocator;
-	DynamicLinearAllocator* dynamiclinearallocator;
-	void* memory;
-	const char* title;
 	RenderWorld* renderworld;
 	
 	Level* level;

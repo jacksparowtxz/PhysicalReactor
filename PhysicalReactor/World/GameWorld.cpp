@@ -1,32 +1,14 @@
 #include "stdafx.h"
 #include "GameWorld.h"
-#include "Allocator/MemoryUtil.h"
 #include <string>
 
 GameWorld::GameWorld(HWND hwnd)
 {
-	size_t memory_size = 512 * 1024 * 1024;
-	memory = malloc(memory_size);
-	Main_Allocator = new (memory)FreeListAllocator(memory_size - sizeof(FreeListAllocator), add(memory, sizeof(FreeListAllocator)));
-	ASSERT(Main_Allocator != nullptr);
-	RenderAllocator = allocatorFC::allocateNew<ProxyAllocator>(*Main_Allocator, *Main_Allocator);
-	ASSERT(RenderAllocator != nullptr);
-	AssetManager::MeshImport = allocatorFC::allocateNew<GameMeshImport>(*Main_Allocator);
-	ASSERT(AssetManager::MeshImport != nullptr);
-	dynamiclinearallocator = allocatorFC::allocateNew<DynamicLinearAllocator>(*Main_Allocator, *Main_Allocator, 512 * 1024, 32);
-	ASSERT(dynamiclinearallocator != nullptr);
-	renderworld = allocatorFC::allocateNew<RenderWorld>(*RenderAllocator, hwnd, RenderAllocator,dynamiclinearallocator);
-	ASSERT(renderworld!= nullptr);
-	TextureManager::TextureImport = allocatorFC::allocateNew<TextureLoader>(*Main_Allocator);
-	
 
-	const char* tmptitle = "PRE";
-	size_t titlelength = strlen(tmptitle) + 1;
-	char* tmp = allocatorFC::allocateArrayNoConstruct<char>(*Main_Allocator, titlelength);
-	memcpy(tmp, tmptitle, sizeof(char)*titlelength);
-	title = tmp;
-
-	level = allocatorFC::allocateNew<Level>(*Main_Allocator, dynamiclinearallocator);
+	AssetManager::MeshImport =new GameMeshImport;
+	renderworld =new RenderWorld(hwnd);
+	TextureManager::TextureImport = new TextureLoader;
+	level = new Level;
 	BuildScene();
 }
 
@@ -81,7 +63,7 @@ void GameWorld::BuildScene()
 
 void GameWorld::AddStaticMesh(std::string path)
 {
-	StaticMesh* ImportMesh = allocatorFC::allocateNew<StaticMesh>(*Main_Allocator);
+	StaticMesh* ImportMesh = new StaticMesh;
 	AssetManager::GetDevice()->Import(path, ImportMesh);
 	level->AddStaticMesh(ImportMesh);
 }
@@ -94,19 +76,12 @@ void GameWorld::AddLight(LightType lighttype, XMFLOAT3 position, XMFLOAT3 rotati
 }
 GameWorld::~GameWorld()
 {
-	if (Main_Allocator != nullptr)
-	{
-		if (RenderAllocator != nullptr)
-		{
-			allocatorFC::deallocateDelete(*Main_Allocator,level);
-			allocatorFC::deallocateDelete(*Main_Allocator, AssetManager::MeshImport);
-			allocatorFC::deallocateDelete(*Main_Allocator, TextureManager::TextureImport);
-			allocatorFC::deallocateDelete(*RenderAllocator, renderworld);
-			allocatorFC::deallocateDelete(*Main_Allocator, RenderAllocator);
-			allocatorFC::deallocateDelete(*Main_Allocator, dynamiclinearallocator);
-		}
-		allocatorFC::deallocateArray(*Main_Allocator, (char*)title);
-		free(memory);
-	}
-
+	GameMeshImport *tempGMI = AssetManager::MeshImport;
+	SAFE_DELETE(tempGMI);
+	AssetManager::MeshImport = nullptr;
+	TextureLoader* tempTL = TextureManager::TextureImport;
+	SAFE_DELETE(tempTL);
+	TextureManager::TextureImport = nullptr;
+	SAFE_DELETE(level);
+	SAFE_DELETE(renderworld);
 }

@@ -8,23 +8,15 @@
 #include <functional>
 
 using namespace std;
-thread_local std::vector<StaticMesh> LStaticMeshList;
-thread_local std::vector<StaticMesh> LTStaticMeshList;
+thread_local std::vector<StaticMesh*> LStaticMeshList;
+thread_local std::vector<StaticMesh*> LTStaticMeshList;
 
 
 namespace PRE
 {
-	RenderWorld::RenderWorld(HWND windows, Allocator* Inallocator, DynamicLinearAllocator* allocator1) :allocator(Inallocator),
-		StaticmeshList(*allocator1),
-		VisiblityMesh(*allocator1),
-		TVisiblityMesh(*allocator1),
-		PointLights(*allocator),
-		SpotLights(*allocator),
-		DirectionalLights(*allocator),
-		SkyLights(*allocator)
+	RenderWorld::RenderWorld(HWND windows)
 	{
-		Initilize(windows, allocator);
-
+		Initilize(windows);
 	}
 
 
@@ -32,24 +24,23 @@ namespace PRE
 	{
 		JobScheduler::Shutdown();
 		
-		allocatorFC::deallocateDelete<Sky>(*allocator, sky);
-		allocatorFC::deallocateDelete<Camera>(*allocator, camera);
-		allocatorFC::deallocateDelete<RasterizerState>(*allocator, Wireframestate);
-		allocatorFC::deallocateDelete<RasterizerState>(*allocator, Solidstate);
-		allocatorFC::deallocateDelete<RasterizerState>(*allocator, rasterizerstate);
-		allocatorFC::deallocateDelete<GPUBuffer>(*allocator, constbuffer);
-		allocatorFC::deallocateDelete<Sampler>(*allocator, SpLutSampler);
-		allocatorFC::deallocateDelete<Sampler>(*allocator, tonemappingsampler);
-		allocatorFC::deallocateDelete<RenderTarget>(*allocator, rendertarget);
-		allocatorFC::deallocateDelete<ShaderManager>(*allocator, Renderer::shadermanager);
-		allocatorFC::deallocateArray(*allocator, m_constantBufferData);
-		allocatorFC::deallocateDelete<RenderDevice>(*allocator, Renderer::renderdevice);
-		StaticmeshList.~Vector();
-		VisiblityMesh.~Vector();
-		TVisiblityMesh.~Vector();
-		PointLights.~Vector();
-		DirectionalLights.~Vector();
-		//SkyLights.~Vector();
+		SAFE_DELETE(camera);
+		SAFE_DELETE(Wireframestate);
+		SAFE_DELETE(Solidstate);
+		SAFE_DELETE(constbuffer);
+		SAFE_DELETE(SpLutSampler);
+		SAFE_DELETE(tonemappingsampler);
+		SAFE_DELETE(rendertarget);
+		ShaderManager* tempSM = Renderer::shadermanager;
+		SAFE_DELETE(tempSM);
+		Renderer::shadermanager = nullptr;
+		/*for (int j = 0; j < 9; j++)
+		{
+			delete[] m_constantBufferData[j];
+		}*/
+		delete[] m_constantBufferData;
+		delete Renderer::renderdevice;
+
 	}
 
 	void RenderWorld::BeginRender()
@@ -107,7 +98,7 @@ namespace PRE
 			//SetEvent(Handle[ThreadID]);
 		};
 		//RenderStaticMesh = lambda;
-		//JobScheduler::Wait(parallel_for(*StaticmeshList.data, StaticmeshList.Size(), RenderStaticMesh, (void*)nullptr));
+		//JobScheduler::Wait(parallel_for(*StaticmeshList.data(), StaticmeshList.Size(), RenderStaticMesh, (void*)nullptr));
 
 
 		///////////////////RenderSky/////////////////////////////
@@ -293,7 +284,7 @@ namespace PRE
 		}
 	}
 
-	void RenderWorld::InitViews()
+	void RenderWorld::InitViews(Level* currentlevel)
 	{
 		std::function<void(StaticMesh*, uint32_t, void*)> FrustumCull;
 		auto lambda = [&, this](StaticMesh* sm, uint32_t size, void* ExtraData) {
@@ -308,13 +299,13 @@ namespace PRE
 					{
 						DrawKey drawkey = DrawKey::GenerateKey(0, ViewLayerType::e3D, 1, sm->GetMaterialID().data, Depth.data, TranslucencyType::eOpaque, false);
 						*sm->drawkey = std::move(drawkey);
-						LStaticMeshList.push_back(sm[i]);
+						LStaticMeshList.push_back(&sm[i]);
 					}
 					else
 					{
 						DrawKey drawkey = DrawKey::GenerateKey(0, ViewLayerType::e3D, 1, sm->GetMaterialID().data, Depth.data, TranslucencyType::eNormal, false);
 						*sm->drawkey = std::move(drawkey);
-						LTStaticMeshList.push_back(sm[i]);
+						LTStaticMeshList.push_back(&sm[i]);
 					}
 				}
 			}
@@ -324,7 +315,7 @@ namespace PRE
 		};
 
 		FrustumCull = lambda;
-		JobScheduler::Wait(parallel_for(StaticmeshList.data, StaticmeshList.Size(), FrustumCull, nullptr, DataSizeSplitter(32 * 1024)));
+		JobScheduler::Wait(parallel_for(*currentlevel->StaticMeshList.data(), currentlevel->StaticMeshList.size(), FrustumCull, nullptr, DataSizeSplitter(32 * 1024)));
 
 		for (uint32_t i = 0; i < 9; i++)
 		{
@@ -334,11 +325,11 @@ namespace PRE
 
 			for (uint32_t k = 0; k < slist->size(); k++)
 			{
-				VisiblityMesh.Push_Back(*slist->operator[](k));
+				VisiblityMesh.emplace_back(*slist->operator[](k));
 			}
 			for (uint32_t k = 0; k < Tslist->size(); k++)
 			{
-				TVisiblityMesh.Push_Back(*Tslist->operator[](k));
+				TVisiblityMesh.emplace_back(*Tslist->operator[](k));
 			}
 		}
 
@@ -377,8 +368,8 @@ namespace PRE
 		};
 
 		RadixSortFC = radixsort;
-		RadixSortFC(VisiblityMesh.data, VisiblityMesh.Size(), nullptr);
-		RadixSortFC(TVisiblityMesh.data, TVisiblityMesh.Size(), nullptr);
+		RadixSortFC(VisiblityMesh.data(), VisiblityMesh.size(), nullptr);
+		RadixSortFC(TVisiblityMesh.data(), TVisiblityMesh.size(), nullptr);
 	}
 
 	void RenderWorld::RenderWireframe(bool Wireframe)
@@ -396,17 +387,17 @@ namespace PRE
 	void RenderWorld::UpdateScene(Level * level)
 	{	
 		
-		StaticmeshList=level->StaticMeshList;
+		//StaticmeshList=level->StaticMeshList;
 		
 		sky = level->sky;
-		m_constantBufferData[0]->directionallights[0] = level->DirectionalLightList[0];
-		for (uint32_t j = 0; j < level->SpotLightList.Size(); j++)
+		m_constantBufferData[0]->directionallights[0] = *level->DirectionalLightList[0];
+		for (uint32_t j = 0; j < level->SpotLightList.size(); j++)
 		{
-			m_constantBufferData[0]->spotlights[j] = level->SpotLightList[j];
+			m_constantBufferData[0]->spotlights[j] = *level->SpotLightList[j];
 		}
-		for (uint32_t j = 0; j < level->PointLightList.Size(); j++)
+		for (uint32_t j = 0; j < level->PointLightList.size(); j++)
 		{
-			m_constantBufferData[0]->pointlights[j] = level->PointLightList[j];
+			m_constantBufferData[0]->pointlights[j] = *level->PointLightList[j];
 		}
 		for (uint32_t j = 1; j < 9; j++)
 		{
@@ -421,12 +412,12 @@ namespace PRE
 		EndRender();
 	}
 
-	void RenderWorld::Initilize(HWND windows, Allocator* allocator)
+	void RenderWorld::Initilize(HWND windows)
 	{
-		Renderer::renderdevice = allocatorFC::allocateNew<RenderDevice_DX11>(*allocator, windows, false, true);
-		Renderer::shadermanager = allocatorFC::allocateNew<ShaderManager>(*allocator);
+		Renderer::renderdevice =new RenderDevice_DX11(windows, false, true);
+		Renderer::shadermanager = new ShaderManager;
 		Renderer::shadermanager->CreateShader();
-		camera = allocatorFC::allocateNew<Camera>(*allocator);
+		camera = new Camera;
 		GPUBufferDesc constantdesc;
 		constantdesc.BindFlags = BIND_CONSTANT_BUFFER;
 		constantdesc.ByteWidth = sizeof(RenderConstantBuffer);
@@ -434,7 +425,7 @@ namespace PRE
 		constantdesc.MiscFlags = 0;
 		constantdesc.Usage = USAGE_DEFAULT;
 		constantdesc.StructureByteStride = 0;
-		constbuffer = allocatorFC::allocateNew<GPUBuffer>(*allocator);
+		constbuffer = new GPUBuffer;
 		Renderer::GetDevice()->CreateBuffer(&constantdesc, nullptr, constbuffer);
 #ifdef PREDEBUG
 		Renderer::GetDevice()->SetName(constbuffer, "constantbuffer");
@@ -454,14 +445,16 @@ namespace PRE
 
 		
 		JobScheduler::Initialize();
+		m_constantBufferData = new RenderConstantBuffer*[9];
 		for (uint32_t i = 0; i < 9; ++i)
 		{
-			m_constantBufferData[i] = allocatorFC::allocateNew<RenderConstantBuffer>(*allocator);
+			m_constantBufferData[i] = new RenderConstantBuffer();
+			
 			Handle[i] = CreateEvent(NULL, FALSE, TRUE, NULL);
 		}
-
-		Solidstate = allocatorFC::allocateNew<RasterizerState>(*allocator);
-		Wireframestate = allocatorFC::allocateNew<RasterizerState>(*allocator);
+		
+		Solidstate = new RasterizerState;
+		Wireframestate = new RasterizerState;
 
 		RasterizerStateDesc Wireframedesc;
 		Wireframedesc.FillMode = FILL_WIREFRAME;
@@ -481,7 +474,7 @@ namespace PRE
 		Renderer::GetDevice()->SetName(Solidstate, "Solidstate");
 		Renderer::GetDevice()->SetName(Wireframestate, "Wireframestate");
 #endif // DEBUG
-		SpLutSampler = allocatorFC::allocateNew<Sampler>(*allocator);
+		SpLutSampler = new Sampler;
 		SamplerDesc splutsampler;
 		splutsampler.Filter = FILTER_ANISOTROPIC;
 		splutsampler.AddressU = TEXTURE_ADDRESS_CLAMP;
@@ -492,7 +485,7 @@ namespace PRE
 #ifdef PREDEBUG
 		Renderer::GetDevice()->SetName(SpLutSampler, "SpLutSampler");
 #endif // DEBUG
-		tonemappingsampler = allocatorFC::allocateNew<Sampler>(*allocator);
+		tonemappingsampler = new Sampler;
 		SamplerDesc tonemappingdesc;
 		tonemappingdesc.Filter = FILTER_MIN_MAG_MIP_LINEAR;
 		tonemappingdesc.AddressU = tonemappingdesc.AddressV = tonemappingdesc.AddressW = TEXTURE_ADDRESS_WRAP;
@@ -508,9 +501,14 @@ namespace PRE
 
 		for (uint32_t i = 0; i < 9; ++i)
 		{
-			for (uint32_t j = 0; j < 9; ++j)
-				m_constantBufferData[i]->COFS[j] = COFS[j];
-
+				m_constantBufferData[0]->COFS[i] = COFS[i];
+				if (i == 8)
+				{
+					for (uint32_t i = 1; i < 9; ++i)
+					{
+						m_constantBufferData[i]->COFS[i] = m_constantBufferData[0]->COFS[0];
+					}
+				}
 		}
 
 		UINT screenwidth = Renderer::GetDevice()->GetScreenWidth();
@@ -518,7 +516,7 @@ namespace PRE
 		FORMAT format = Renderer::GetDevice()->GetBackBufferFormat();
 		UINT QUALITY = Renderer::GetDevice()->GetMSAAQUALITY();
 
-		rendertarget = allocatorFC::allocateNew<RenderTarget>(*allocator,screenwidth,screenheight,true,format,1,4,QUALITY,false);
+		rendertarget = new RenderTarget(screenwidth,screenheight,true,format,1,4,QUALITY,false);
 		
 		
 
