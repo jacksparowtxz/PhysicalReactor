@@ -324,7 +324,7 @@ namespace PRE
 		};
 
 		FrustumCull = lambda;
-		JobScheduler::Wait(parallel_for(*StaticmeshList.data, StaticmeshList.Size(), FrustumCull, nullptr, DataSizeSplitter(32 * 1024)));
+		JobScheduler::Wait(parallel_for(StaticmeshList.data, StaticmeshList.Size(), FrustumCull, nullptr, DataSizeSplitter(32 * 1024)));
 
 		for (uint32_t i = 0; i < 9; i++)
 		{
@@ -334,11 +334,11 @@ namespace PRE
 
 			for (uint32_t k = 0; k < slist->size(); k++)
 			{
-				VisiblityMesh.Push_Back(slist->operator[](k));
+				VisiblityMesh.Push_Back(*slist->operator[](k));
 			}
 			for (uint32_t k = 0; k < Tslist->size(); k++)
 			{
-				TVisiblityMesh.Push_Back(Tslist->operator[](k));
+				TVisiblityMesh.Push_Back(*Tslist->operator[](k));
 			}
 		}
 
@@ -377,8 +377,8 @@ namespace PRE
 		};
 
 		RadixSortFC = radixsort;
-		RadixSortFC(*VisiblityMesh.data, VisiblityMesh.Size(), nullptr);
-		RadixSortFC(*TVisiblityMesh.data, TVisiblityMesh.Size(), nullptr);
+		RadixSortFC(VisiblityMesh.data, VisiblityMesh.Size(), nullptr);
+		RadixSortFC(TVisiblityMesh.data, TVisiblityMesh.Size(), nullptr);
 	}
 
 	void RenderWorld::RenderWireframe(bool Wireframe)
@@ -399,14 +399,14 @@ namespace PRE
 		StaticmeshList=level->StaticMeshList;
 		
 		sky = level->sky;
-		m_constantBufferData[0]->directionallights[0] = *level->DirectionalLightList[0];
+		m_constantBufferData[0]->directionallights[0] = level->DirectionalLightList[0];
 		for (uint32_t j = 0; j < level->SpotLightList.Size(); j++)
 		{
-			m_constantBufferData[0]->spotlights[j] = *level->SpotLightList[j];
+			m_constantBufferData[0]->spotlights[j] = level->SpotLightList[j];
 		}
 		for (uint32_t j = 0; j < level->PointLightList.Size(); j++)
 		{
-			m_constantBufferData[0]->pointlights[j] = *level->PointLightList[j];
+			m_constantBufferData[0]->pointlights[j] = level->PointLightList[j];
 		}
 		for (uint32_t j = 1; j < 9; j++)
 		{

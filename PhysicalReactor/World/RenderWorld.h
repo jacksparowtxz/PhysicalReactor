@@ -78,10 +78,10 @@ namespace PRE
 		void UpdateScene(Level* level);
 		Allocator* allocator;
 
-		Vector<StaticMesh*> StaticmeshList;
+		Vector<StaticMesh> StaticmeshList;
 
-		Vector<StaticMesh*> VisiblityMesh;
-		Vector<StaticMesh*> TVisiblityMesh;
+		Vector<StaticMesh> VisiblityMesh;
+		Vector<StaticMesh> TVisiblityMesh;
 		Vector<PointLight> PointLights;
 		Vector<SpotLight> SpotLights;
 		Vector<DirectionalLight> DirectionalLights;

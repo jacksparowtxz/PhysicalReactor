@@ -12,11 +12,11 @@ public:
 	Level(Allocator* Inallocator);
 	~Level();
 	
-	Vector<StaticMesh*> StaticMeshList;
-	Vector<DirectionalLight*> DirectionalLightList;
-	Vector<SpotLight*> SpotLightList;
-	Vector<PointLight*> PointLightList;
-	Vector<SkyLight*> SkyLightList;
+	Vector<StaticMesh> StaticMeshList;
+	Vector<DirectionalLight> DirectionalLightList;
+	Vector<SpotLight> SpotLightList;
+	Vector<PointLight> PointLightList;
+	Vector<SkyLight> SkyLightList;
 
 	Sky* sky;
 

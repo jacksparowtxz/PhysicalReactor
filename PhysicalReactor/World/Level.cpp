@@ -18,11 +18,8 @@ Level::~Level()
 	{
 		allocatorFC::deallocateDelete(*allocator, sky);
 	}
-	for (uint32_t i = 0; i < StaticMeshList.Size(); i++)
-	{
-		allocatorFC::deallocateDelete(*allocator, StaticMeshList.operator[](i));
-	}
-//	StaticMeshList.~Vector();
+
+	StaticMeshList.~Vector();
 	DirectionalLightList.~Vector();
 	SpotLightList.~Vector();
 	PointLightList.~Vector();
@@ -33,7 +30,7 @@ Level::~Level()
 
 void Level::AddStaticMesh(StaticMesh* sm)
 {
-	StaticMeshList.Push_Back(sm);
+	StaticMeshList.Push_Back(*sm);
 }
 
 void Level::AddSky()
@@ -49,22 +46,22 @@ void Level::AddLight(LightType lighttype, XMFLOAT3 position, XMFLOAT3 rotation)
 	{
 	case DIRECTIONALLIGHT:
 	{
-		DirectionalLightList.Push_Back(allocatorFC::allocateNew<DirectionalLight>(*allocator, position));
+		DirectionalLightList.Push_Back(*(allocatorFC::allocateNew<DirectionalLight>(*allocator, position)));
 	}
 	break;
 	case POINTLIGHT:
 	{
-		PointLightList.Push_Back(allocatorFC::allocateNew<PointLight>(*allocator, position, rotation));
+		PointLightList.Push_Back(*(allocatorFC::allocateNew<PointLight>(*allocator, position, rotation)));
 	}
 	break;
 	case SPOTLIGHT:
 	{
-		SpotLightList.Push_Back(allocatorFC::allocateNew<SpotLight>(*allocator, position, rotation));
+		SpotLightList.Push_Back(*(allocatorFC::allocateNew<SpotLight>(*allocator, position, rotation)));
 	}
 	break;
 	case SKYLIGHT:
 	{
-		SkyLightList.Push_Back(allocatorFC::allocateNew<SkyLight>(*allocator));
+		SkyLightList.Push_Back(*(allocatorFC::allocateNew<SkyLight>(*allocator)));
 	}
 	default:
 		break;
