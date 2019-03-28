@@ -100,7 +100,7 @@ float2 Hammersley(uint Index, uint NumSamples, uint2 Random)
 
 float2 sampleHammersley(uint i,float InvNumSample, uint2 n)
 {
-    return float2(i * InvNumSample, VDC_radicalInverse(n.y));
+    return float2(i * InvNumSample, VDC_radicalInverse(i));
 }
 
 float3 sampleHemisphere(float u1, float u2)
