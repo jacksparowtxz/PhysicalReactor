@@ -83,7 +83,7 @@ float4 main(PixelShaderInput input) : SV_TARGET
     float3 basecolor = BaseColorMap.Sample(BaseColorSampler, input.Tex).rgb;
     float metalness = MetalicMap.Sample(BaseColorSampler,input.Tex).g;
     float roughness = RoughnessMap.Sample(BaseColorSampler,input.Tex).b;
-
+    float ambient = AmbientMap.Sample(BaseColorSampler, input.Tex).r;
     float3 Lo = normalize(EyePos.xyz - input.PosW);
 
     float3 N = normalize(2.0 * NormalMap.Sample(BaseColorSampler,input.Tex).rgb-1.0);
@@ -138,7 +138,7 @@ float4 main(PixelShaderInput input) : SV_TARGET
 
     float3 specularIBL = (F0 * IspecularBRDF.x + IspecularBRDF.y) * specularIrradiance;
 
-    float3 ambientLighting = diffuseIBL + specularIBL;
+    float3 ambientLighting = (diffuseIBL + specularIBL) * ambient;
 
     return float4(ambientLighting,1.0f);
 }
