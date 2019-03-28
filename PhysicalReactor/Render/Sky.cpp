@@ -14,7 +14,7 @@ Sky::Sky()
 	
 	EnvMap=new Texture2D;
 	SpLutMap = new Texture2D;
-	//TextureManager::GetLoader()->MakeRadianceMap(SkyCubeMap,EnvMap,SpLutMap);
+	TextureManager::GetLoader()->MakeRadianceMap(SkyCubeMap,EnvMap,SpLutMap);
 
 	DepthStencilStateDesc dsdesc;
 	dsdesc.DepthEnable = true;
