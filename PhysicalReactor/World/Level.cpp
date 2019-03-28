@@ -9,6 +9,10 @@ Level::Level() :sky(nullptr)
 Level::~Level()
 {	
 	SAFE_DELETE(sky);
+	for (auto sm : StaticMeshList)
+	{
+		sm->~StaticMesh();
+	}
 }
 
 
