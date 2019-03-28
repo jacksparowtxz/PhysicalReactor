@@ -154,8 +154,20 @@ float Vis_SmithJointApprox(float a,float nov,float nol)
     float Vis_SimthL = nov * (nol) * (1 - a2) + a2;
     return 0.5 * rcp(Vis_SimthV + Vis_SimthL);
 }
+///////////////////
 
+float gaSchlickG1(float cosTheta, float k)
+{
+    return cosTheta / (cosTheta * (1.0 - k) + k);
+}
 
+// Schlick-GGX approximation of geometric attenuation function using Smith's method (IBL version).
+float gaSchlickGGX_IBL(float cosLi, float cosLo, float roughness)
+{
+    float r = roughness;
+    float k = (r * r) / 2.0; // Epic suggests using this roughness remapping for IBL lighting.
+    return gaSchlickG1(cosLi, k) * gaSchlickG1(cosLo, k);
+}
 
 
 //////////////////////////////simple Fresnel

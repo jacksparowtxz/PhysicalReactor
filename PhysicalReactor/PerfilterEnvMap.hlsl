@@ -43,10 +43,7 @@ void main(uint3 ThreadID:SV_DispatchThreadID)
 
     for (uint i = 0; i < NumSamples;++i)
     {
-        uint2 j;
-        j.x = 0;
-        j.y = i;
-        float2 u = sampleHammersley(i, InvNumSamples,j);
+        float2 u = sampleHammersley(i, InvNumSamples);
         float3 Lh = TangentToWorld2(ImportanceSampleGGX(u,roughness).xyz,N,S,T);
 
         float3 Li = 2.0 * dot(Lo, Lh) * Lh - Lo;

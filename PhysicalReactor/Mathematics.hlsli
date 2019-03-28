@@ -74,6 +74,17 @@ float4 ImportanceSampleGGX(float2 Xi, float Roughness)
     return float4(H, PDF);
 }
 
+float3 sampleGGX(float2 u, float roughness)
+{
+    float alpha = roughness * roughness;
+
+    float cosTheta = sqrt((1.0 - u.y) / (1.0 + (alpha * alpha - 1.0) * u.y));
+    float sinTheta = sqrt(1.0 - cosTheta * cosTheta); // Trig. identity
+    float phi = 2*PI * u.x;
+
+	// Convert to Cartesian upon return.
+    return float3(sinTheta * cos(phi), sinTheta * sin(phi), cosTheta);
+}
 
 
 /////////////////////////////////Van der Corput sequence
@@ -98,7 +109,7 @@ float2 Hammersley(uint Index, uint NumSamples, uint2 Random)
     return float2(E1, E2);
 }
 
-float2 sampleHammersley(uint i,float InvNumSample, uint2 n)
+float2 sampleHammersley(uint i,float InvNumSample)
 {
     return float2(i * InvNumSample, VDC_radicalInverse(i));
 }

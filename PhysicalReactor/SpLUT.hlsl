@@ -1,6 +1,6 @@
 #include"BRDF.hlsli"
-
-
+static const uint NumSamples = 1024;
+static const float InvNumSamples = 1.0 / float(NumSamples);
 
 RWTexture2D<float2> LUT : register(u0);
 
@@ -21,13 +21,13 @@ void main(uint2 ThreadID:SV_DispatchThreadID)
     float DFG1 = 0;
     float DFG2 = 0;
 
-    uint NumSamples = 1024;
-    float InvSamples = (float) 1 / NumSamples;
+   
+  
     for (uint i = 0; i < NumSamples; ++i)
     {
-        uint2 j = {0,0};
-        float2 u = sampleHammersley(i, (float)1/NumSamples, j);
-        float3 Lh = ImportanceSampleGGX(u,roughness).xyz;
+
+        float2 u = sampleHammersley(i, (float)1/NumSamples);
+        float3 Lh = sampleGGX(u, roughness);
 
         float3 Li = 2.0 * dot(Lo, Lh) * Lh - Lo;
 
@@ -37,9 +37,9 @@ void main(uint2 ThreadID:SV_DispatchThreadID)
 
         if (cosLi>0.0)
         {
-            float G= Vis_SmithJointApprox(roughness,cosLi,cosLh);
+            float G = gaSchlickGGX_IBL(cosLi, cosLo, roughness);
             float Gv = G * cosLoLh / (cosLh * cosLo);
-            float Fc = Pow5(1.0 - cosLoLh);
+            float Fc = pow(1.0 - cosLoLh, 5);
 
             DFG1 += (1 - Fc) * Gv;
             DFG2 += Fc * Gv;
@@ -47,5 +47,5 @@ void main(uint2 ThreadID:SV_DispatchThreadID)
         }
 
     }
-    LUT[ThreadID] = float2(DFG1, DFG2) * InvSamples;
+    LUT[ThreadID] = float2(DFG1, DFG2) * InvNumSamples;
 }
