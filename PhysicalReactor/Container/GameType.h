@@ -1,57 +1,13 @@
 #pragma once
 #include <stdint.h>
-#include "Allocator/Allocator.h"
 
-#define ALLOCATOR_AWARE typedef int allocator_aware
+
+
 
 
 
 namespace PRE
 {
-
-
-template <int v>
-struct Int2Type { enum { value = v }; };
-#define IS_ALLOCATOR_AWARE(T) is_allocator_aware<T>::value
-#define IS_ALLOCATOR_AWARE_TYPE(T) Int2Type< IS_ALLOCATOR_AWARE(T) >
-template <typename T>
-inline T &construct(void *p, Allocator& a, Int2Type<true>)
-{
-	new (p) T(a); 
-    return *(T *)p;
-}
-
-template <typename T> 
-inline T &construct(void *p, Allocator& /*a*/, Int2Type<false>)
-{ 
-	new (p) T;
-    return *(T *)p;
-}
-
-template <typename T> 
-inline T &construct(void *p, Allocator& a)
-{ 
-	return construct<T>(p, a, IS_ALLOCATOR_AWARE_TYPE(T)());
-}
-
-
-
-template<typename T>
-struct is_allocator_aware {
-	template<typename C>
-	static char testfun(typename C::allocator_aware*);
-
-	template<typename C>
-	static int testfun(...);
-
-	enum 
-	{
-		value = (sizeof(testfun<T>(0)) == sizeof(char))
-	};
-
-};
-
-#define IS_ALLOCATOR_AWARE(T) is_allocator_aware<T>::value
 
 
 template<typename T>
