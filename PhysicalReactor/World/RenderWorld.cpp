@@ -34,10 +34,6 @@ namespace PRE
 		ShaderManager* tempSM = Renderer::shadermanager;
 		SAFE_DELETE(tempSM);
 		Renderer::shadermanager = nullptr;
-		/*for (int j = 0; j < 9; j++)
-		{
-			delete[] m_constantBufferData[j];
-		}*/
 		delete[] m_constantBufferData;
 		delete Renderer::renderdevice;
 
@@ -61,8 +57,9 @@ namespace PRE
 
 			GraphicPSO PSO;
 			Renderer::shadermanager->GetPSO(TYPE_STATICMESH, &PSO);
+			PSO.desc.rs = rasterizerstate;
 			Renderer::GetDevice()->BindGraphicsPSO(&PSO);
-			Renderer::GetDevice()->BindRasterizerState(*rasterizerstate);
+			//Renderer::GetDevice()->BindRasterizerState(*rasterizerstate);
 			UINT pFisrtConstant1 = 0;
 			UINT pNumberConstant1 = 64;
 			Renderer::GetDevice()->BindConstantBuffer(VS_STAGE, constbuffer, 0, &pFisrtConstant1, &pNumberConstant1);
@@ -97,9 +94,9 @@ namespace PRE
 			//Renderer::GetDevice()->FinishComanlist();
 			//SetEvent(Handle[ThreadID]);
 		};
-		//RenderStaticMesh = lambda;
+		RenderStaticMesh = lambda;
 		//JobScheduler::Wait(parallel_for(*StaticmeshList.data(), StaticmeshList.Size(), RenderStaticMesh, (void*)nullptr));
-
+		RenderStaticMesh(*StaticMeshList.data(), StaticMeshList.size(), (void*)nullptr);
 
 		///////////////////RenderSky/////////////////////////////
 		std::function<void(Sky*, uint32_t, void*)> RenderSkyFC;
@@ -125,7 +122,11 @@ namespace PRE
 			Renderer::GetDevice()->BindVertexBuffers(&sky->SkyMesh->Meshs[0]->mVertexBuffer, 0, 1, &stride, &offset);
 			Renderer::GetDevice()->BindIndexBuffer(sky->SkyMesh->Meshs[0]->mIndexBuffer, INDEXBUFFER_32BIT, 0);
 			Renderer::GetDevice()->DrawIndexed(sky->SkyMesh->Meshs[0]->Indices.size(), 0, 0);
-			//Renderer::GetDevice()->FinishComanlist();
+			PSO.desc.rs = 0;
+			PSO.desc.dss = 0;
+			PSO.desc.vs = 0;
+			PSO.desc.ps = 0;
+			Renderer::GetDevice()->BindGraphicsPSO(&PSO);
 		};
 
 		RenderSkyFC = RenderSkybox;
@@ -376,18 +377,18 @@ namespace PRE
 	{
 		if (Wireframe)
 		{
-			rasterizerstate = Wireframestate;
+			rasterizerstate=Wireframestate;
 		}
 		else
 		{
-			rasterizerstate = Solidstate;
+			rasterizerstate=Solidstate;
 		}
 	}
 
 	void RenderWorld::UpdateScene(Level * level)
 	{	
 		
-		//StaticmeshList=level->StaticMeshList;
+		StaticMeshList=std::move(level->StaticMeshList);
 		
 		sky = level->sky;
 		m_constantBufferData[0]->directionallights[0] = *level->DirectionalLightList[0];

@@ -74,8 +74,7 @@ namespace PRE
 		void RenderWireframe(bool Wireframe);
 		void UpdateScene(Level* level);
 		
-
-		//Vector<StaticMesh> StaticmeshList;
+		vector<StaticMesh*> StaticMeshList;
 
 		vector<StaticMesh> VisiblityMesh;
 		vector<StaticMesh> TVisiblityMesh;
