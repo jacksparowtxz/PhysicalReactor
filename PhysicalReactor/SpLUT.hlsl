@@ -25,9 +25,7 @@ void main(uint2 ThreadID:SV_DispatchThreadID)
     float InvSamples = (float) 1 / NumSamples;
     for (uint i = 0; i < NumSamples; ++i)
     {
-        uint2 j;
-        j.x = 0;
-        j.y = i;
+        uint2 j = {0,0};
         float2 u = sampleHammersley(i, (float)1/NumSamples, j);
         float3 Lh = ImportanceSampleGGX(u,roughness).xyz;
 
