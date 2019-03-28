@@ -270,7 +270,7 @@ void TextureLoader::MakeRadianceMap(Texture2D* ufilterEnvmap,Texture2D* env_Map,
 	Renderer::GetDevice()->BindUAV_Immediate(CS_STAGE, Splut, 0);
 	Renderer::GetDevice()->BindComputerPSO_Immediate(&ComputeSpLut);
 	Renderer::GetDevice()->Dispatch_Immediate(Splut->desc.Width/32, Splut->desc.Height / 32,1);
-
+	Renderer::GetDevice()->BindUAV_Immediate(CS_STAGE, &NullResource, 0);
 	
 	
 }
