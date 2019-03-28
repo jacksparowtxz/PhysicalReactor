@@ -198,7 +198,7 @@ void TextureLoader::MakeRadianceMap(Texture2D* ufilterEnvmap,Texture2D* env_Map,
 	smpdesc.MiscFlags = 0;
 	smpdesc.Usage = USAGE_DEFAULT;
 	smpdesc.StructureByteStride = 0;
-
+	
 	GPUBuffer* SpeularMapFilterSettingCB = new GPUBuffer;
 
 	Renderer::GetDevice()->CreateBuffer(&smpdesc,nullptr, SpeularMapFilterSettingCB);
@@ -214,7 +214,8 @@ void TextureLoader::MakeRadianceMap(Texture2D* ufilterEnvmap,Texture2D* env_Map,
 	CubeMapdesc.MipLevels = 0;
 	CubeMapdesc.MiscFlags = RESOURCE_MISC_TEXTURECUBE|RESOURCE_MISC_GENERATE_MIPS;
 	CubeMapdesc.Usage = USAGE_DEFAULT;
-
+	CubeMapdesc.SampleDesc.Count = 1;
+	CubeMapdesc.SampleDesc.Quality = 0;
 	Renderer::GetDevice()->CreateTexture2D(&CubeMapdesc,nullptr,&env_Map);
 
 	for (int arraySlice = 0; arraySlice < 6; ++arraySlice)
@@ -235,9 +236,9 @@ void TextureLoader::MakeRadianceMap(Texture2D* ufilterEnvmap,Texture2D* env_Map,
 	Renderer::GetDevice()->BindResource_Immediate(CS_STAGE,ufilterEnvmap,0);
 	Renderer::GetDevice()->BindSampler_Immediate(CS_STAGE, &Computersampler, 0,1);
 	
-
-	const float deltaRoughness = 1.0f / PRE::fmax(float(env_Map->GetDesc().MipLevels - 1), 1.0f);
-	for (UINT level = 1, size = 512; level < env_Map->GetDesc().MipLevels; ++level, size /= 2)
+	int texturelevel = (UINT)log2(max(env_Map->GetDesc().Width, env_Map->GetDesc().Height));
+	const float deltaRoughness = 1.0f / PRE::fmax(float(texturelevel), 1.0f);
+	for (UINT level = 1, size = 512; level < texturelevel; ++level, size /= 2)
 	{
 		const UINT numGroups = MathHelper::Max<int>(1, size / 32);
 		const SpeularMapFilterSetting spmfs = { level*deltaRoughness };
@@ -266,7 +267,7 @@ void TextureLoader::MakeRadianceMap(Texture2D* ufilterEnvmap,Texture2D* env_Map,
 	Renderer::GetDevice()->CreateTexture2D(&sptexturedesc,nullptr,&Splut);
 
 
-	Renderer::GetDevice()->BindResource_Immediate(CS_STAGE, Splut, 0);
+	Renderer::GetDevice()->BindUAV_Immediate(CS_STAGE, Splut, 0);
 	Renderer::GetDevice()->BindComputerPSO_Immediate(&ComputeSpLut);
 	Renderer::GetDevice()->Dispatch_Immediate(Splut->desc.Width/32, Splut->desc.Height / 32,1);
 
@@ -277,6 +278,6 @@ void TextureLoader::MakeRadianceMap(Texture2D* ufilterEnvmap,Texture2D* env_Map,
 void TextureLoader::MakeIadiacneMap(shcoeffs* cofs)
 {
 	///////////USE spherical_harmonics
-	PRE::LoadSH("sh_coefficients.txt",cofs);
+	PRE::LoadSH("sh_coefficient.txt",cofs);
 
 }
