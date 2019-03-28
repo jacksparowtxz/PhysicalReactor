@@ -15,9 +15,8 @@ Material::~Material()
 	SAFE_DELETE(MaterialID);
 	SAFE_DELETE(rasterzerstate);
 	SAFE_DELETE(depthstencilstate);
-
+	SAFE_DELETE(depthstencilstate);
 	
-
 	SAFE_DELETE(BaseColorMap);
 	SAFE_DELETE(MetalicMap);
 	SAFE_DELETE(SpecularMap);

@@ -2641,6 +2641,7 @@ HRESULT RenderDevice_DX11::CreateDepthStencilView(Texture2D* pTexture)
 	return hr;
 }
 
+
 HRESULT RenderDevice_DX11::CreateInputLayout(const VertexLayoutDesc *pInputElementDescs, UINT NumElements, GraphicBlob* blob, VertexLayout *pInputLayout)
 {
 	
@@ -3187,10 +3188,10 @@ void RenderDevice_DX11::PresentEnd()
 	DXGI_PRESENT_PARAMETERS parameters = { 0 };
 	swapChain->Present1(VSYNC, 0,&parameters);
 
-/*
-	deviceContexts[GRAPHICTHREAD_IMMERIATE]->OMSetRenderTargets(0, nullptr, nullptr);
 
-	deviceContexts[GRAPHICTHREAD_IMMERIATE]->ClearState();
+	ImmediatedeviceContext->OMSetRenderTargets(0, nullptr, nullptr);
+
+	ImmediatedeviceContext->ClearState();
 	BindGraphicsPSO(nullptr);
 	BindComputerPSO(nullptr);
 
@@ -3202,9 +3203,9 @@ void RenderDevice_DX11::PresentEnd()
 		pRects[i].right = INT32_MAX;
 		pRects[i].top = INT32_MIN;
 	}
-	deviceContexts[GRAPHICTHREAD_IMMERIATE]->RSSetScissorRects(0, pRects);*/
+	ImmediatedeviceContext->RSSetScissorRects(0, pRects);
 
-/*
+
 	memset(prev_vs, 0, sizeof(prev_vs));
 	memset(prev_ps, 0, sizeof(prev_ps));
 	memset(prev_hs, 0, sizeof(prev_hs));
@@ -3221,7 +3222,7 @@ void RenderDevice_DX11::PresentEnd()
 
 	memset(raster_uavs, 0, sizeof(raster_uavs));
 	memset(raster_uavs_slot, 0, sizeof(raster_uavs_slot));
-	memset(raster_uavs_count, 0, sizeof(raster_uavs_count));*/
+	memset(raster_uavs_count, 0, sizeof(raster_uavs_count));
 
 	FRAMECOUNT++;
 
@@ -4578,7 +4579,7 @@ void RenderDevice_DX11::CopyTexture2D_Immediate(Texture2D* pDest, Texture2D* pSr
 
 void RenderDevice_DX11::CopyTexture2D_Region_Immediate(Texture2D* pDest, UINT dstMip, UINT dstX, UINT dstY, Texture2D* pSrc, UINT srcMip, UINT ArraySize)
 {
-	const UINT subresourceIndex = D3D11CalcSubresource(0,ArraySize, pDest->GetDesc().MipLevels);
+	const UINT subresourceIndex = D3D11CalcSubresource(0,ArraySize, (UINT)log2(max(pDest->GetDesc().Width, pDest->GetDesc().Height)));
 	ImmediatedeviceContext->CopySubresourceRegion((ID3D11Resource*)pDest->resource, subresourceIndex, dstX, dstY, 0,
 		(ID3D11Resource*)pSrc->resource, subresourceIndex, nullptr);
 }
