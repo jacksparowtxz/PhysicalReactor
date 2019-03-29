@@ -238,6 +238,7 @@ namespace PRE
 		virtual void EventEnd_Immediate() override;
 		virtual void SetMarker_Immediate(const std::string &name) override;
 		virtual void GenerateMips_Immediate(GPUResource* ShaderResourceView) override;
+	
 		/////////////////////////////////////////////////////////////////////////////////
 
 

@@ -2,7 +2,8 @@
 #include"CommonInclude.h"
 #include"Render/Renderer.h"
 #include"Render/GraphicsResource.h"
-
+#include<vector>
+using namespace std;
 using namespace PRE;
 
 class DepthStencilTarget;
@@ -23,6 +24,10 @@ namespace PRE
 		void Activate(float r, float g, float b, float a, bool disableColor = false, int viewID = -1);
 		void Activate(DepthStencilTarget*, float r, float g, float b, float a, bool disableColor = false, int viewID = -1);
 		void Activate(DepthStencilTarget*, bool disableColor = false, int viewID = -1);
+		void Clear_Immediate(bool disableColor = false, int viewID = -1);
+		void Clear_Immediate(float r, float g, float b, float a, bool disableColor = false, int viewID = -1);
+		void Clear_Immediate(DepthStencilTarget*, float r, float g, float b, float a, bool disableColor = false, int viewID = -1);
+		void Clear_Immediate(DepthStencilTarget*, bool disableColor = false, int viewID = -1);
 		void Deactivate();
 		void Set(bool disableColor = false, int viewID = -1);
 		void Set(DepthStencilTarget*, bool disableColor = false, int viewID = -1);

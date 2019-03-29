@@ -219,6 +219,51 @@ void RenderTarget::Activate(DepthStencilTarget *getDepth, bool disableColor, int
 	Activate(getDepth, 0, 0, 0, 0, disableColor, viewID);
 }
 
+void PRE::RenderTarget::Clear_Immediate(bool disableColor, int viewID)
+{
+	Clear_Immediate(0, 0, 0, 0, disableColor, viewID);
+}
+
+void PRE::RenderTarget::Clear_Immediate(float r, float g, float b, float a, bool disableColor, int viewID)
+{
+	float ClearColor[4] = { r,g,b,a };
+	if (viewID >= 0)
+	{
+		Renderer::GetDevice()->ClearRenderTarget_Immediate(GetTexture(viewID), ClearColor);
+	}
+	else
+	{
+		for (int i = 0; i < numviews; ++i)
+		{
+			Renderer::GetDevice()->ClearRenderTarget_Immediate(GetTexture(i), ClearColor);
+		}
+
+	}
+	if (depthstencil)
+		depthstencil->Clear_Immediate();
+}
+
+void PRE::RenderTarget::Clear_Immediate(DepthStencilTarget *, float r, float g, float b, float a, bool disableColor, int viewID)
+{
+	float ClearColor[4] = { r,g,b,a };
+	if (viewID >= 0)
+	{
+		Renderer::GetDevice()->ClearRenderTarget_Immediate(GetTexture(viewID), ClearColor);
+	}
+	else
+	{
+		for (int i = 0; i < numviews; i++)
+		{
+			Renderer::GetDevice()->ClearRenderTarget_Immediate(GetTexture(i), ClearColor);
+		}
+	}
+}
+
+void PRE::RenderTarget::Clear_Immediate(DepthStencilTarget *getDepth, bool disableColor, int viewID)
+{
+	Clear_Immediate(getDepth, 0, 0, 0, 0, disableColor, viewID);
+}
+
 void RenderTarget::Deactivate()
 {
 	Renderer::GetDevice()->BindRenderTargets(0, nullptr, nullptr);
@@ -229,11 +274,11 @@ void RenderTarget::Set(bool disableColor, int viewID)
 	Renderer::GetDevice()->BindViewports(1, &viewprot);
 	if (viewID >= 0)
 	{
-		Renderer::GetDevice()->BindRenderTargets(disableColor?0:1,disableColor?nullptr:(Texture2D**)&rendertargets[viewID],(depthstencil?depthstencil->GetTexture():nullptr));
+		Renderer::GetDevice()->BindRenderTargets(disableColor?0:1,disableColor?nullptr:(Texture2D**)&rendertargets[viewID],(disableColor ? nullptr:depthstencil->GetTexture()));
 	}
 	else
 	{
-		Renderer::GetDevice()->BindRenderTargets(disableColor ? 0 : numviews, disableColor ? nullptr : (Texture2D**)rendertargets.data(), (depthstencil ? depthstencil->GetTexture() : nullptr));
+		Renderer::GetDevice()->BindRenderTargets(disableColor ? 0 : numviews, disableColor ? nullptr : (Texture2D**)rendertargets.data(), (disableColor ? nullptr : depthstencil->GetTexture()));
 		for (auto& x : resolvedMSAAUptodate)
 		{
 			x = false;

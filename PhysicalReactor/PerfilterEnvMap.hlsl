@@ -44,7 +44,7 @@ void main(uint3 ThreadID:SV_DispatchThreadID)
     for (uint i = 0; i < NumSamples;++i)
     {
         float2 u = sampleHammersley(i, InvNumSamples);
-        float3 Lh = TangentToWorld2(ImportanceSampleGGX(u,roughness).xyz,N,S,T);
+        float3 Lh = TangentToWorld2(sampleGGX(u, roughness), N, S, T);
 
         float3 Li = 2.0 * dot(Lo, Lh) * Lh - Lo;
         float cosLi = dot(N,Li);

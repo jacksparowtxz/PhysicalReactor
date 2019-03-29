@@ -12,6 +12,8 @@
 #include <string.h>
 #include <tchar.h>
 
+
+
 namespace PRE
 {
 	class RenderDevice
@@ -259,6 +261,7 @@ namespace PRE
 		virtual void EventEnd_Immediate() = 0;
 		virtual void SetMarker_Immediate(const std::string &name) = 0;
 		virtual void GenerateMips_Immediate(GPUResource* ShaderResourceView) = 0;
+
 		/////////////////////////////////////////////////////////////////////////////////
 
 		virtual void* GetDevice() = 0;

@@ -41,9 +41,13 @@ namespace PRE
 
 	void RenderWorld::BeginRender()
 	{
-		Renderer::GetDevice()->PresentBegin();
-		Renderer::GetDevice()->SetResolution(1920, 1080);
-		rendertarget->Set(false,0);
+		rendertarget->Clear_Immediate(false, 0);
+		rendertarget->Set(false, 0);  
+		
+		//Renderer::GetDevice()->PresentBegin();
+		//Renderer::GetDevice()->SetResolution(1920, 1080);
+	
+		
 		RenderWireframe(false);
 	}
 
@@ -58,8 +62,8 @@ namespace PRE
 			GraphicPSO PSO;
 			Renderer::shadermanager->GetPSO(TYPE_STATICMESH, &PSO);
 			PSO.desc.rs = rasterizerstate;
+			//PSO.desc.dss = defalutDSS;
 			Renderer::GetDevice()->BindGraphicsPSO(&PSO);
-			//Renderer::GetDevice()->BindRasterizerState(*rasterizerstate);
 			UINT pFisrtConstant1 = 0;
 			UINT pNumberConstant1 = 64;
 			Renderer::GetDevice()->BindConstantBuffer(VS_STAGE, constbuffer, 0, &pFisrtConstant1, &pNumberConstant1);
@@ -122,21 +126,24 @@ namespace PRE
 			Renderer::GetDevice()->BindVertexBuffers(&sky->SkyMesh->Meshs[0]->mVertexBuffer, 0, 1, &stride, &offset);
 			Renderer::GetDevice()->BindIndexBuffer(sky->SkyMesh->Meshs[0]->mIndexBuffer, INDEXBUFFER_32BIT, 0);
 			Renderer::GetDevice()->DrawIndexed(sky->SkyMesh->Meshs[0]->Indices.size(), 0, 0);
-			PSO.desc.rs = 0;
+			/*PSO.desc.rs = 0;
 			PSO.desc.dss = 0;
 			PSO.desc.vs = 0;
 			PSO.desc.ps = 0;
-			Renderer::GetDevice()->BindGraphicsPSO(&PSO);
+			Renderer::GetDevice()->BindGraphicsPSO(&PSO);*/
+			//Renderer::GetDevice()->FinishComanlist();
 		};
 
 		RenderSkyFC = RenderSkybox;
 		RenderSkyFC(sky, 1, nullptr);
+		
 		//JobScheduler::Wait(parallel_for(sky, 1, RenderSkyFC, nullptr));
 
 		auto tonemapping = [&, this]() {
+			rendertarget->Deactivate();
+			Renderer::GetDevice()->SetResolution(1920, 1080);
 			Texture2D *sdt = rendertarget->depthstencil->GetTextureResolvedMSAA();
 			Renderer::GetDevice()->BindBackBufferRenderTargets(sdt);
-			Renderer::GetDevice()->SetResolution(1920,1080);
 			GraphicPSO PSO;
 			Renderer::shadermanager->GetPSO(OBJECTTYPE::TYPE_TONEMAPPING,&PSO);
 			Renderer::GetDevice()->BindGraphicsPSO(&PSO);
@@ -176,12 +183,12 @@ namespace PRE
 
 	void RenderWorld::MoveForWard(float Direction)
 	{
-		camera->Walk(dt * 10 * Direction);
+		camera->Walk(dt * 100 * Direction);
 	}
 
 	void RenderWorld::MoveRight(float Direction)
 	{
-		camera->Strafe(dt * 10 * Direction);
+		camera->Strafe(dt * 100 * Direction);
 	}
 
 	void RenderWorld::CameraRotation(WPARAM btnState, int x, int y)
@@ -456,24 +463,31 @@ namespace PRE
 		
 		Solidstate = new RasterizerState;
 		Wireframestate = new RasterizerState;
-
+		defalutDSS = new DepthStencilState;
 		RasterizerStateDesc Wireframedesc;
 		Wireframedesc.FillMode = FILL_WIREFRAME;
 		Wireframedesc.CullMode = CULL_BACK;
 		Wireframedesc.FrontCounterClockWise = false;
 		Wireframedesc.DepthCilpEnable = true;
 
-
 		RasterizerStateDesc Soliddesc;
 		Wireframedesc.FillMode = FILL_SOLID;
 		Wireframedesc.CullMode = CULL_BACK;
 		Wireframedesc.FrontCounterClockWise = false;
 		Wireframedesc.DepthCilpEnable = true;
+
+		DepthStencilStateDesc depthstencildesc;
+		depthstencildesc.DepthEnable = true;
+		depthstencildesc.DepthWriteMask = DEPTH_WRITE_MASK_ALL;
+		depthstencildesc.DepthFunc = COMPARSION_LESS;
+
+		Renderer::GetDevice()->CreateDepthStencilState(&depthstencildesc, defalutDSS);
 		Renderer::GetDevice()->CreateRasterizerState(&Soliddesc, Solidstate);
 		Renderer::GetDevice()->CreateRasterizerState(&Wireframedesc, Wireframestate);
 #ifdef PREDEBUG
 		Renderer::GetDevice()->SetName(Solidstate, "Solidstate");
 		Renderer::GetDevice()->SetName(Wireframestate, "Wireframestate");
+		Renderer::GetDevice()->SetName(defalutDSS, "defalutDSS");
 #endif // DEBUG
 		SpLutSampler = new Sampler;
 		SamplerDesc splutsampler;

@@ -95,7 +95,7 @@ namespace PRE
 		RasterizerState* Wireframestate;
 		RasterizerState* Solidstate;
 		RasterizerState* rasterizerstate;
-
+		DepthStencilState *defalutDSS;
 
 		RenderTarget* rendertarget;
 	    

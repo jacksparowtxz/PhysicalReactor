@@ -91,6 +91,12 @@ void DepthStencilTarget::Clear()
 	resolvedMSAAUptodate = false;
 }
 
+void DepthStencilTarget::Clear_Immediate()
+{
+	Renderer::GetDevice()->ClearDepthStencil_Immediate(GetTexture(), CLEAR_DEPTH | CLEAR_STENCIL, 0.0f, 0);
+	resolvedMSAAUptodate = false;
+}
+
 void DepthStencilTarget::CopyFrom(const DepthStencilTarget &form)
 {
 	Renderer::GetDevice()->CopyTexture2D(GetTexture(), form.GetTexture());
@@ -110,7 +116,7 @@ Texture2D * DepthStencilTarget::GetTextureResolvedMSAA()
 			ComputerPSO computerpso;
 			computerpso.desc.cs=Renderer::shadermanager->GetComputerShader("resolveMSAADepthStencilCS.hlsl");
 			Renderer::GetDevice()->BindComputerPSO(&computerpso);
-			Renderer::GetDevice()->Dispatch((UINT)ceilf(desc.Width / 16.f), (UINT)ceilf(desc.Height / 16.f), 1);
+			Renderer::GetDevice()->Dispatch((UINT)desc.Width / 16, (UINT)desc.Height / 16, 1);
 
 			Renderer::GetDevice()->UnbindResources(0, 1);
 			Renderer::GetDevice()->UnbindUAVs(0,1);
