@@ -216,6 +216,7 @@ void TextureLoader::MakeRadianceMap(Texture2D* ufilterEnvmap,Texture2D* env_Map,
 	CubeMapdesc.Usage = USAGE_DEFAULT;
 	CubeMapdesc.SampleDesc.Count = 1;
 	CubeMapdesc.SampleDesc.Quality = 0;
+	env_Map->RequesIndenpentUnorderedAccessResoucesForMips(true);
 	Renderer::GetDevice()->CreateTexture2D(&CubeMapdesc,nullptr,&env_Map);
 
 	for (int arraySlice = 0; arraySlice < 6; ++arraySlice)
@@ -240,11 +241,11 @@ void TextureLoader::MakeRadianceMap(Texture2D* ufilterEnvmap,Texture2D* env_Map,
 	const float deltaRoughness = 1.0f / PRE::fmax(float(texturelevel), 1.0f);
 	for (UINT level = 1, size = 512; level < texturelevel; ++level, size /= 2)
 	{
-		const UINT numGroups = MathHelper::Max<int>(1, size / 32);
+		const UINT numGroups = MathHelper::Max<UINT>(1, size / 32);
 		const SpeularMapFilterSetting spmfs = { level*deltaRoughness };
 		Renderer::GetDevice()->UpdateBuffer_Immediate(SpeularMapFilterSettingCB,&spmfs);
 		Renderer::GetDevice()->BindConstantBuffer_Immediate(CS_STAGE,SpeularMapFilterSettingCB,0,nullptr,nullptr);
-		Renderer::GetDevice()->BindUAV_Immediate(CS_STAGE,env_Map,0);
+		Renderer::GetDevice()->BindUAV_Immediate(CS_STAGE,env_Map,0, level);
 		Renderer::GetDevice()->Dispatch_Immediate(numGroups, numGroups, 6);
 	}
 	Renderer::GetDevice()->BindConstantBuffer_Immediate(CS_STAGE, nullptr, 0, NULL, NULL);
