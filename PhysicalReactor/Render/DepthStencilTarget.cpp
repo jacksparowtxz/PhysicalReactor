@@ -93,7 +93,7 @@ void DepthStencilTarget::Clear()
 
 void DepthStencilTarget::Clear_Immediate()
 {
-	Renderer::GetDevice()->ClearDepthStencil_Immediate(GetTexture(), CLEAR_DEPTH | CLEAR_STENCIL, 0.0f, 0);
+	Renderer::GetDevice()->ClearDepthStencil_Immediate(GetTexture(), CLEAR_DEPTH | CLEAR_STENCIL, 1.0f, 0);
 	resolvedMSAAUptodate = false;
 }
 
