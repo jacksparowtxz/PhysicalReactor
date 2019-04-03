@@ -224,10 +224,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			gw->MoveForward(-1.0f);
 			break;
 		   case 65:
-			gw->MoveRight(1.0f);
+			gw->MoveRight(-1.0f);
 			break;
 		   case 68:
-			gw->MoveRight(-1.0f);
+			gw->MoveRight(1.0f);
 			break;
 		   default:
 			 break;
