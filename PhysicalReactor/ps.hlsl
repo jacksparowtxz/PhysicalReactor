@@ -3,7 +3,7 @@
 
 cbuffer DirectionalLightCB : register(b0)
 {
-    DirectionalLight directionalights;
+    DirectionalLight directionalights[MAX_LIGHTS];
 };
 
 
@@ -32,7 +32,6 @@ struct PixelShaderInput
     float3 NormalW : NORMAL;
     float3 TangentW : TANGENT;
     float2 Tex : TEXCOORD;
-    float3x3 TBN : TBASIS;
 };
 
 static const float3 Fdielectirc = 0.04;
@@ -86,8 +85,8 @@ float4 main(PixelShaderInput input) : SV_TARGET
     float ambient = AmbientMap.Sample(BaseColorSampler, input.Tex).r;
     float3 Lo = normalize(EyePos.xyz - input.PosW);
 
-    float3 N = normalize(2.0 * NormalMap.Sample(BaseColorSampler,input.Tex).rgb-1.0);
-    N = normalize(mul(input.TBN, N));
+    float3 N1 =NormalMap.Sample(BaseColorSampler,input.Tex).rgb;
+    float3 N = NormalSampleToWorldSpace(N1, input.NormalW, input.TangentW);
 
     float cosLo = max(0.0, dot(N, Lo));
 
@@ -97,20 +96,20 @@ float4 main(PixelShaderInput input) : SV_TARGET
 
 
     //Direct Light///Temp one directionlight
-    float3 Li = -directionalights.direction;
-    float3 Lradiance = directionalights.color.rgb;
-    float Intensity = directionalights.Intensity;
+    float3 Li = -directionalights[0].direction;
+    float3 Lradiance = directionalights[0].color.rgb;
+    float Intensity = directionalights[0].Intensity;
 
     float3 Lh = normalize(Li+Lo);
 
     float cosLi = max(0.0, dot(N, Li));
     float cosLh = max(0.0, dot(N, Lh));
 
-    float3 F = Fresnel_Schlick(F0, Li, Lh);
+    float3 F = Fresnel_Schlick(F0, Lo, Lh);
 
     float D = GGX_NDF(roughness,cosLh);
 
-    float G = GGX_Schilck(roughness,Li,Lh,N);
+    float G = GGX_Schilck(cosLi,cosLo,roughness);
 
     float3 kd = lerp(float3(1, 1, 1) - F, float3(0,0,0),metalness);
 
@@ -138,9 +137,9 @@ float4 main(PixelShaderInput input) : SV_TARGET
 
     float3 specularIBL = (F0 * IspecularBRDF.x + IspecularBRDF.y) * specularIrradiance;
 
-    float3 ambientLighting = (diffuseIBL + specularIBL);
+    float3 ambientLighting =(diffuseIBL + specularIBL);
 
-    float3 totallighting = (ambientLighting + directLighting) * ambient;
+    float3 totallighting = directLighting; //(ambientLighting + directLighting) * ambient;
 
     return float4(totallighting, 1.0f);
 }

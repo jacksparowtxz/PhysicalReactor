@@ -85,8 +85,9 @@ float3 Diffuse_Gotanda(float3 diffuseColor, float roughness, float3 V, float3 L,
 
 float GGX_NDF(float a,float NoH)
 {
-    float d = (NoH * a * a - NoH) * NoH + 1;
-    return (a * a) / (PI * d * d);
+    float as = a * a ;
+    float d = (NoH * as * as - NoH) * NoH + 1;
+    return as / (PI * d * d);
 }
 
 ////////////////////////Specular G
@@ -100,12 +101,12 @@ float GGX_NDF(float a,float NoH)
 //////////////////////          k=------------------------------
 /////////////////////////                  8
 
-float GGX_Schilck(float r,float3 l,float3 v,float3 n)
+float GGX_Schilck(float cosLi, float cosLo, float roughness)
 {
-    float k = sqrt(r * r) * 0.5;
-    float SchlickV = dot(l, n) * (1 - k) + k;
-    float SchlickL = dot(v, n) * (1 - k) + k;
-    return 0.25 / (SchlickV * SchlickL);
+    float k = (roughness + 1) * (roughness + 1) / 8;
+    float SchlickV = cosLi / (cosLi * (1-  k) + k);
+    float SchlickL = cosLo / (cosLo * (1 - k) + k);
+    return (SchlickV * SchlickL);
 }
 
 //////////////////////////////////////////////////Simple vis 
@@ -180,8 +181,9 @@ float3 F_Simple(float SpecularColor)
 ///////////////////////http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.50.2297&rep=rep1&type=pdf
 float3 Fresnel_Schlick(float3 specularcolor,float3 v,float3 h)
 {
-    float Fc = pow(1 - dot(v, h), 5);
-    return saturate(50.0f * specularcolor.g) * Fc + (1 - Fc) * specularcolor;
+    float Fc = pow(1 - max(0.0, dot(v, h)), 5);
+    return specularcolor + (1.0 - specularcolor) * Fc; ////////////////saturate(50.0f * specularcolor.g) * Fc + (1 - Fc) * specularcolor;
+
 }
 
 float3 Fresnel(float3 SpecularColor, float3 V,float3 H)

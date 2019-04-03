@@ -32,7 +32,6 @@ struct PixelShaderInput
         float3 NormalW : NORMAL;
         float3 TangentW : TANGENT;
         float2 Tex : TEXCOORD;
-        float3x3 TBN : TBASIS;
 };
 
 // 用于在 GPU 上执行顶点处理的简单着色器。
@@ -50,15 +49,6 @@ PixelShaderInput main(VertexShaderInput input)
     output.NormalW = mul(input.NormalL, (float3x3) WorldInvTranspose);
     output.Tex = mul(float4(input.Tex, 1.0f, 1.0f),TexTransform).xy;
     output.TangentW = mul(input.TangentL, (float3x3) ModelWorld);
- 
-    float3 T = normalize(float3(mul(ModelWorld, float4(input.TangentL, 0.0)).xyz));
-    float3 N = normalize(float3(mul(ModelWorld, float4(input.NormalL, 0.0)).xyz));
 
-    T = normalize(T - dot(T, N) * N);
-
-    float3 B = cross(T, N);
-
-    float3x3 TBN = float3x3(T, B, N);
-    output.TBN = TBN;
 	return output;  
 }
