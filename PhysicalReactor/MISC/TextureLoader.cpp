@@ -147,18 +147,19 @@ void TextureLoader::LoadTexture(const string & TexturefileName, Texture2D* LoadM
 		 const char* szname = TexturefileName.c_str();
 		 int width = 0;
 		 int height = 0;
-		 int channelcount = 0;
-		 unsigned char* data = stbi_load(szname, &width, &height, &channelcount, 4);
+		 int comp = 0;
+		 const int channelcount = 4;
+		 unsigned char* data = stbi_load(szname, &width, &height, &comp, channelcount);
 
 		 TextureDesc desc;
 		 desc.ArraySize = 1;
-		 desc.BindFlags = BIND_SHADER_RESOURCE | BIND_UNORDERED_ACCESS;
+		 desc.BindFlags = BIND_SHADER_RESOURCE | BIND_UNORDERED_ACCESS| BIND_RENDER_TARGET;
 		 desc.CPUAccessFlags = 0;
 		 desc.Format = FORMAT_R8G8B8A8_UNORM;
 		 desc.Height = static_cast<uint32_t>(height);
 		 desc.Width = static_cast<uint32_t>(width);
 		 desc.MipLevels = (UINT)log2(max(width, height));
-		 desc.MiscFlags = 0;
+		 desc.MiscFlags = RESOURCE_MISC_GENERATE_MIPS;
 		 desc.Usage = USAGE_DEFAULT;
 
 		 UINT mipwidth = width;
@@ -172,6 +173,7 @@ void TextureLoader::LoadTexture(const string & TexturefileName, Texture2D* LoadM
 		 LoadMap->RequestIndepentShaderReourcesForMIPs(true);
 		 LoadMap->RequesIndenpentUnorderedAccessResoucesForMips(true);
 		 HRESULT hr = Renderer::GetDevice()->CreateTexture2D(&desc, InitData, &LoadMap);
+		 Renderer::GetDevice()->GenerateMips_Immediate(LoadMap);
 #ifdef PREDEBUG
 		 Renderer::GetDevice()->SetName(LoadMap, TexturefileName);
 #endif // DEBUG

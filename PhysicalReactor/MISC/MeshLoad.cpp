@@ -83,7 +83,7 @@ void GameMeshImport::ProcessMesh(aiMesh* mesh, const aiScene* scene, StaticMesh 
 		vector.y = mesh->mTangents[i].y;
 		vector.z = mesh->mTangents[i].z;
 		vertex.Tangent = vector;
-
+		
 		if (mesh->mTextureCoords[0])
 		{
 			XMFLOAT2 uv;
