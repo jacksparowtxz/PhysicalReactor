@@ -85,12 +85,18 @@ namespace PRE
 			Renderer::GetDevice()->BindSampler(PS_STAGE, SpLutSampler, 15, 1);
 			Renderer::GetDevice()->BindResource(PS_STAGE, sky->EnvMap, 15);
 			Renderer::GetDevice()->BindResource(PS_STAGE, sky->SpLutMap, 16);
-			DirectX::XMStoreFloat4x4(&m_constantBufferData[ThreadID]->model, XMMatrixTranspose(XMMatrixRotationY(90.f)));
+			DirectX::XMStoreFloat4x4(&m_constantBufferData[ThreadID]->model, XMMatrixTranspose(XMMatrixIdentity()));
+			DirectX::XMStoreFloat4x4(&m_constantBufferData[ThreadID]->worldinvtranspose, MathHelper::InverseTranspose(std::move(XMMatrixTranspose(XMMatrixIdentity()))));
+			
 			for (SubMesh* submesh : sm->Meshs)
 			{
 				UINT stride = sizeof(Vertex);
 				UINT offset = 0;
 				RenderMaterial(PS_STAGE, submesh);
+				m_constantBufferData[ThreadID]->BaseColorFactor = submesh->material->BaseColor;
+				m_constantBufferData[ThreadID]->metalic_factor = submesh->material->Metalness;
+				m_constantBufferData[ThreadID]->Roughness_factor = submesh->material->Roughness;
+				m_constantBufferData[ThreadID]->emissive_factor = submesh->material->Emssive;
 				Renderer::GetDevice()->BindVertexBuffers(&submesh->mVertexBuffer, 0, 1, &stride, &offset);
 				Renderer::GetDevice()->BindIndexBuffer(submesh->mIndexBuffer, INDEXBUFFER_32BIT, 0);
 				Renderer::GetDevice()->DrawIndexed(submesh->Indices.size(), 0, 0);
@@ -398,7 +404,10 @@ namespace PRE
 		StaticMeshList=std::move(level->StaticMeshList);
 		
 		sky = level->sky;
-		m_constantBufferData[0]->directionallights[0] = *level->DirectionalLightList[0];
+		for (uint32_t j = 0; j < level->DirectionalLightList.size(); j++)
+		{
+			m_constantBufferData[0]->directionallights[j] = *level->DirectionalLightList[j];
+		}
 		for (uint32_t j = 0; j < level->SpotLightList.size(); j++)
 		{
 			m_constantBufferData[0]->spotlights[j] = *level->SpotLightList[j];
@@ -510,7 +519,7 @@ namespace PRE
 		Renderer::GetDevice()->SetName(tonemappingsampler, "tonemappingsampler");
 #endif // DEBUG
 
-		shcoeffs COFS[15];
+		shcoeffs COFS[9];
 
 		TextureManager::GetLoader()->MakeIadiacneMap(COFS);
 

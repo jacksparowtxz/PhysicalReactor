@@ -47,7 +47,12 @@ namespace PRE
 		PointLight pointlights[4];
 		DirectionalLight directionallights[4];
 		DirectX::XMFLOAT4 EyePos;
-		shcoeffs COFS[15];
+		shcoeffs COFS[9];
+		XMFLOAT3 BaseColorFactor;
+		float emissive_factor;
+		float metalic_factor;
+		float Roughness_factor;
+
 
 
 	};
