@@ -66,8 +66,9 @@ void Material::Init(const std::string &newName)
 	Materialname = "NewMaterial";
 
 	
-	
-
+	Metalness = 0.0f;
+	Roughness=0.0f;
+	Emssive = 0.0f;
 
 
 	RasterizerStateDesc RSdesc;

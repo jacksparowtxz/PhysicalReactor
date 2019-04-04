@@ -116,6 +116,7 @@ public:
 
 	float Metalness;
 	float Roughness;
+	float Emssive;
 	XMFLOAT3 BaseColor;
 
 	bool TwoSide;
