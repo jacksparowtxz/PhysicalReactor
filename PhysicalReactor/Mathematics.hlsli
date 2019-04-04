@@ -349,3 +349,22 @@ float3 NormalSampleToWorldSpace(float3 normalMapSample,float3 unitNormalW,float3
     float3 bumpedNormalW = mul(normalT, TBN);
     return bumpedNormalW;
 }
+
+/////////////////////////////////////  MircoSoft Gltf viewer
+float4 SRGBtoLINEAR(float4 srgbIn)
+{
+#ifdef MANUAL_SRGB
+     #ifdef SRGB_FAST_APPROXIMATION
+        float3 linOUT=pow(srgbIn.xyz,float3(2.2));
+     #else
+        float3 bless=step(float3(0.04045),srgbIn.xyz);
+        float3 linOUT=mix(srgbIn.xyz/float3(12.92),pow(srgbIn.xyz+float3(0.055),float3(2.4)),bless);
+    #endif
+    return float4(linOUT,srgbIn.w);
+#else
+    return srgbIn;
+#endif
+
+
+
+}
