@@ -51,3 +51,21 @@ struct SpotLight
 };
 
 
+
+struct PBRInfo
+{
+
+    float NdotL; // cos angle between normal and light direction
+    float NdotV; // cos angle between normal and view direction
+    float NdotH; // cos angle between normal and half vector
+    float LdotH; // cos angle between light direction and half vector
+    float VdotH; // cos angle between view direction and half vector
+    float perceptualRoughness; // roughness value, as authored by the model creator (input to shader)
+    float metalness; // metallic value at the surface
+    float3 reflectance0; // full reflectance color (normal incidence angle)
+    float3 reflectance90; // reflectance color at grazing angle
+    float alphaRoughness; // roughness mapped to a more linear change in the roughness (proposed by [2])
+    float3 diffuseColor; // color contribution from diffuse lighting
+    float3 specularColor; // color contribution from specular lighting
+
+};
