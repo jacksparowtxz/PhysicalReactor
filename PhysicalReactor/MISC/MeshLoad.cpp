@@ -110,7 +110,7 @@ void GameMeshImport::ProcessMesh(aiMesh* mesh, const aiScene* scene, StaticMesh 
 	{
 		aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 		vector<Texture2D*> Maps;
-		
+	
 		SamplerDesc InitSamplerDesc;
 		InitSamplerDesc.Filter = FILTER_ANISOTROPIC;
 		InitSamplerDesc.AddressU = TEXTURE_ADDRESS_WRAP;
@@ -199,10 +199,11 @@ void GameMeshImport::ProcessMesh(aiMesh* mesh, const aiScene* scene, StaticMesh 
 		XMFLOAT3 basefactor = GetVectorFactorAssimp(AI_MATKEY_COLOR_DIFFUSE, material);
 		float metallic_factor = GetNumerFactorAssimp(AI_MATKEY_GLTF_PBRMETALLICROUGHNESS_METALLIC_FACTOR, material);
 		float rougness_factor = GetNumerFactorAssimp(AI_MATKEY_GLTF_PBRMETALLICROUGHNESS_ROUGHNESS_FACTOR, material);
-
-		meshmaterial->Metalness = metallic_factor;
-		meshmaterial->Roughness = rougness_factor;
-		meshmaterial->BaseColor = basefactor;
+		float emissive_factor = GetNumerFactorAssimp(AI_MATKEY_COLOR_EMISSIVE, material);
+		meshmaterial->Metalness = std::move(metallic_factor);
+		meshmaterial->Roughness = std::move(rougness_factor);
+		meshmaterial->BaseColor = std::move(basefactor);
+		meshmaterial->Emssive = std::move(emissive_factor);
 
 	}
 	SubMesh *loadsub =new SubMesh(std::move(Vertices),std::move(indices));
