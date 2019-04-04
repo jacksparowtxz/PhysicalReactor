@@ -1,8 +1,8 @@
 #include"Mathematics.hlsli"
 
-float3 LambertDiffuse(float3 diffusecolor)
+float3 LambertDiffuse(PBRInfo pbrInputs)
 {
-    return diffusecolor * (1 / PI);
+    return pbrInputs.diffuseColor / PI;
 }
 
 ////////////////////////////////https://blog.selfshadow.com/publications/s2012-shading-course/burley/s2012_pbs_disney_brdf_notes_v3.pdf
@@ -83,11 +83,11 @@ float3 Diffuse_Gotanda(float3 diffuseColor, float roughness, float3 V, float3 L,
 ///////////////////            ¦Ð*((n ¡¤ h)*(n ¡¤ h)*(¦Á*¦Á-1)+1)*((n ¡¤ h)*(n ¡¤ h)*(¦Á*¦Á-1)+1)
 
 
-float GGX_NDF(float a,float NoH)
+float GGX_NDF(PBRInfo pbrInputs)
 {
-    float as = a * a ;
-    float d = (NoH * as * as - NoH) * NoH + 1;
-    return as / (PI * d * d);
+    float roughnessSq = pbrInputs.alphaRoughness * pbrInputs.alphaRoughness;
+    float f = (pbrInputs.NdotH * roughnessSq - pbrInputs.NdotH) * pbrInputs.NdotH + 1.0;
+    return roughnessSq / (PI * f * f);
 }
 
 ////////////////////////Specular G
@@ -101,12 +101,15 @@ float GGX_NDF(float a,float NoH)
 //////////////////////          k=------------------------------
 /////////////////////////                  8
 
-float GGX_Schilck(float cosLi, float cosLo, float roughness)
+float GGX_Schilck(PBRInfo pbrInputs)
 {
-    float k = (roughness + 1) * (roughness + 1) / 8;
-    float SchlickV = cosLi / (cosLi * (1-  k) + k);
-    float SchlickL = cosLo / (cosLo * (1 - k) + k);
-    return (SchlickV * SchlickL);
+    float NdotL = pbrInputs.NdotL;
+    float NdotV = pbrInputs.NdotV;
+    float r = pbrInputs.alphaRoughness;
+
+    float attenuationL = 2.0 * NdotL / (NdotL + sqrt(r * r + (1.0 - r * r) * (NdotL * NdotL)));
+    float attenuationV = 2.0 * NdotV / (NdotV + sqrt(r * r + (1.0 - r * r) * (NdotV * NdotV)));
+    return attenuationL * attenuationV;
 }
 
 //////////////////////////////////////////////////Simple vis 
@@ -179,10 +182,9 @@ float3 F_Simple(float SpecularColor)
 
 //////////////////////////////////
 ///////////////////////http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.50.2297&rep=rep1&type=pdf
-float3 Fresnel_Schlick(float3 specularcolor,float3 v,float3 h)
+float3 Fresnel_Schlick(PBRInfo pbrInputs)
 {
-    float Fc = pow(1 - max(0.0, dot(v, h)), 5);
-    return specularcolor + (1.0 - specularcolor) * Fc; ////////////////saturate(50.0f * specularcolor.g) * Fc + (1 - Fc) * specularcolor;
+    return pbrInputs.reflectance0 + (pbrInputs.reflectance90 - pbrInputs.reflectance0) * pow(clamp(1.0 - pbrInputs.VdotH, 0.0, 1.0), 5.0); ////////////////saturate(50.0f * specularcolor.g) * Fc + (1 - Fc) * specularcolor;
 
 }
 
