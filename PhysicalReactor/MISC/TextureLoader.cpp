@@ -20,7 +20,7 @@ TextureLoader::~TextureLoader()
 
 }
 
-void TextureLoader::LoadTexture(const string & TexturefileName, Texture2D* LoadMap,bool UseCubeMap)
+void TextureLoader::LoadTexture(const string & TexturefileName, Texture2D* LoadMap,bool UseCubeMap, bool srgb /*= false*/)
 {
 
 	 std::string exname=GetExtensionFromFileName(TexturefileName);
@@ -153,9 +153,13 @@ void TextureLoader::LoadTexture(const string & TexturefileName, Texture2D* LoadM
 
 		 TextureDesc desc;
 		 desc.ArraySize = 1;
-		 desc.BindFlags = BIND_SHADER_RESOURCE | BIND_UNORDERED_ACCESS| BIND_RENDER_TARGET;
+		 desc.BindFlags = BIND_SHADER_RESOURCE | BIND_RENDER_TARGET;
+		 if (!srgb)
+		 {
+			 desc.BindFlags |= BIND_UNORDERED_ACCESS;
+		 }
 		 desc.CPUAccessFlags = 0;
-		 desc.Format = FORMAT_R8G8B8A8_UNORM;
+		 desc.Format = srgb?FORMAT_R8G8B8A8_UNORM_SRGB:FORMAT_R8G8B8A8_UNORM;
 		 desc.Height = static_cast<uint32_t>(height);
 		 desc.Width = static_cast<uint32_t>(width);
 		 desc.MipLevels = (UINT)log2(max(width, height));
