@@ -1,7 +1,8 @@
-#define PI 3.141592f
+#define PI 3.141592653589793f
 #define Epsilon=0.00001f
 #define MAX_LIGHTS 4
-
+#define MANUAL_SRGB 1
+#define SRGB_FAST_APPROXIMATION 0
 struct coffies
 {
     float r;
