@@ -80,13 +80,13 @@ namespace PRE
 			UINT pNumberConstant5 = 16;
 			Renderer::GetDevice()->BindConstantBuffer(PS_STAGE, constbuffer, 2, &pFisrtConstant5, &pNumberConstant5);
 			UINT pFisrtConstant6 = 96;
-			UINT pNumberConstant6 = 16;
+			UINT pNumberConstant6 = 64;
 			Renderer::GetDevice()->BindConstantBuffer(PS_STAGE, constbuffer, 3, &pFisrtConstant6, &pNumberConstant6);
 			Renderer::GetDevice()->BindSampler(PS_STAGE, SpLutSampler, 15, 1);
 			Renderer::GetDevice()->BindResource(PS_STAGE, sky->EnvMap, 15);
 			Renderer::GetDevice()->BindResource(PS_STAGE, sky->SpLutMap, 16);
-			DirectX::XMStoreFloat4x4(&m_constantBufferData[ThreadID]->model, XMMatrixTranspose(XMMatrixIdentity()));
-			DirectX::XMStoreFloat4x4(&m_constantBufferData[ThreadID]->worldinvtranspose, MathHelper::InverseTranspose(std::move(XMMatrixTranspose(XMMatrixIdentity()))));
+			DirectX::XMStoreFloat4x4(&m_constantBufferData[ThreadID]->model, XMMatrixTranspose(XMMatrixRotationX(-90.0)));
+			DirectX::XMStoreFloat4x4(&m_constantBufferData[ThreadID]->worldinvtranspose, MathHelper::InverseTranspose(std::move(XMMatrixTranspose(XMMatrixRotationX(-90.0)))));
 			
 			for (SubMesh* submesh : sm->Meshs)
 			{
@@ -500,11 +500,11 @@ namespace PRE
 #endif // DEBUG
 		SpLutSampler = new Sampler;
 		SamplerDesc splutsampler;
-		splutsampler.Filter = FILTER_ANISOTROPIC;
+		splutsampler.Filter = FILTER_MIN_MAG_MIP_LINEAR;
 		splutsampler.AddressU = TEXTURE_ADDRESS_CLAMP;
 		splutsampler.AddressV = TEXTURE_ADDRESS_CLAMP;
 		splutsampler.AddressW = TEXTURE_ADDRESS_CLAMP;
-
+		splutsampler.MaxAnisotropy = 1;
 		Renderer::GetDevice()->CreateSamplerState(&splutsampler, SpLutSampler);
 #ifdef PREDEBUG
 		Renderer::GetDevice()->SetName(SpLutSampler, "SpLutSampler");
@@ -513,7 +513,7 @@ namespace PRE
 		SamplerDesc tonemappingdesc;
 		tonemappingdesc.Filter = FILTER_MIN_MAG_MIP_LINEAR;
 		tonemappingdesc.AddressU = tonemappingdesc.AddressV = tonemappingdesc.AddressW = TEXTURE_ADDRESS_WRAP;
-
+		tonemappingdesc.MaxAnisotropy = 1;
 		Renderer::GetDevice()->CreateSamplerState(&tonemappingdesc, tonemappingsampler);
 #ifdef PREDEBUG
 		Renderer::GetDevice()->SetName(tonemappingsampler, "tonemappingsampler");

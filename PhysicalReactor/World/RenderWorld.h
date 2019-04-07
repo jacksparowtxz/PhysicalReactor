@@ -52,7 +52,8 @@ namespace PRE
 		float emissive_factor;
 		float metalic_factor;
 		float Roughness_factor;
-
+		float padingf;
+		float padingf1;
 
 
 	};
