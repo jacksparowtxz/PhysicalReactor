@@ -15,7 +15,7 @@ Sky::Sky()
 	EnvMap=new Texture2D;
 	SpLutMap = new Texture2D;
 	TextureManager::GetLoader()->MakeRadianceMap(SkyCubeMap,EnvMap,SpLutMap);
-
+	
 	DepthStencilStateDesc dsdesc;
 	dsdesc.DepthEnable = true;
 	dsdesc.DepthFunc = COMPARSION_LESS_EQUAL;
@@ -27,6 +27,7 @@ Sky::Sky()
 	spdesc.Filter = FILTER_MIN_MAG_MIP_LINEAR;
 	spdesc.AddressU = TEXTURE_ADDRESS_WRAP;
 	spdesc.AddressV = TEXTURE_ADDRESS_WRAP;
+	spdesc.MaxAnisotropy = 1;
 
 	Skymaterial->SetEmissiveSampler(spdesc);
 	SkyMesh->Meshs[0]->material =std::move(Skymaterial);
