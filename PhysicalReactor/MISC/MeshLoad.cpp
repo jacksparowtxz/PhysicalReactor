@@ -116,9 +116,10 @@ void GameMeshImport::ProcessMesh(aiMesh* mesh, const aiScene* scene, StaticMesh 
 		InitSamplerDesc.AddressU = TEXTURE_ADDRESS_WRAP;
 		InitSamplerDesc.AddressV = TEXTURE_ADDRESS_WRAP;
 		InitSamplerDesc.AddressW = TEXTURE_ADDRESS_WRAP;
+		InitSamplerDesc.ComparsionFunc = COMPARSION_NEVER;
+		InitSamplerDesc.MaxAnisotropy = 16;
 
-
-		Maps = loadMaterialTexture(material, aiTextureType_DIFFUSE, "texture_diffuse");
+		Maps = loadMaterialTexture(material, aiTextureType_DIFFUSE, "texture_diffuse",true);
 		if (Maps.size() > 0)
 		{
 			meshmaterial->BaseColorMap = std::move(Maps[0]);
@@ -149,7 +150,6 @@ void GameMeshImport::ProcessMesh(aiMesh* mesh, const aiScene* scene, StaticMesh 
 			meshmaterial->EmissiveMap = std::move(Maps[0]);
 			meshmaterial->EmissiveMapName = std::move(string("texture_emissive"));
 			meshmaterial->SetEmissiveSampler(InitSamplerDesc);
-
 		}
 		Maps = loadMaterialTexture(material, aiTextureType_OPACITY, "texture_opacity");
 		if (Maps.size() > 0)
@@ -197,9 +197,10 @@ void GameMeshImport::ProcessMesh(aiMesh* mesh, const aiScene* scene, StaticMesh 
 		}
 
 		XMFLOAT3 basefactor = GetVectorFactorAssimp(AI_MATKEY_COLOR_DIFFUSE, material);
+		float emissive_factor = GetNumerFactorAssimp(AI_MATKEY_COLOR_EMISSIVE, material);
 		float metallic_factor = GetNumerFactorAssimp(AI_MATKEY_GLTF_PBRMETALLICROUGHNESS_METALLIC_FACTOR, material);
 		float rougness_factor = GetNumerFactorAssimp(AI_MATKEY_GLTF_PBRMETALLICROUGHNESS_ROUGHNESS_FACTOR, material);
-		float emissive_factor = GetNumerFactorAssimp(AI_MATKEY_COLOR_EMISSIVE, material);
+		
 		meshmaterial->Metalness = std::move(metallic_factor);
 		meshmaterial->Roughness = std::move(rougness_factor);
 		meshmaterial->BaseColor = std::move(basefactor);
@@ -211,7 +212,7 @@ void GameMeshImport::ProcessMesh(aiMesh* mesh, const aiScene* scene, StaticMesh 
 	loadmesh->Meshs.push_back(loadsub);
 }
 
-std::vector<Texture2D*> GameMeshImport::loadMaterialTexture(aiMaterial* mat, aiTextureType type, std::string name)
+std::vector<Texture2D*> GameMeshImport::loadMaterialTexture(aiMaterial* mat, aiTextureType type, std::string name,bool SRGB /*= false*/)
 {
 	vector<Texture2D*> textures;
 	for (uint32_t i = 0; i < mat->GetTextureCount(type); i++)
@@ -226,7 +227,7 @@ std::vector<Texture2D*> GameMeshImport::loadMaterialTexture(aiMaterial* mat, aiT
 		   filename = directory + "/" + filename;
 		   std::string name = std::string(filename.begin(), filename.end());
 		   const char* szname = name.c_str();
-		   TextureManager::GetLoader()->LoadTexture(name, texture2d,false);
+		   TextureManager::GetLoader()->LoadTexture(name, texture2d,false,SRGB);
 		   textures.push_back(texture2d);
 		   lastname = std::move(str.C_Str());
 		 
@@ -272,13 +273,17 @@ DirectX::XMFLOAT3 GameMeshImport::GetVectorFactorAssimp(std::string key, unsigne
 
 float GameMeshImport::GetNumerFactorAssimp(std::string key, unsigned int type, unsigned int slot, aiMaterial* ai_material, float defalut_value/*=0.0f*/)
 {
-	float value;
+	float value=0.0f;
 
-	if (ai_material->Get(key.c_str(),type,slot,value)==AI_SUCCESS)
+	if (ai_material->Get(key.c_str(),type,slot, defalut_value)==AI_SUCCESS)
 	{
-		return value;
+		return defalut_value;
 	}
-	return defalut_value;
+	else
+	{
+		return defalut_value;
+	}
+	
 }
 
 
