@@ -22,9 +22,11 @@ cbuffer EyePostionCB : register(b3)
     float4 EyePos;
     coffies cosf[9];
     float3 BaseColorFactor;
+    float emissive_factor;
     float metalic_factor;
     float rouhgness_factor;
-    float emissive_factor;
+    float padingf;
+    float padingf1;
 };
 
 
@@ -87,19 +89,19 @@ float4 main(PixelShaderInput input) : SV_TARGET
 
     
 
-    float metalness = MetalicMap.Sample(BaseColorSampler,input.Tex).b*metalic_factor;
+    float metalness = MetalicMap.Sample(MetalicSampler, input.Tex).b* metalic_factor;
+    metalness = clamp(metalness,0.0,1.0);
 
 
+    float roughness = RoughnessMap.Sample(MetalicSampler, input.Tex).g * rouhgness_factor;
+    roughness = clamp(roughness,0.04,1.0);
+    
+    float3 diffusecolor = basecolor.rgb * (1.0 - Fdielectirc);
 
-    float roughness = RoughnessMap.Sample(BaseColorSampler,input.Tex).g*rouhgness_factor;
-
-  
-    float3 diffusecolor = basecolor.rgb * (float3(1.0) - Fdielectirc);
-
-    diffusecolor *= 1 - metalness;
+    diffusecolor *= 1.0 - metalness;
 
     float3 specularColor = lerp(Fdielectirc,basecolor,metalness);
-    float3 F0 = lerp(Fdielectirc, basecolor, metalness);
+    
 
     float3 reflectance = max(max(specularColor.r, specularColor.g), specularColor.b);
 
@@ -109,10 +111,11 @@ float4 main(PixelShaderInput input) : SV_TARGET
 
     float3 v = normalize(EyePos.xyz - input.PosW);
 
-    float3 n1 = NormalMap.Sample(BaseColorSampler, input.Tex).rgb;
+    float3 n1 = NormalMap.Sample(NormalSampler, input.Tex).rgb;
+    input.NormalW = normalize(input.NormalW);
     float3 n = NormalSampleToWorldSpace(n1, input.NormalW, input.TangentW);
 
-    float ambient = AmbientMap.Sample(BaseColorSampler, input.Tex).r;
+    float ambient = AmbientMap.Sample(AmbientSampler, input.Tex).r;
     
     PBRInfo pbrInputs;
 
@@ -167,22 +170,30 @@ float4 main(PixelShaderInput input) : SV_TARGET
     /////Return IBL Env map;
     uint width, height, specularTextureLevels;
     specularTexture.GetDimensions(0, width, height, specularTextureLevels);
-
+   
 
     float3 specularIrradiance = SRGBtoLINEAR(specularTexture.SampleLevel(BaseColorSampler, reflection, roughness * specularTextureLevels)).rgb;
 
 
     float2 val = float2(pbrInputs.NdotV, 1.0 - pbrInputs.perceptualRoughness);
 
-    float2 IspecularBRDF = SRGBtoLINEAR(specularBRDF_LUT.Sample(spBRDF_Sampler, val)).rgb;
+    float2 IspecularBRDF = SRGBtoLINEAR(specularBRDF_LUT.Sample(spBRDF_Sampler, val)).rg;
 
 
 
     float3 specularIBL = (pbrInputs.specularColor * IspecularBRDF.x + IspecularBRDF.y) * specularIrradiance;
 
-    float3 ambientLighting =(diffuseIBL + specularIBL);
+    float3 IndirectLighting = (diffuseIBL + specularIBL);
 
-    float3 totallighting = (ambientLighting + directLighting) * ambient;
+    float3 totallighting = (IndirectLighting + directLighting) ;
 
-    return float4(totallighting, 1.0f);
+
+    float3 totallightingWithAo = lerp(totallighting, totallighting * ambient, 1.0f);
+
+    float3 emissive = SRGBtoLINEAR(EmissiveMap.Sample(BaseColorSampler, input.Tex)).rgb * emissive_factor;
+  
+    totallightingWithAo += emissive;
+ 
+      
+    return float4(totallightingWithAo, 1.0f);
 }

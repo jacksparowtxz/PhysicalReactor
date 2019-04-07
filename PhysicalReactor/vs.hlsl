@@ -47,7 +47,7 @@ PixelShaderInput main(VertexShaderInput input)
 	pos = mul(pos, Projection);
 	output.PosH = pos;
     output.NormalW = mul(input.NormalL, (float3x3) WorldInvTranspose);
-    output.Tex = mul(float4(input.Tex, 1.0f, 1.0f),TexTransform).xy;
+    output.Tex = mul(float4(input.Tex, 0.0f, 1.0f), TexTransform).xy;
     output.TangentW = mul(input.TangentL, (float3x3) ModelWorld);
 
 	return output;  
