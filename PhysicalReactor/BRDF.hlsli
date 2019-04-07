@@ -90,6 +90,15 @@ float GGX_NDF(PBRInfo pbrInputs)
     return roughnessSq / (PI * f * f);
 }
 
+float GGX_NDF1(float cosLh, float roughness)
+{
+    float alpha = roughness * roughness;
+    float alphaSq = alpha * alpha;
+
+    float denom = (cosLh * cosLh) * (alphaSq - 1.0) + 1.0;
+    return alphaSq / (PI * denom * denom);
+}
+
 ////////////////////////Specular G
 ////////////////////GGC_Schlick
 ////////////////////                n¡¤v
