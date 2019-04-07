@@ -3,7 +3,7 @@
 ////////////spherical-harmonics Function
 /////////////////////////////////////"Simplifying-Spherical-Harmonics-for-Lighting"Dr Graham Hazel
 
-float3 spherical_harmonics_Irrandice(coffies Coefficients[15], float3 n)
+float3 spherical_harmonics_Irrandice(coffies Coefficients[9], float3 n)
 {
 
     float SHbasis[9];
@@ -355,7 +355,8 @@ float4 SRGBtoLINEAR(float4 srgbIn)
 {
 #ifdef MANUAL_SRGB
      #ifdef SRGB_FAST_APPROXIMATION
-        float3 linOUT=pow(srgbIn.xyz,float3(2.2));
+        float3 S2L=(2.2, 2.2, 2.2);
+        float3 linOUT = pow(srgbIn.xyz, S2L);
      #else
         float3 bless=step(float3(0.04045),srgbIn.xyz);
         float3 linOUT=mix(srgbIn.xyz/float3(12.92),pow(srgbIn.xyz+float3(0.055),float3(2.4)),bless);
