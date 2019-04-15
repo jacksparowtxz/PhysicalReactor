@@ -40,7 +40,7 @@ struct PixelShaderInput
     float2 Tex : TEXCOORD;
 };
 
-static const float3 Fdielectirc = 0.04;
+static const float3 Fdielectirc = float3(0.04, 0.04, 0.04);
 static const float epsilon = 0.00001;
  
 Texture2D BaseColorMap : register(t0);
@@ -103,7 +103,7 @@ float4 main(PixelShaderInput input) : SV_TARGET
     float3 specularColor = lerp(Fdielectirc,basecolor,metalness);
     
 
-    float3 reflectance = max(max(specularColor.r, specularColor.g), specularColor.b);
+    float reflectance = max(max(specularColor.r, specularColor.g), specularColor.b);
 
     float reflectance90 = clamp(reflectance*25.0,0.0,1.0);
     float3 specularEnvironmentR0 = specularColor.rgb;
@@ -113,7 +113,7 @@ float4 main(PixelShaderInput input) : SV_TARGET
 
     float3 n1 = NormalMap.Sample(NormalSampler, input.Tex).rgb;
     input.NormalW = normalize(input.NormalW);
-    float3 n = NormalSampleToWorldSpace(n1, input.NormalW, input.TangentW);
+    float3 n = NormalSampleToWorldSpace(n1, input.NormalW, input.TangentW); 
 
     float ambient = AmbientMap.Sample(AmbientSampler, input.Tex).r;
     
@@ -158,7 +158,7 @@ float4 main(PixelShaderInput input) : SV_TARGET
         float3 diffuseContrib = (1.0 - F) * LambertDiffuse(pbrInputs);
 
         float3 specContrib = F * G * D / (4.0 * NdotL * NdotV);
-        float3 color = NdotL * Lradiance * Intensity * (diffuseContrib + specContrib);
+        float3 color = NdotL * Lradiance * 1.0 * (diffuseContrib + specContrib);
     
 
 
@@ -171,7 +171,7 @@ float4 main(PixelShaderInput input) : SV_TARGET
     uint width, height, specularTextureLevels;
     specularTexture.GetDimensions(0, width, height, specularTextureLevels);
    
-
+    //
     float3 specularIrradiance = SRGBtoLINEAR(specularTexture.SampleLevel(BaseColorSampler, reflection, roughness * specularTextureLevels)).rgb;
 
 
@@ -184,6 +184,7 @@ float4 main(PixelShaderInput input) : SV_TARGET
     float3 specularIBL = (pbrInputs.specularColor * IspecularBRDF.x + IspecularBRDF.y) * specularIrradiance;
 
     float3 IndirectLighting = (diffuseIBL + specularIBL);
+    //
 
     float3 totallighting = (IndirectLighting + directLighting) ;
 
