@@ -150,7 +150,7 @@ void TextureLoader::LoadTexture(const string & TexturefileName, Texture2D* LoadM
 		 int comp = 0;
 		 const int channelcount = 4;
 		 unsigned char* data = stbi_load(szname, &width, &height, &comp, channelcount);
-
+		 
 		 TextureDesc desc;
 		 desc.ArraySize = 1;
 		 desc.BindFlags = BIND_SHADER_RESOURCE | BIND_RENDER_TARGET;

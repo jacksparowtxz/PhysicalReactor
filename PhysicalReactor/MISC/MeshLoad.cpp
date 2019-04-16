@@ -16,7 +16,7 @@ GameMeshImport::~GameMeshImport()
 
 void GameMeshImport::Import(std::string pFile, StaticMesh* loadmesh)
 {
-
+	//
 	Assimp::Importer importer;
 	const aiScene* pScene = importer.ReadFile(pFile.c_str(), aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_ConvertToLeftHanded);
 	if (pScene)
@@ -119,7 +119,7 @@ void GameMeshImport::ProcessMesh(aiMesh* mesh, const aiScene* scene, StaticMesh 
 		InitSamplerDesc.ComparsionFunc = COMPARSION_NEVER;
 		InitSamplerDesc.MaxAnisotropy = 16;
 
-		Maps = loadMaterialTexture(material, aiTextureType_DIFFUSE, "texture_diffuse",true);
+		Maps = loadMaterialTexture(material, aiTextureType_DIFFUSE, "texture_diffuse",false);
 		if (Maps.size() > 0)
 		{
 			meshmaterial->BaseColorMap = std::move(Maps[0]);
