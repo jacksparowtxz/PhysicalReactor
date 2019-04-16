@@ -89,11 +89,11 @@ float4 main(PixelShaderInput input) : SV_TARGET
 
     
 
-    float metalness = MetalicMap.Sample(MetalicSampler, input.Tex).b* metalic_factor;
+    float metalness = MetalicMap.Sample(MetalicSampler, input.Tex).g* metalic_factor;
     metalness = clamp(metalness,0.0,1.0);
 
 
-    float roughness = RoughnessMap.Sample(MetalicSampler, input.Tex).g * rouhgness_factor;
+    float roughness = RoughnessMap.Sample(MetalicSampler, input.Tex).b * rouhgness_factor;
     roughness = clamp(roughness,0.04,1.0);
     
     float3 diffusecolor = basecolor.rgb * (1.0 - Fdielectirc);
@@ -158,7 +158,7 @@ float4 main(PixelShaderInput input) : SV_TARGET
         float3 diffuseContrib = (1.0 - F) * LambertDiffuse(pbrInputs);
 
         float3 specContrib = F * G * D / (4.0 * NdotL * NdotV);
-        float3 color = NdotL * Lradiance * 1.0 * (diffuseContrib + specContrib);
+        directLighting = NdotL * Lradiance * 1.0 * (diffuseContrib + specContrib);
     
 
 
@@ -175,8 +175,8 @@ float4 main(PixelShaderInput input) : SV_TARGET
     float3 specularIrradiance = SRGBtoLINEAR(specularTexture.SampleLevel(BaseColorSampler, reflection, roughness * specularTextureLevels)).rgb;
 
 
-    float2 val = float2(pbrInputs.NdotV, 1.0 - pbrInputs.perceptualRoughness);
-
+    //float2 val = float2(pbrInputs.perceptualRoughness,1-pbrInputs.NdotV);
+    float2 val = float2(pbrInputs.NdotV, 1 - pbrInputs.perceptualRoughness);
     float2 IspecularBRDF = SRGBtoLINEAR(specularBRDF_LUT.Sample(spBRDF_Sampler, val)).rg;
 
 
@@ -184,9 +184,9 @@ float4 main(PixelShaderInput input) : SV_TARGET
     float3 specularIBL = (pbrInputs.specularColor * IspecularBRDF.x + IspecularBRDF.y) * specularIrradiance;
 
     float3 IndirectLighting = (diffuseIBL + specularIBL);
-    //
+    //(IndirectLighting + directLighting);
 
-    float3 totallighting = (IndirectLighting + directLighting) ;
+    float3 totallighting = directLighting;
 
 
     float3 totallightingWithAo = lerp(totallighting, totallighting * ambient, 1.0f);
