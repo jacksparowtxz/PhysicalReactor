@@ -18,7 +18,16 @@ void GameMeshImport::Import(std::string pFile, StaticMesh* loadmesh)
 {
 	//
 	Assimp::Importer importer;
-	const aiScene* pScene = importer.ReadFile(pFile.c_str(), aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_ConvertToLeftHanded);
+	const aiScene* pScene = importer.ReadFile(pFile.c_str(), 
+		aiProcess_CalcTangentSpace |
+		aiProcess_Triangulate |
+		aiProcess_SortByPType |
+		aiProcess_PreTransformVertices |
+		aiProcess_GenNormals |
+		aiProcess_GenUVCoords |
+		aiProcess_OptimizeMeshes |
+		aiProcess_Debone |
+		aiProcess_ValidateDataStructure);
 	if (pScene)
 	{
 		directory = pFile.substr(0, pFile.find_last_of('/'));
@@ -84,6 +93,11 @@ void GameMeshImport::ProcessMesh(aiMesh* mesh, const aiScene* scene, StaticMesh 
 		vector.z = mesh->mTangents[i].z;
 		vertex.Tangent = vector;
 		
+		vector.x = mesh->mBitangents[i].x;
+		vector.y = mesh->mBitangents[i].y;
+		vector.z = mesh->mBitangents[i].z;
+		vertex.Bitgent= vector;
+		
 		if (mesh->mTextureCoords[0])
 		{
 			XMFLOAT2 uv;
@@ -119,7 +133,7 @@ void GameMeshImport::ProcessMesh(aiMesh* mesh, const aiScene* scene, StaticMesh 
 		InitSamplerDesc.ComparsionFunc = COMPARSION_NEVER;
 		InitSamplerDesc.MaxAnisotropy = 16;
 
-		Maps = loadMaterialTexture(material, aiTextureType_DIFFUSE, "texture_diffuse",false);
+		Maps = loadMaterialTexture(material, aiTextureType_DIFFUSE, "texture_diffuse",true);
 		if (Maps.size() > 0)
 		{
 			meshmaterial->BaseColorMap = std::move(Maps[0]);
@@ -188,6 +202,16 @@ void GameMeshImport::ProcessMesh(aiMesh* mesh, const aiScene* scene, StaticMesh 
 			meshmaterial->SetMetalicSampler(InitSamplerDesc);
 		}
 
+
+		Maps = loadMaterialTexture(material, aiTextureType_UNKNOWN, "texture_unkonw");
+		if (Maps.size() > 0)
+		{
+			meshmaterial->RoughnessMap = std::move(Maps[0]);
+			meshmaterial->RoughnessMapName = std::move(string("texture_roughness"));
+			meshmaterial->SetRoughnessSampler(InitSamplerDesc);
+		}
+
+
 		Maps = loadMaterialTexture(material, aiTextureType_LIGHTMAP, "texture_ambient");
 		if (Maps.size() > 0)
 		{
@@ -212,7 +236,7 @@ void GameMeshImport::ProcessMesh(aiMesh* mesh, const aiScene* scene, StaticMesh 
 	loadmesh->Meshs.push_back(loadsub);
 }
 
-std::vector<Texture2D*> GameMeshImport::loadMaterialTexture(aiMaterial* mat, aiTextureType type, std::string name,bool SRGB /*= false*/)
+std::vector<Texture2D*> GameMeshImport::loadMaterialTexture(aiMaterial* mat, aiTextureType type, std::string name,bool SRGB /*= false*/,UINT levels/*=0*/)
 {
 	vector<Texture2D*> textures;
 	for (uint32_t i = 0; i < mat->GetTextureCount(type); i++)
@@ -227,7 +251,7 @@ std::vector<Texture2D*> GameMeshImport::loadMaterialTexture(aiMaterial* mat, aiT
 		   filename = directory + "/" + filename;
 		   std::string name = std::string(filename.begin(), filename.end());
 		   const char* szname = name.c_str();
-		   TextureManager::GetLoader()->LoadTexture(name, texture2d,false,SRGB);
+		   TextureManager::GetLoader()->LoadTexture(name, texture2d,false,SRGB,levels);
 		   textures.push_back(texture2d);
 		   lastname = std::move(str.C_Str());
 		 

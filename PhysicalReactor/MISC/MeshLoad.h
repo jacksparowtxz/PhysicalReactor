@@ -28,7 +28,7 @@ public:
 private:
 	void ProcessNode(aiNode* node, const aiScene* scene, StaticMesh* loadmesh);
 	void ProcessMesh(aiMesh* mesh, const aiScene* scene, StaticMesh* loadmesh);
-	vector<Texture2D*> loadMaterialTexture(aiMaterial* mat, aiTextureType type, std::string name,bool SRGB=false);
+	vector<Texture2D*> loadMaterialTexture(aiMaterial* mat, aiTextureType type, std::string name,bool SRGB=false,UINT levels=0);
 	//Texture2D  TextureFormFile(const char* path, std::string directory);
 	std::string directory;
 	static std::string lastname;

@@ -85,8 +85,9 @@ namespace PRE
 			Renderer::GetDevice()->BindSampler(PS_STAGE, SpLutSampler, 15, 1);
 			Renderer::GetDevice()->BindResource(PS_STAGE, sky->EnvMap, 15);
 			Renderer::GetDevice()->BindResource(PS_STAGE, sky->SpLutMap, 16);
-			DirectX::XMStoreFloat4x4(&m_constantBufferData[ThreadID]->model, XMMatrixTranspose(XMMatrixRotationX(-90.0)));
-			DirectX::XMStoreFloat4x4(&m_constantBufferData[ThreadID]->worldinvtranspose, MathHelper::InverseTranspose(std::move(XMMatrixTranspose(XMMatrixRotationX(-90.0)))));
+			Renderer::GetDevice()->BindResource(PS_STAGE, sky->IradMap, 17);
+			DirectX::XMStoreFloat4x4(&m_constantBufferData[ThreadID]->model, XMMatrixTranspose(XMMatrixRotationX(0.0)));
+			DirectX::XMStoreFloat4x4(&m_constantBufferData[ThreadID]->worldinvtranspose, MathHelper::InverseTranspose(std::move(XMMatrixTranspose(XMMatrixRotationX(0.0)))));
 			
 			for (SubMesh* submesh : sm->Meshs)
 			{
@@ -521,7 +522,7 @@ namespace PRE
 
 		shcoeffs COFS[9];
 
-		TextureManager::GetLoader()->MakeIadiacneMap(COFS);
+		/*TextureManager::GetLoader()->MakeIadiacneMap(COFS,nullptr,nullptr);
 
 		for (uint32_t i = 0; i < 9; ++i)
 		{
@@ -533,7 +534,7 @@ namespace PRE
 						m_constantBufferData[i]->COFS[i] = m_constantBufferData[0]->COFS[0];
 					}
 				}
-		}
+		}*/
 
 		UINT screenwidth = Renderer::GetDevice()->GetScreenWidth();
 		UINT screenheight = Renderer::GetDevice()->GetScreenHeight();

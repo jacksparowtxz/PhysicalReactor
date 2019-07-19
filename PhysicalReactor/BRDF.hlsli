@@ -197,6 +197,12 @@ float3 Fresnel_Schlick(PBRInfo pbrInputs)
 
 }
 
+float3 Fresnel_Schlick1(float3 F0, float cosTheta)
+{
+    return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 5.0);
+
+}
+
 float3 Fresnel(float3 SpecularColor, float3 V,float3 H)
 {
     float3 SpecularColorSqrt = sqrt(clamp(float3(0, 0, 0), float3(0.99, 0.99, 0.99), SpecularColor));

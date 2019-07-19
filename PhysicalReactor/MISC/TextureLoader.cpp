@@ -20,7 +20,7 @@ TextureLoader::~TextureLoader()
 
 }
 
-void TextureLoader::LoadTexture(const string & TexturefileName, Texture2D* LoadMap,bool UseCubeMap, bool srgb /*= false*/)
+void TextureLoader::LoadTexture(const string & TexturefileName, Texture2D* LoadMap,bool UseCubeMap, bool srgb /*= false*/,UINT levels /*= 0*/)
 {
 
 	 std::string exname=GetExtensionFromFileName(TexturefileName);
@@ -153,7 +153,12 @@ void TextureLoader::LoadTexture(const string & TexturefileName, Texture2D* LoadM
 		 
 		 TextureDesc desc;
 		 desc.ArraySize = 1;
-		 desc.BindFlags = BIND_SHADER_RESOURCE | BIND_RENDER_TARGET;
+		 desc.BindFlags = BIND_SHADER_RESOURCE;
+		 if (levels == 0 )
+		 {
+			 desc.BindFlags |= BIND_RENDER_TARGET;
+			 desc.MiscFlags = RESOURCE_MISC_GENERATE_MIPS;
+		 }
 		 if (!srgb)
 		 {
 			 desc.BindFlags |= BIND_UNORDERED_ACCESS;
@@ -162,8 +167,8 @@ void TextureLoader::LoadTexture(const string & TexturefileName, Texture2D* LoadM
 		 desc.Format = srgb?FORMAT_R8G8B8A8_UNORM_SRGB:FORMAT_R8G8B8A8_UNORM;
 		 desc.Height = static_cast<uint32_t>(height);
 		 desc.Width = static_cast<uint32_t>(width);
-		 desc.MipLevels = (UINT)log2(max(width, height));
-		 desc.MiscFlags = RESOURCE_MISC_GENERATE_MIPS;
+		 desc.MipLevels =(levels==0)?(UINT)log2(max(width, height))+1 : levels;
+		 desc.SampleDesc.Count = 1;
 		 desc.Usage = USAGE_DEFAULT;
 
 		 UINT mipwidth = width;
@@ -177,7 +182,11 @@ void TextureLoader::LoadTexture(const string & TexturefileName, Texture2D* LoadM
 		 LoadMap->RequestIndepentShaderReourcesForMIPs(true);
 		 LoadMap->RequesIndenpentUnorderedAccessResoucesForMips(true);
 		 HRESULT hr = Renderer::GetDevice()->CreateTexture2D(&desc, InitData, &LoadMap);
-		 Renderer::GetDevice()->GenerateMips_Immediate(LoadMap);
+		 if (levels == 0)
+		 {
+			 Renderer::GetDevice()->GenerateMips_Immediate(LoadMap);
+		 }
+		
 #ifdef PREDEBUG
 		 Renderer::GetDevice()->SetName(LoadMap, TexturefileName);
 #endif // DEBUG
@@ -282,9 +291,48 @@ void TextureLoader::MakeRadianceMap(Texture2D* ufilterEnvmap,Texture2D* env_Map,
 	
 }
 
-void TextureLoader::MakeIadiacneMap(shcoeffs* cofs)
+void TextureLoader::MakeIadiacneMap(shcoeffs* cofs, Texture2D* Env_map, Texture2D* Iradiacnemap)
 {
 	///////////USE spherical_harmonics
-	PRE::LoadSH("sh_coefficient.txt",cofs);
+//	PRE::LoadSH("sh_coefficient.txt",cofs);
+
+	TextureDesc CubeMapdesc;
+	CubeMapdesc.ArraySize = 6;
+	CubeMapdesc.BindFlags = BIND_SHADER_RESOURCE | BIND_UNORDERED_ACCESS;
+	CubeMapdesc.CPUAccessFlags = 0;
+	CubeMapdesc.Format = FORMAT_R16G16B16A16_FLOAT;
+	CubeMapdesc.Height = static_cast<uint32_t>(32);
+	CubeMapdesc.Width = static_cast<uint32_t>(32);
+	CubeMapdesc.MipLevels = 1;
+	CubeMapdesc.MiscFlags = RESOURCE_MISC_TEXTURECUBE;
+	CubeMapdesc.Usage = USAGE_DEFAULT;
+	CubeMapdesc.SampleDesc.Count = 1;
+	CubeMapdesc.SampleDesc.Quality = 0;
+	Iradiacnemap->RequesIndenpentUnorderedAccessResoucesForMips(true);
+	Renderer::GetDevice()->CreateTexture2D(&CubeMapdesc, nullptr, &Iradiacnemap);
+
+	Sampler Computersampler;
+	SamplerDesc computerdesc;
+	computerdesc.Filter = FILTER_MIN_MAG_MIP_LINEAR;
+	computerdesc.AddressU = TEXTURE_ADDRESS_WRAP;
+	computerdesc.AddressV = TEXTURE_ADDRESS_WRAP;
+	computerdesc.AddressW = TEXTURE_ADDRESS_WRAP;
+	computerdesc.MaxAnisotropy = 1;
+	computerdesc.MinLOD = 0;
+	computerdesc.MaxLOD = FLT_MAX;
+	Renderer::GetDevice()->CreateSamplerState(&computerdesc, &Computersampler);
+
+
+	Renderer::GetDevice()->BindResource_Immediate(CS_STAGE,Env_map,0);
+	Renderer::GetDevice()->BindSampler_Immediate(CS_STAGE,&Computersampler,0,1);
+	Renderer::GetDevice()->BindUAV_Immediate(CS_STAGE, Iradiacnemap,0);
+
+	ComputerPSO ComputeIrad;
+	ComputeIrad.desc.cs = Renderer::shadermanager->GetComputerShader("IraMap.hlsl");
+	Renderer::GetDevice()->BindComputerPSO_Immediate(&ComputeIrad);
+
+	Renderer::GetDevice()->Dispatch_Immediate(1,1,6);
+	Renderer::GetDevice()->BindComputerPSO_Immediate(nullptr);
+
 
 }

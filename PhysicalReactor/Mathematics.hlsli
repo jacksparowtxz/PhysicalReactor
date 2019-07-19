@@ -355,7 +355,7 @@ float4 SRGBtoLINEAR(float4 srgbIn)
 {
 #ifdef MANUAL_SRGB
      #ifdef SRGB_FAST_APPROXIMATION
-        float3 S2L=(2.2, 2.2, 2.2);
+        float3 S2L=float3(2.2, 2.2, 2.2);
         float3 linOUT = pow(srgbIn.xyz, S2L);
      #else
         float3 bless=step(float3(0.04045),srgbIn.xyz);

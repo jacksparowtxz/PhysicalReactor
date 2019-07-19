@@ -2,7 +2,7 @@
 #define Epsilon=0.00001f
 #define MAX_LIGHTS 4
 #define MANUAL_SRGB 1
-#define SRGB_FAST_APPROXIMATION 0
+#define SRGB_FAST_APPROXIMATION 1
 struct coffies
 {
     float r;

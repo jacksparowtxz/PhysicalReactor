@@ -38,6 +38,7 @@ StaticMesh::~StaticMesh()
 	for (auto sm : Meshs)
 	{
 		sm->~SubMesh();
+		SAFE_DELETE(sm);
 	}
 }
 

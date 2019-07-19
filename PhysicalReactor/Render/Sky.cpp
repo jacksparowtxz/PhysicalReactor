@@ -38,6 +38,9 @@ Sky::Sky()
 	rsdesc.DepthCilpEnable = true;
 	rsdesc.ScissorEnable = false;
 	Skymaterial->SetRasterState(rsdesc);
+
+	IradMap = new Texture2D;
+	TextureManager::GetLoader()->MakeIadiacneMap(nullptr,EnvMap,IradMap);
 }
 
 
@@ -46,4 +49,5 @@ Sky::~Sky()
 	SAFE_DELETE(SkyMesh);
 	SAFE_DELETE(EnvMap);
 	SAFE_DELETE(SpLutMap);
+	SAFE_DELETE(IradMap);
 }

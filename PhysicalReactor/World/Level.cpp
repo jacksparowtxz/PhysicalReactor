@@ -12,6 +12,7 @@ Level::~Level()
 	for (auto sm : StaticMeshList)
 	{
 		sm->~StaticMesh();
+		SAFE_DELETE(sm);
 	}
 }
 

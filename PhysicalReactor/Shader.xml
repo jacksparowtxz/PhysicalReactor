@@ -13,6 +13,7 @@
       <Name>equirect2cube.hlsl</Name>
 	  <Name>PerfilterEnvMap.hlsl</Name>
 	  <Name>SpLUT.hlsl</Name>
+	  <Name>IraMap.hlsl</Name>
 	  <Name>resolveMSAADepthStencilCS.hlsl</Name>
 	</TYPE>
 </root>

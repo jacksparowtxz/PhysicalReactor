@@ -57,7 +57,7 @@ void GameWorld::MouseButtonUp()
 void GameWorld::BuildScene()
 {
 	
-	AddLight(LightType::DIRECTIONALLIGHT, { 1.0f,-1.0f,1.0f }, { 0.0f,0.0f,0.0f });
+	AddLight(LightType::DIRECTIONALLIGHT, { 1.0f,1.0f,1.0f }, { 1.0f,1.0f,1.0f });
 	
 	
 	AddStaticMesh("Re/DamagedHelmet.gltf");
