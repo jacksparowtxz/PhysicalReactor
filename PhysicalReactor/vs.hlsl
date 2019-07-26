@@ -54,5 +54,6 @@ PixelShaderInput main(VertexShaderInput input)
    // output.TangentW = mul(input.TangentL, (float3x3) ModelWorld);
     float3x3 TBN = float3x3(input.TangentL, input.Bitangent, input.NormalL);
     output.tangentBasis = transpose(TBN);
+  
 	return output;  
 }

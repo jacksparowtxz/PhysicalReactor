@@ -1685,7 +1685,7 @@ void RenderDevice_DX11::SetResolution(int width, int height)
 
 	ScreenViewport.MinDepth = 0.0f;
 	ScreenViewport.MaxDepth = 1.0f;
-
+	
 	for (int i = 0; i < JobScheduler::NumThreads; i++)
 	{
 		deviceContexts[i]->RSSetViewports(1, &ScreenViewport);
@@ -1867,9 +1867,10 @@ HRESULT RenderDevice_DX11::CreateTexture1D(const TextureDesc* pDesc, const Subre
 	 return hr;
 }
 
-HRESULT RenderDevice_DX11::CreateTexture2D(const TextureDesc* pDesc, const SubresourceData *pInitialData, Texture2D **ppTexture2D)
-{
 
+
+HRESULT RenderDevice_DX11::CreateTexture2D(const TextureDesc * pDesc, const SubresourceData * pInitialData, Texture2D ** ppTexture2D)
+{
 	if ((*ppTexture2D) == nullptr)
 	{
 		(*ppTexture2D) = new Texture2D;
@@ -1877,11 +1878,11 @@ HRESULT RenderDevice_DX11::CreateTexture2D(const TextureDesc* pDesc, const Subre
 	(*ppTexture2D)->Register(this);
 
 	(*ppTexture2D)->desc = *pDesc;
-	
-	if ((*ppTexture2D)->desc.SampleDesc.Count>1)
+
+	if ((*ppTexture2D)->desc.SampleDesc.Count > 1)
 	{
 		UINT qulity;
-		device->CheckMultisampleQualityLevels(ConvertFormat((*ppTexture2D)->desc.Format),(*ppTexture2D)->desc.SampleDesc.Count,&qulity);
+		device->CheckMultisampleQualityLevels(ConvertFormat((*ppTexture2D)->desc.Format), (*ppTexture2D)->desc.SampleDesc.Count, &qulity);
 		(*ppTexture2D)->desc.SampleDesc.Quality = qulity - 1;
 		if (qulity == 0)
 		{
@@ -1898,7 +1899,7 @@ HRESULT RenderDevice_DX11::CreateTexture2D(const TextureDesc* pDesc, const Subre
 	{
 		UINT dataCount = pDesc->ArraySize* max(1, pDesc->MipLevels);
 		data = new D3D11_SUBRESOURCE_DATA[dataCount];
-		for (UINT slice=0;slice<dataCount;++slice)
+		for (UINT slice = 0; slice < dataCount; ++slice)
 		{
 			data[slice] = ConvertSubresourceData(pInitialData[slice]);
 		}
@@ -1911,16 +1912,15 @@ HRESULT RenderDevice_DX11::CreateTexture2D(const TextureDesc* pDesc, const Subre
 	SAFE_DELETE_ARRAY(data);
 	if (FAILED(hr))
 		return hr;
-	 
-	if ((*ppTexture2D)->desc.MipLevels==0)
+
+	if ((*ppTexture2D)->desc.MipLevels == 0)
 	{
 		(*ppTexture2D)->desc.MipLevels = (UINT)log2(max((*ppTexture2D)->desc.Width, (*ppTexture2D)->desc.Height));
 	}
 
- 	CreateRenderTargetView(*ppTexture2D);
+	CreateRenderTargetView(*ppTexture2D);
 	CreateShaderResourceView(*ppTexture2D);
 	CreateDepthStencilView(*ppTexture2D);
-
 	if (desc.BindFlags & D3D11_BIND_UNORDERED_ACCESS)
 	{
 		if (desc.ArraySize > 1)
@@ -1935,7 +1935,7 @@ HRESULT RenderDevice_DX11::CreateTexture2D(const TextureDesc* pDesc, const Subre
 			if ((*ppTexture2D)->indepentdentUAVMIPs)
 			{
 				UINT miplevels = (*ppTexture2D)->desc.MipLevels;
-				for (UINT i=0;i<miplevels;++i)
+				for (UINT i = 0; i < miplevels; ++i)
 				{
 					uav_desc.Texture2DArray.MipSlice = i;
 
@@ -1946,7 +1946,7 @@ HRESULT RenderDevice_DX11::CreateTexture2D(const TextureDesc* pDesc, const Subre
 			}
 			{
 				uav_desc.Texture2DArray.MipSlice = 0;
-				hr = device->CreateUnorderedAccessView((ID3D11Resource*)(*ppTexture2D)->resource,&uav_desc, (ID3D11UnorderedAccessView**)&(*ppTexture2D)->UAV);
+				hr = device->CreateUnorderedAccessView((ID3D11Resource*)(*ppTexture2D)->resource, &uav_desc, (ID3D11UnorderedAccessView**)&(*ppTexture2D)->UAV);
 			}
 		}
 		else
@@ -1958,7 +1958,7 @@ HRESULT RenderDevice_DX11::CreateTexture2D(const TextureDesc* pDesc, const Subre
 			if ((*ppTexture2D)->indepentdentUAVMIPs)
 			{
 				UINT miplevels = (*ppTexture2D)->desc.MipLevels;
-				for (UINT i=0;i<miplevels;++i)
+				for (UINT i = 0; i < miplevels; ++i)
 				{
 					uav_desc.Texture2D.MipSlice = i;
 
@@ -1969,7 +1969,7 @@ HRESULT RenderDevice_DX11::CreateTexture2D(const TextureDesc* pDesc, const Subre
 			}
 			{
 				uav_desc.Texture2D.MipSlice = 0;
-				hr = device->CreateUnorderedAccessView((ID3D11Resource*)(*ppTexture2D)->resource,&uav_desc, (ID3D11UnorderedAccessView**)&(*ppTexture2D)->UAV);
+				hr = device->CreateUnorderedAccessView((ID3D11Resource*)(*ppTexture2D)->resource, &uav_desc, (ID3D11UnorderedAccessView**)&(*ppTexture2D)->UAV);
 			}
 		}
 		assert(SUCCEEDED(hr) && "UnorderedAccessView of the Texture2D could not be created!");
@@ -2640,6 +2640,7 @@ HRESULT RenderDevice_DX11::CreateDepthStencilView(Texture2D* pTexture)
 
 	return hr;
 }
+
 
 
 HRESULT RenderDevice_DX11::CreateInputLayout(const VertexLayoutDesc *pInputElementDescs, UINT NumElements, GraphicBlob* blob, VertexLayout *pInputLayout)
@@ -4579,7 +4580,7 @@ void RenderDevice_DX11::CopyTexture2D_Immediate(Texture2D* pDest, Texture2D* pSr
 
 void RenderDevice_DX11::CopyTexture2D_Region_Immediate(Texture2D* pDest, UINT dstMip, UINT dstX, UINT dstY, Texture2D* pSrc, UINT srcMip, UINT ArraySize)
 {
-	const UINT subresourceIndex = D3D11CalcSubresource(0,ArraySize, (UINT)log2(max(pDest->GetDesc().Width, pDest->GetDesc().Height)));
+	const UINT subresourceIndex = D3D11CalcSubresource(0,ArraySize,PRE::numMipmapLevels(pDest->GetDesc().Width, pDest->GetDesc().Height));
 	ImmediatedeviceContext->CopySubresourceRegion((ID3D11Resource*)pDest->resource, subresourceIndex, dstX, dstY, 0,
 		(ID3D11Resource*)pSrc->resource, subresourceIndex, nullptr);
 }
@@ -4623,7 +4624,7 @@ void RenderDevice_DX11::UpdateBuffer_Immediate(GPUBuffer* buffer, const void* da
 		box.front = 1;
 		box.right = static_cast<UINT>(datasize);
 		box.top = 0;
-		ImmediatedeviceContext->UpdateSubresource((ID3D11Resource*)buffer->resource, 0, &box, data, 0, 0);
+		ImmediatedeviceContext->UpdateSubresource((ID3D11Resource*)buffer->resource, 0, &box,data, 0, 0);
 	}
 }
 

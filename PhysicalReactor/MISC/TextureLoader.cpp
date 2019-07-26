@@ -145,9 +145,9 @@ void TextureLoader::LoadTexture(const string & TexturefileName, Texture2D* LoadM
 	 else
 	 {
 		 const char* szname = TexturefileName.c_str();
-		 int width = 0;
-		 int height = 0;
-		 int comp = 0;
+		 int width;
+		 int height;
+		 int comp;
 		 const int channelcount = 4;
 		 unsigned char* data = stbi_load(szname, &width, &height, &comp, channelcount);
 		 
@@ -164,14 +164,15 @@ void TextureLoader::LoadTexture(const string & TexturefileName, Texture2D* LoadM
 			 desc.BindFlags |= BIND_UNORDERED_ACCESS;
 		 }
 		 desc.CPUAccessFlags = 0;
-		 desc.Format = srgb?FORMAT_R8G8B8A8_UNORM_SRGB:FORMAT_R8G8B8A8_UNORM;
+		 desc.Format = srgb?FORMAT_R8G8B8A8_UNORM_SRGB: FORMAT_R8G8B8A8_UNORM;
 		 desc.Height = static_cast<uint32_t>(height);
 		 desc.Width = static_cast<uint32_t>(width);
-		 desc.MipLevels =(levels==0)?(UINT)log2(max(width, height))+1 : levels;
+		 desc.MipLevels = (levels== 0) ? PRE::numMipmapLevels(width, height) : levels;
 		 desc.SampleDesc.Count = 1;
 		 desc.Usage = USAGE_DEFAULT;
 
 		 UINT mipwidth = width;
+		
 		 SubresourceData* InitData = new SubresourceData[desc.MipLevels];
 		 for (UINT mip = 0; mip < desc.MipLevels; ++mip)
 		 {
@@ -232,6 +233,8 @@ void TextureLoader::MakeRadianceMap(Texture2D* ufilterEnvmap,Texture2D* env_Map,
 	CubeMapdesc.SampleDesc.Count = 1;
 	CubeMapdesc.SampleDesc.Quality = 0;
 	env_Map->RequesIndenpentUnorderedAccessResoucesForMips(true);
+	env_Map->RequestIndepentShaderReourcesForMIPs(true);
+	env_Map->RequestIndepentShaderResourceArraySlices(true);
 	Renderer::GetDevice()->CreateTexture2D(&CubeMapdesc,nullptr,&env_Map);
 
 	for (int arraySlice = 0; arraySlice < 6; ++arraySlice)
@@ -252,7 +255,7 @@ void TextureLoader::MakeRadianceMap(Texture2D* ufilterEnvmap,Texture2D* env_Map,
 	Renderer::GetDevice()->BindResource_Immediate(CS_STAGE,ufilterEnvmap,0);
 	Renderer::GetDevice()->BindSampler_Immediate(CS_STAGE, &Computersampler, 0,1);
 	
-	int texturelevel = (UINT)log2(max(env_Map->GetDesc().Width, env_Map->GetDesc().Height));
+	int texturelevel = PRE::numMipmapLevels(env_Map->GetDesc().Width, env_Map->GetDesc().Height)-1;
 	const float deltaRoughness = 1.0f / PRE::fmax(float(texturelevel), 1.0f);
 	for (UINT level = 1, size = 512; level < texturelevel; ++level, size /= 2)
 	{

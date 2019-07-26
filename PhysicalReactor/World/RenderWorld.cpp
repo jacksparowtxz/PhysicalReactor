@@ -44,8 +44,9 @@ namespace PRE
 		rendertarget->Clear_Immediate(false, 0);
 		rendertarget->Set(false, 0);  
 		
-		//Renderer::GetDevice()->PresentBegin();
-		//Renderer::GetDevice()->SetResolution(1920, 1080);
+	/*	Renderer::GetDevice()->PresentBegin();
+		Renderer::GetDevice()->SetResolution(1904, 1021);
+		Renderer::GetDevice()->BindBackBufferRenderTargets(nullptr);*/
 	
 		
 		RenderWireframe(false);
@@ -77,10 +78,10 @@ namespace PRE
 			UINT pNumberConstant4 = 64;
 			Renderer::GetDevice()->BindConstantBuffer(PS_STAGE, constbuffer, 1, &pFisrtConstant4, &pNumberConstant4);
 			UINT pFisrtConstant5 = 80;
-			UINT pNumberConstant5 = 16;
+			UINT pNumberConstant5 = 64;
 			Renderer::GetDevice()->BindConstantBuffer(PS_STAGE, constbuffer, 2, &pFisrtConstant5, &pNumberConstant5);
 			UINT pFisrtConstant6 = 96;
-			UINT pNumberConstant6 = 64;
+			UINT pNumberConstant6 = 16;
 			Renderer::GetDevice()->BindConstantBuffer(PS_STAGE, constbuffer, 3, &pFisrtConstant6, &pNumberConstant6);
 			Renderer::GetDevice()->BindSampler(PS_STAGE, SpLutSampler, 15, 1);
 			Renderer::GetDevice()->BindResource(PS_STAGE, sky->EnvMap, 15);
@@ -148,7 +149,7 @@ namespace PRE
 
 		auto tonemapping = [&, this]() {
 			rendertarget->Deactivate();
-			Renderer::GetDevice()->SetResolution(1920, 1080);
+			Renderer::GetDevice()->SetResolution(1904, 1021);
 			Texture2D *sdt = rendertarget->depthstencil->GetTextureResolvedMSAA();
 			Renderer::GetDevice()->BindBackBufferRenderTargets(sdt);
 			GraphicPSO PSO;

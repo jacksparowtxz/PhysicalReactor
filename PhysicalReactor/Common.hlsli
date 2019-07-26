@@ -3,13 +3,6 @@
 #define MAX_LIGHTS 4
 #define MANUAL_SRGB 1
 #define SRGB_FAST_APPROXIMATION 1
-struct coffies
-{
-    float r;
-    float g;
-    float b;
-    float a;
-};
 
 
 struct DirectionalLight

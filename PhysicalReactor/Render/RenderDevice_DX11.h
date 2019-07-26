@@ -82,7 +82,7 @@ namespace PRE
 
 		virtual HRESULT CreateBuffer(const GPUBufferDesc *pDesc, const SubresourceData* pInitialData, GPUBuffer *ppBuffer) override;
 		virtual HRESULT CreateTexture1D(const TextureDesc* pDesc, const SubresourceData *pInitialData, Texture1D **ppTexture1D) override;
-		virtual HRESULT CreateTexture2D(const TextureDesc* pDesc, const SubresourceData *pInitialData, Texture2D **ppTexture2D) override;
+		virtual HRESULT CreateTexture2D(const TextureDesc* pDesc, const SubresourceData* pInitialData, Texture2D**ppTexture2D) override;
 		virtual HRESULT CreateTexture3D(const TextureDesc* pDesc, const SubresourceData *pInitialData, Texture3D **ppTexture3D) override;
 		
 		virtual HRESULT CreateInputLayout(const VertexLayoutDesc *pInputElementDescs, UINT NumElements, GraphicBlob* blob, VertexLayout *pInputLayout) override;
@@ -249,5 +249,6 @@ namespace PRE
 			HRESULT CreateRenderTargetView(Texture2D* pTexture);
 			HRESULT CreateRenderTargetView(Texture3D* pTexture);
 			HRESULT CreateDepthStencilView(Texture2D* pTexture);
+		
 	};
 }

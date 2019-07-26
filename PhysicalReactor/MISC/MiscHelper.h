@@ -73,7 +73,14 @@ namespace PRE
 	//void Sleep(float milliseconds);
 	int GetDigitInPos(int num, int pos);
 	
-
+	template<typename T> static constexpr T numMipmapLevels(T width, T height)
+	{
+		T levels = 1;
+		while ((width | height) >> levels) {
+			++levels;
+		}
+		return levels;
+	}
 
 	template<typename TO, typename FROM>
 	inline TO union_cast(FROM from)

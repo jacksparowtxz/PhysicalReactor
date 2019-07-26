@@ -3,7 +3,7 @@
 ////////////spherical-harmonics Function
 /////////////////////////////////////"Simplifying-Spherical-Harmonics-for-Lighting"Dr Graham Hazel
 
-float3 spherical_harmonics_Irrandice(coffies Coefficients[9], float3 n)
+/*float3 spherical_harmonics_Irrandice(coffies Coefficients[9], float3 n)
 {
 
     float SHbasis[9];
@@ -33,7 +33,7 @@ float3 spherical_harmonics_Irrandice(coffies Coefficients[9], float3 n)
     }
 
     return color;
-}
+}*/
 
 
 
@@ -123,7 +123,7 @@ float3 sampleHemisphere(float u1, float u2)
 void ComputeBasisVector(const float3 N,out float3 S,out float3 T)
 {
     T = cross(N, float3(0.0, 1.0, 0.0));
-    T = lerp(cross(N, float3(1.0, 0.0, 0.0)), T, step(0.00001f, dot(T, T)));
+    T = lerp(cross(N, float3(1.0, 0.0, 0.0)), T, step(0.00001, dot(T, T)));
 
     T = normalize(T);
     S = normalize(cross(N, T));
@@ -368,4 +368,12 @@ float4 SRGBtoLINEAR(float4 srgbIn)
 
 
 
+}
+
+
+uint querySpecularTextureLevels(TextureCube specularTexture)
+{
+    uint width, height, levels;
+    specularTexture.GetDimensions(0, width, height, levels);
+    return levels;
 }
