@@ -85,138 +85,7 @@ SamplerState spBRDF_Sampler : register(s15);
 // (内插)颜色数据的传递函数。
 float4 main(PixelShaderInput input) : SV_TARGET
 {
-   /*float3 basecolor = BaseColorMap.Sample(BaseColorSampler, input.Tex).rgb * BaseColorFactor;
-    
- 
-    float metalness = MetalicMap.Sample(MetalicSampler, input.Tex).b; // * metalic_factor;SRGBtoLINEAR(
-    metalness = clamp(metalness,0.0,1.0);
-    float roughness =MetalicMap.Sample(MetalicSampler, input.Tex).g; // * rouhgness_factor;
-   roughness = clamp(roughness,0.04,1.0);
-    
-    float3 diffusecolor = basecolor.rgb * (1.0 - Fdielectirc);
-
-    diffusecolor *= 1.0 - metalness;
-
-    float3 specularColor = lerp(Fdielectirc,basecolor,metalness);
-    
-
-    float reflectance = max(max(specularColor.r, specularColor.g), specularColor.b);
-
-    float reflectance90 = clamp(reflectance*25.0,0.0,1.0);
-    float3 specularEnvironmentR0 = specularColor.rgb;
-    float3 specularEnvironmentR90 = float3(1.0, 1.0, 1.0) * reflectance90;
-
-    float3 v = normalize(EyePos.xyz - input.PosW);
-
-    //float3 n1 = NormalMap.Sample(NormalSampler, input.Tex).rgb;
-    //input. = normalize(input.NormalW);
-  // float3 n = NormalSampleToWorldSpace(n1, input.NormalW, input.TangentW); 
-    float3 n = normalize(2.0 * NormalMap.Sample(NormalSampler, input.Tex).rgb - 1.0);
-    n = normalize(mul(input.tangentBasis, n));
-    float ambient = AmbientMap.Sample(AmbientSampler, input.Tex).r;
-    
-    PBRInfo pbrInputs;
-
-    float3 directLighting = 0;
-  
-           //Direct Light///Temp one directionlight
-        float3 l = normalize(directionalights.direction);
-        float3 h = normalize(l + v);
-
-     
-    float3 reflection = -normalize(reflect(v, n));
    
-    float cosLo = max(0.0, dot(n, v));
-		
-	// Specular reflection vector.
-    float3 Lr = 2.0 * cosLo * n - v;
-
-    float NdotL = clamp(dot(n, l), 0.001, 1.0);
-    float NdotV = abs(dot(n, v)) + 0.001;
-    float NdotH = clamp(dot(n, h), 0.0, 1.0);
-    float LdotH = clamp(dot(l, h), 0.0, 1.0);
-    float VdotH = clamp(dot(v, h), 0.0, 1.0);
-
-    
-
-
-
-        pbrInputs.NdotL = NdotL;
-        pbrInputs.NdotV = NdotV;
-        pbrInputs.NdotH = NdotH;
-        pbrInputs.LdotH = LdotH;
-        pbrInputs.VdotH = VdotH;
-        pbrInputs.perceptualRoughness = roughness;
-        pbrInputs.metalness = metalness;
-        pbrInputs.reflectance0 = specularEnvironmentR0;
-        pbrInputs.reflectance90 = specularEnvironmentR90;
-        pbrInputs.alphaRoughness = roughness * roughness;
-        pbrInputs.diffuseColor = diffusecolor;
-        pbrInputs.specularColor = specularColor;
-
-        float3 Lradiance = directionalights.color.rgb;
-        float Intensity = directionalights.Intensity;
-
-        float3 F = Fresnel_Schlick(pbrInputs);
-
-        float D = GGX_NDF(pbrInputs);
-
-        float G = GGX_Schilck(pbrInputs);
-
-
-        float3 diffuseContrib = (1.0 - F) * LambertDiffuse(pbrInputs);
-
-    float3 specContrib = F * G *D/ (4.0 * NdotL * NdotV);
-    directLighting = NdotL * Lradiance  * (diffuseContrib+ specContrib); 
- 
-   
-
-   // float3 irradiance = spherical_harmonics_Irrandice(cosf, n);
-    float3 irradiance = iradaniceTexture.Sample(BaseColorSampler,n).rgb;
-    float3 diffuseIBL = pbrInputs.diffuseColor* irradiance;
-
-
-    /////Return IBL Env map;
-    uint width, height, specularTextureLevels;
-    specularTexture.GetDimensions(0, width, height, specularTextureLevels);
-   
-    //
-    float3 specularIrradiance = specularTexture.SampleLevel(BaseColorSampler, Lr, roughness * specularTextureLevels).rgb;
-   // float3 specularIrradiance = specularTexture.Sample(BaseColorSampler, reflection).rgb;
- 
-    float2 val = float2(pbrInputs.perceptualRoughness,1-pbrInputs.NdotV); //SRGBtoLINEAR
-   // float2 val = float2(pbrInputs.NdotV,  pbrInputs.perceptualRoughness);
-    float3 IspecularBRDF = specularBRDF_LUT.Sample(spBRDF_Sampler, val).rgb;
-
-
-
-    float3 specularIBL = (pbrInputs.specularColor * IspecularBRDF.x + IspecularBRDF.y)* specularIrradiance;
-
-    float3 IndirectLighting = specularIBL+ diffuseIBL;
-   
-    //
-
-    float3 totallighting = (IndirectLighting + directLighting);
-   
-    float3 totallightingWithAo = 0;
-    if (ambient>0)
-    {
-        totallightingWithAo = lerp(totallighting, totallighting * ambient, 1.0f);
-    }
-    else
-    {
-        totallightingWithAo = totallighting;
-
-    }
-
-    float3 emissive = SRGBtoLINEAR(EmissiveMap.Sample(BaseColorSampler, input.Tex)).rgb * emissive_factor;
-  
-    totallightingWithAo += emissive;
- 
-      
-    return float4(totallightingWithAo, 1.0);*/
-    
-
     float3 albedo = BaseColorMap.Sample(BaseColorSampler, input.Tex).rgb;
     float metalness = MetalicMap.Sample(MetalicSampler, input.Tex).b;
     float roughness = MetalicMap.Sample(MetalicSampler, input.Tex).g;
@@ -301,7 +170,7 @@ float4 main(PixelShaderInput input) : SV_TARGET
         //specularTexture.GetDimensions(0, width, height, specularTextureLevels);roughness * specularTextureLevels 
         uint specularTextureLevels=querySpecularTextureLevels(specularTexture);
         
-        float3 specularIrradiance = specularTexture.SampleLevel(MetalicSampler, Lr, roughness * 6).rgb;
+        float3 specularIrradiance = specularTexture.SampleLevel(MetalicSampler, Lr, roughness * specularTextureLevels/2).rgb;
       
 		// Split-sum approximation factors for Cook-Torrance specular BRDF.
         float3 specularBRDF = specularBRDF_LUT.Sample(spBRDF_Sampler, float2(cosLo, roughness)).rgb;
@@ -339,8 +208,8 @@ float4 main(PixelShaderInput input) : SV_TARGET
 
 
 	// Final fragment color.
-   // return float4(roughness, 0.0, 0.0, 0.0);
-    return float4(test, 1.0);
+    return float4(roughness, 0.0, 0.0, 0.0);
+    //return float4(test, 1.0);
    
 
 

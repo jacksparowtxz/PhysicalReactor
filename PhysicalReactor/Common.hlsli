@@ -39,8 +39,8 @@ struct SpotLight
     float sourceradius;
     float softsourceradius;
     float sourcelengh;
-    float pad;
-    float pad1;
+    float pad; //lightAngleScale=1.0f/max(0.001f,(cosInner-cosOuter));
+    float pad1; //lightAngleOffset=-cosOuter*angleScale;
     float pad2;
 };
 

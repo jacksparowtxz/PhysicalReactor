@@ -177,8 +177,8 @@ float gaSchlickG1(float cosTheta, float k)
 // Schlick-GGX approximation of geometric attenuation function using Smith's method (IBL version).
 float gaSchlickGGX_IBL(float cosLi, float cosLo, float roughness)
 {
-    float r = roughness;
-    float k = (r * r) / 2.0; // Epic suggests using this roughness remapping for IBL lighting.
+    float r = roughness+1.0;
+    float k = (r * r) / 8.0; // Epic suggests using this roughness remapping for IBL lighting.
     return gaSchlickG1(cosLi, k) * gaSchlickG1(cosLo, k);
 }
 
