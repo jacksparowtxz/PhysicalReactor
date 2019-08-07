@@ -5,6 +5,12 @@ float3 LambertDiffuse(PBRInfo pbrInputs)
     return pbrInputs.diffuseColor / PI;
 }
 
+
+float3 LambertDiffuse1(float3 diffuseColor)
+{
+    return diffuseColor / PI;
+}
+
 ////////////////////////////////https://blog.selfshadow.com/publications/s2012-shading-course/burley/s2012_pbs_disney_brdf_notes_v3.pdf
 float3 BurleyDiffuse(float3 diffusecolor,float roughness,float3 v,float3 h,float3 n)
 {
@@ -299,3 +305,5 @@ float Vis_Cloth(float3 n, float3 v, float3 l)
 //ks=F;
 //kd=1-ks;
 //float3 kd = lerp(float3(1, 1, 1) - F, float3(0, 0, 0), metalness);
+
+

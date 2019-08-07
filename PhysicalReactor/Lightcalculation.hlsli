@@ -1,4 +1,4 @@
-#include"Common.hlsli"
+#include"BRDF.hlsli"
 
 
 ///https://seblagarde.files.wordpress.com/2015/07/course_notes_moving_frostbite_to_pbr_v32.pdf
@@ -28,9 +28,8 @@ float getAngleAtt(float3 normalizedLightVector,float3 lightDir,float lightAngleS
     return attenuation;
 }
 
-float CalculationDirectionalLight(DirectionalLight dl,float3 WorldPos,float3 BRDF,float ndotl,float3 camerapos,float3 N)
+float3 CalculationDirectionalLightSpecular(DirectionalLight dl, float3 V, float roughness, float3 F0, float3 N)
 {
-    float3 V = normalize(camerapos - WorldPos);
     float3 R = reflect(-V, N);
     float3 D = dl.direction;
     float sunAngularRadius = 0.017f;
@@ -41,31 +40,101 @@ float CalculationDirectionalLight(DirectionalLight dl,float3 WorldPos,float3 BRD
     float3 S = R - DdotR * D;
     float3 L = DdotR < d ? normalize(d * D + normalize(S) * r) : R;
 
+    float NdotV = abs(dot(N, V));
+    float NdotL = saturate(dot(N, L));
+    float3 H = normalize(V + L);
+    float LdotH = saturate(dot(L, H));
+    float NdotH = clamp(dot(N, H), 0.0, 0.99999995);
 
+
+    float3 fresnel = Fresnel_Schlick1(F0, LdotH);
+    float geo = gaSchlickGGX_IBL(NdotL, NdotV, roughness);
+    float ndf = GGX_NDF1(NdotH, roughness);
+    float3 specularBRDF1 = fresnel * ndf * geo / PI;
+    return specularBRDF1;
 
 }
 
-float3 CalculationSpotlight(SpotLight spotlight, float3 WorldPos, float3 BRDF,float ndotl)
+float3 CalculationDirectionalLightDiffuse(DirectionalLight dl, float3 V, float metalness, float3 F0, float3 N)
+{
+   
+    float3 R = reflect(-V, N);
+    float3 D = dl.direction;
+    float sunAngularRadius = 0.017f;
+    float r = sin(sunAngularRadius);
+    float d = cos(sunAngularRadius);
+  
+    float DdotR = dot(D, R);
+    float3 S = R - DdotR * D;
+    float3 L = DdotR < d ? normalize(d * D + normalize(S) * r) : R;
+
+    float3 H = normalize(V + L);
+    float LdotH = saturate(dot(L, H));
+  
+
+
+    float3 fresnel = Fresnel_Schlick1(F0, LdotH);
+    float3 kd = lerp(float3(1, 1, 1) - fresnel, float3(0, 0, 0), metalness);
+    return kd;
+}
+
+
+float3 CalculationSpotlight(SpotLight spotlight, float3 WorldPos,float3 N,float3 V,float NdotV,float3 F0,float roughness,float3 diffusecolor,float metalness)
 {
     float3 unnormalizedLightVector = spotlight.position - WorldPos;
     float3 L = normalize(unnormalizedLightVector);
+
+   
+    const float3 H = normalize(V + L);
+    const float LdotH = saturate(dot(L, H));
+    const float NdotH = saturate(dot(N, H));
+    const float NdotL = saturate(dot(N, L));
+
+    float3 fresnel = Fresnel_Schlick1(F0, LdotH);
+    float geo = gaSchlickGGX_IBL(NdotL, NdotV, roughness);
+    float ndf = GGX_NDF1(NdotH, roughness);
+    
+   
+    float3 kd = lerp(float3(1, 1, 1) - fresnel, float3(0, 0, 0), metalness);
+
+    float3 BRDF = (fresnel * geo * ndf / PI) + LambertDiffuse1(diffusecolor)*kd;
+
     float att = 1;
     float lightinvsqrattradius = 1.0f / (spotlight.attenuationradius * spotlight.attenuationradius);
     att *= getDistanceAtt(unnormalizedLightVector, lightinvsqrattradius);
     att *= getAngleAtt(L, spotlight.rotation, spotlight.pad, spotlight.pad1);
-    float3 luminace = (BRDF * spotlight.Intensity * att * ndotl) * spotlight.color.xyz/(PI);
 
+    
+
+
+    float3 luminace = (BRDF * spotlight.Intensity * att * NdotL) * spotlight.color.xyz / (PI);
+    return luminace;
 
 }
 
 
-float3 CalculationPointlight(PointLight pointlight, float3 WorldPos, float3 BRDF, float ndotl)
+float3 CalculationPointlight(PointLight pointlight, float3 WorldPos, float3 N, float3 V, float NdotV,float3 F0, float roughness, float3 diffusecolor, float metalness)
 {
     float3 unnormalizedLightVector = pointlight.position - WorldPos;
     float3 L = normalize(unnormalizedLightVector);
+
+  
+    const float3 H = normalize(V + L);
+    const float LdotH = saturate(dot(L, H));
+    const float NdotH = saturate(dot(N, H));
+    const float NdotL = saturate(dot(N, L));
+
+    float3 fresnel = Fresnel_Schlick1(F0, LdotH);
+    float geo = gaSchlickGGX_IBL(NdotL, NdotV, roughness);
+    float ndf = GGX_NDF1(NdotH, roughness);
+
+    float3 kd = lerp(float3(1, 1, 1) - fresnel, float3(0, 0, 0), metalness);
+    float3 BRDF = (fresnel * geo * ndf / PI) + LambertDiffuse1(diffusecolor) * kd;
+
     float att = 1;
     float lightinvsqrattradius = 1.0f / (pointlight.attenuationraduis * pointlight.attenuationraduis);
     att *= getDistanceAtt(unnormalizedLightVector, lightinvsqrattradius);
     att *= getAngleAtt(L, pointlight.rotation, 1, 0);
-    float3 luminace = (BRDF * pointlight.Intensity * att * ndotl) * pointlight.color.xyz / (4*PI);
+    float3 luminace = (BRDF * pointlight.Intensity * att * NdotL) * pointlight.color.xyz / (4 * PI);
+    return luminace;
 }

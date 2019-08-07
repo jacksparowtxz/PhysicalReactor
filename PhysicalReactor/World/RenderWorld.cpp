@@ -75,12 +75,12 @@ namespace PRE
 			UINT pNumberConstant3 = 64;
 			Renderer::GetDevice()->BindConstantBuffer(PS_STAGE, constbuffer, 0, &pFisrtConstant3, &pNumberConstant3);
 			UINT pFisrtConstant4 = 64;
-			UINT pNumberConstant4 = 64;
+			UINT pNumberConstant4 = 4096;
 			Renderer::GetDevice()->BindConstantBuffer(PS_STAGE, constbuffer, 1, &pFisrtConstant4, &pNumberConstant4);
-			UINT pFisrtConstant5 = 80;
-			UINT pNumberConstant5 = 64;
+			UINT pFisrtConstant5 = 336;
+			UINT pNumberConstant5 = 4096;
 			Renderer::GetDevice()->BindConstantBuffer(PS_STAGE, constbuffer, 2, &pFisrtConstant5, &pNumberConstant5);
-			UINT pFisrtConstant6 = 96;
+			UINT pFisrtConstant6 = 592;
 			UINT pNumberConstant6 = 16;
 			Renderer::GetDevice()->BindConstantBuffer(PS_STAGE, constbuffer, 3, &pFisrtConstant6, &pNumberConstant6);
 			Renderer::GetDevice()->BindSampler(PS_STAGE, SpLutSampler, 15, 1);
@@ -413,10 +413,12 @@ namespace PRE
 		for (uint32_t j = 0; j < level->SpotLightList.size(); j++)
 		{
 			m_constantBufferData[0]->spotlights[j] = *level->SpotLightList[j];
+			m_constantBufferData[0]->NumOfSpotLights= level->SpotLightList.size();
 		}
 		for (uint32_t j = 0; j < level->PointLightList.size(); j++)
 		{
 			m_constantBufferData[0]->pointlights[j] = *level->PointLightList[j];
+			m_constantBufferData[0]->NumOfPointLights= level->PointLightList.size();
 		}
 		for (uint32_t j = 1; j < 9; j++)
 		{
