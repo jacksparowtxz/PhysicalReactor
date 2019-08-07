@@ -2,18 +2,18 @@
 
 cbuffer DirectionalLightCB : register(b0)
 {
-    DirectionalLight directionalights[MAX_LIGHTS];
+    DirectionalLight directionalights[4];
 };
 
 
 cbuffer PointLightCB : register(b1)
 {
-    PointLight pointlights[MAX_LIGHTS];
+    PointLight pointlights[4];
 };
 
 cbuffer SpotLightCB : register(b2)
 {
-    SpotLight spotlights[MAX_LIGHTS];
+    SpotLight spotlights[4];
 };
 
 cbuffer EyePostionCB : register(b3)
@@ -113,13 +113,13 @@ float4 main(PixelShaderInput input) : SV_TARGET
     ///Directional light
     {
 
-      float3 DLdiffuse=CalculationDirectionalLightDiffuse(directionalights[0], V, metalness, specularEnvironmentR0, N) * LambertDiffuse1(diffusecolor);
+      float3 DLdiffuse=CalculationDirectionalLightDiffuse(directionalights[0], V, metalness, specularEnvironmentR0, N,roughness) * LambertDiffuse1(diffusecolor);
       float3 DLspecular = CalculationDirectionalLightSpecular(directionalights[0],V,roughness,specularEnvironmentR0,N);
       float3 Lradiance = (directionalights[0].Intensity, directionalights[0].Intensity, directionalights[0].Intensity);
      
       float3 L= -directionalights[0].direction;
       float NdotL = max(0.0, dot(N, L));
-      directLighting = (DLdiffuse + DLspecular) * Lradiance * NdotL;
+        directLighting = (DLdiffuse + DLspecular) * Lradiance * NdotL;
 
     }
     //spot light
@@ -142,6 +142,7 @@ float4 main(PixelShaderInput input) : SV_TARGET
     float ambient = AmbientMap.Sample(AmbientSampler, input.Tex).r;
 	// Ambient lighting (IBL).
     float3 ambientLighting;
+    float3 test;
 	{
 
 
@@ -179,7 +180,8 @@ float4 main(PixelShaderInput input) : SV_TARGET
 		// Total ambient lighting contribution.
         ambientLighting = diffuseIBL + specularIBL;
       
-    
+        test = specularIrradiance;
+
     }
 
     
@@ -196,14 +198,14 @@ float4 main(PixelShaderInput input) : SV_TARGET
 
     }
 
-    float3 emissive = EmissiveMap.Sample(BaseColorSampler, input.Tex).rgb * emissive_factor;
+    float3 emissive = EmissiveMap.Sample(BaseColorSampler, input.Tex).rgb;
   
     totallightingWithAo += emissive;
  
 
     
     return float4(totallightingWithAo, 1.0);
-
+   // return float4(test, 1.0);
 
   /*  float3 albedo = BaseColorMap.Sample(BaseColorSampler, input.Tex).rgb;
     float metalness = MetalicMap.Sample(MetalicSampler, input.Tex).b;

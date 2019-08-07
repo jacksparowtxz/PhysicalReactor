@@ -10,7 +10,7 @@ Sky::Sky()
 	Skymaterial = new Material("SkyMaterial");
 	AssetManager::GetDevice()->Import("Re/smsphere.obj",SkyMesh);
 	SkyCubeMap = new Texture2D;
-	TextureManager::GetLoader()->LoadTexture("Re/DarkStorm4K.hdr", SkyCubeMap,true);//DarkStorm4K  SkyhighFluffycloudField4k
+	TextureManager::GetLoader()->LoadTexture("Re/SkyhighFluffycloudField4k.hdr", SkyCubeMap,true);//DarkStorm4K  SkyhighFluffycloudField4k
 	
 	EnvMap=new Texture2D;
 	SpLutMap = new Texture2D;

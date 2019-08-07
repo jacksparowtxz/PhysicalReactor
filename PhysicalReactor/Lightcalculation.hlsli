@@ -40,8 +40,9 @@ float3 CalculationDirectionalLightSpecular(DirectionalLight dl, float3 V, float 
     float3 S = R - DdotR * D;
     float3 L = DdotR < d ? normalize(d * D + normalize(S) * r) : R;
 
-    float NdotV = abs(dot(N, V));
+    float NdotV = abs(dot(N, V)) + 1e-5f;
     float NdotL = saturate(dot(N, L));
+    
     float3 H = normalize(V + L);
     float LdotH = saturate(dot(L, H));
     float NdotH = clamp(dot(N, H), 0.0, 0.99999995);
@@ -55,26 +56,28 @@ float3 CalculationDirectionalLightSpecular(DirectionalLight dl, float3 V, float 
 
 }
 
-float3 CalculationDirectionalLightDiffuse(DirectionalLight dl, float3 V, float metalness, float3 F0, float3 N)
+float3 CalculationDirectionalLightDiffuse(DirectionalLight dl, float3 V, float metalness, float3 F0, float3 N,float roughness)
 {
    
-    float3 R = reflect(-V, N);
+   
     float3 D = dl.direction;
-    float sunAngularRadius = 0.017f;
-    float r = sin(sunAngularRadius);
-    float d = cos(sunAngularRadius);
+ 
   
-    float DdotR = dot(D, R);
-    float3 S = R - DdotR * D;
-    float3 L = DdotR < d ? normalize(d * D + normalize(S) * r) : R;
-
-    float3 H = normalize(V + L);
-    float LdotH = saturate(dot(L, H));
   
+   
+    float NdotV = abs(dot(N, V)) + 1e-5f;
+    float NdotD = saturate(dot(N, D));
+    
+   
+    
+    float3 H = normalize(V + D);
+    float LdotH = saturate(dot(D, H));
+    float NdotH = clamp(dot(N, H), 0.0, 0.99999995);
 
 
-    float3 fresnel = Fresnel_Schlick1(F0, LdotH);
-    float3 kd = lerp(float3(1, 1, 1) - fresnel, float3(0, 0, 0), metalness);
+    float3 fresnel = Fr_DisneyDiffuse(NdotV, NdotD, LdotH, roughness * roughness); //Fresnel_Schlick1(F0, LdotH);
+    float3 kd = fresnel;
+    //lerp(float3(1, 1, 1) - fresnel, float3(0, 0, 0), metalness);
     return kd;
 }
 

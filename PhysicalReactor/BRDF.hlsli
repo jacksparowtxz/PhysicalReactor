@@ -11,6 +11,7 @@ float3 LambertDiffuse1(float3 diffuseColor)
     return diffuseColor / PI;
 }
 
+
 ////////////////////////////////https://blog.selfshadow.com/publications/s2012-shading-course/burley/s2012_pbs_disney_brdf_notes_v3.pdf
 float3 BurleyDiffuse(float3 diffusecolor,float roughness,float3 v,float3 h,float3 n)
 {
@@ -197,9 +198,9 @@ float3 F_Simple(float SpecularColor)
 
 //////////////////////////////////
 ///////////////////////http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.50.2297&rep=rep1&type=pdf
-float3 Fresnel_Schlick(PBRInfo pbrInputs)
+float3 Fresnel_Schlick(float3 reflectance0, float reflectance90,float VdotH)
 {
-    return pbrInputs.reflectance0 + (pbrInputs.reflectance90 - pbrInputs.reflectance0) * pow(clamp(1.0 - pbrInputs.VdotH, 0.0, 1.0), 5.0); ////////////////saturate(50.0f * specularcolor.g) * Fc + (1 - Fc) * specularcolor;
+    return reflectance0 + (reflectance90 - reflectance0) * pow(clamp(1.0 - VdotH, 0.0, 1.0), 5.0); ////////////////saturate(50.0f * specularcolor.g) * Fc + (1 - Fc) * specularcolor;
 
 }
 
@@ -307,3 +308,14 @@ float Vis_Cloth(float3 n, float3 v, float3 l)
 //float3 kd = lerp(float3(1, 1, 1) - F, float3(0, 0, 0), metalness);
 
 
+float Fr_DisneyDiffuse(float NdotV, float NdotL, float LdotH, float linearRoughness)
+{
+    float energyBias = lerp(0.f, 0.5f, linearRoughness);
+    float energyFactor = lerp(1.0f, 1.0f / 1.51f, linearRoughness);
+    float fd90 = energyBias + 2.0 * LdotH * LdotH * linearRoughness;
+    float3 f0 = float3(1.0f, 1.0f, 1.0f);
+    float lightScatter = Fresnel_Schlick(f0, fd90, NdotL).r;
+    float viewScatter = Fresnel_Schlick(f0, fd90, NdotV).r;
+    
+    return lightScatter * viewScatter * energyFactor;
+}

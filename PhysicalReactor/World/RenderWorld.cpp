@@ -75,12 +75,12 @@ namespace PRE
 			UINT pNumberConstant3 = 64;
 			Renderer::GetDevice()->BindConstantBuffer(PS_STAGE, constbuffer, 0, &pFisrtConstant3, &pNumberConstant3);
 			UINT pFisrtConstant4 = 64;
-			UINT pNumberConstant4 = 4096;
+			UINT pNumberConstant4 = 64;
 			Renderer::GetDevice()->BindConstantBuffer(PS_STAGE, constbuffer, 1, &pFisrtConstant4, &pNumberConstant4);
-			UINT pFisrtConstant5 = 336;
-			UINT pNumberConstant5 = 4096;
+			UINT pFisrtConstant5 = 80;
+			UINT pNumberConstant5 = 64;
 			Renderer::GetDevice()->BindConstantBuffer(PS_STAGE, constbuffer, 2, &pFisrtConstant5, &pNumberConstant5);
-			UINT pFisrtConstant6 = 592;
+			UINT pFisrtConstant6 = 96;
 			UINT pNumberConstant6 = 16;
 			Renderer::GetDevice()->BindConstantBuffer(PS_STAGE, constbuffer, 3, &pFisrtConstant6, &pNumberConstant6);
 			Renderer::GetDevice()->BindSampler(PS_STAGE, SpLutSampler, 15, 1);
