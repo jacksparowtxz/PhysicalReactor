@@ -28,6 +28,26 @@ StaticMesh::StaticMesh() :directory(""), aabb(nullptr)
 
 }
 
+StaticMesh::StaticMesh(XMFLOAT3 pos, XMFLOAT3 rot, XMFLOAT3 scale) :directory(""), aabb(nullptr)
+{
+	XMFLOAT3 zero = { 0,0,0 };
+	XMFLOAT4 Id = { 0,0,0,1 };
+
+	XMVECTOR vZero = DirectX::XMLoadFloat3(&zero);
+	XMVECTOR qId = DirectX::XMLoadFloat4(&Id);
+
+	XMVECTOR qRot = XMQuaternionRotationRollPitchYaw(rot.x, rot.y, rot.z); // DirectX::XMLoadFloat4(&rot);
+	XMVECTOR vPos = DirectX::XMLoadFloat3(&pos);
+	XMVECTOR vScale = DirectX::XMLoadFloat3(&scale);
+
+	XMMATRIX mtx = XMMatrixTransformation(vZero, qId, vScale, vZero, qRot, vPos);
+	mtx = XMMatrixTranspose(mtx);
+	Transformation = new XMFLOAT4X4;
+	DirectX::XMStoreFloat4x4(Transformation, mtx);
+
+	drawkey = new DrawKey;
+}
+
 
 StaticMesh::~StaticMesh()
 {

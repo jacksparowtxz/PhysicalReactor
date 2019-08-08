@@ -29,19 +29,17 @@ struct PointLight
 
 struct SpotLight
 {
-    float4 color;
+    float4 colorAndIntensity;
     float3 position;
-    float Intensity;
-    float3 rotation;
     float InnerConeAngle;
+    float3 rotation;
     float OuterConeAngle;
     float attenuationradius;
     float sourceradius;
     float softsourceradius;
     float sourcelengh;
-    float pad; //lightAngleScale=1.0f/max(0.001f,(cosInner-cosOuter));
-    float pad1; //lightAngleOffset=-cosOuter*angleScale;
-    float pad2;
+    float lightAngleScale; //lightAngleScale=1.0f/max(0.001f,(cosInner-cosOuter));
+    float lightAngleOffset; //lightAngleOffset=-cosOuter*angleScale;
 };
 
 

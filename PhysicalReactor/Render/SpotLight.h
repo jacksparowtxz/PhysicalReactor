@@ -7,18 +7,17 @@ struct SpotLight
 	~SpotLight();
 	SpotLight(XMFLOAT3 Position, XMFLOAT3 Rotaion);
 	//////////////////////////////SpotLight
-	XMFLOAT3 color;
-	float OuterConeAngle;
+	XMFLOAT4 colorAndIntensity;
 	XMFLOAT3 Position;
-	float Intensity;
-	XMFLOAT3 Rotaion;
 	float InnerConeAngle;
-
+	XMFLOAT3 Rotaion;
+	float OuterConeAngle;
 	float attenuationradius;
 	float sourceradius;
 	float softsourceradius;
 	float sourcelengh;
-	
+	float lightAngleScale; //lightAngleScale=1.0f/max(0.001f,(cosInner-cosOuter));
+	float lightAngleOffset; //lightAngleOffset=-cosOuter*angleScale;
 	void SetPostion(XMFLOAT3 position);
 	void SetRotation(XMFLOAT3 rotation);
 	
@@ -34,4 +33,4 @@ struct SpotLight
 
 };
 
-//int i = sizeof(SpotLight);64
+int i = sizeof(SpotLight);

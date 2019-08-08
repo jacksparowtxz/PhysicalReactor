@@ -20,11 +20,11 @@ cbuffer EyePostionCB : register(b3)
 {
     float4 EyePos;
     float3 BaseColorFactor;
-    float NumOfSpotLights;
+    int NumOfSpotLights;
     float emissive_factor;
     float metalic_factor;
     float rouhgness_factor;
-    float NumOfPointLights;
+    int NumOfPointLights;
     float4 padingf3;
 };
 
@@ -113,13 +113,13 @@ float4 main(PixelShaderInput input) : SV_TARGET
     ///Directional light
     {
 
-      float3 DLdiffuse=CalculationDirectionalLightDiffuse(directionalights[0], V, metalness, specularEnvironmentR0, N,roughness) * LambertDiffuse1(diffusecolor);
-      float3 DLspecular = CalculationDirectionalLightSpecular(directionalights[0],V,roughness,specularEnvironmentR0,N);
-      float3 Lradiance = (directionalights[0].Intensity, directionalights[0].Intensity, directionalights[0].Intensity);
-     
+        float3 DLdiffuse = CalculationDirectionalLightDiffuse(directionalights[0], V, specularEnvironmentR0, NdotV, N, metalness) * LambertDiffuse1(diffusecolor);
+        float3 DLspecular = CalculationDirectionalLightSpecular(directionalights[0], V, roughness,NdotV,specularEnvironmentR0, N);
+      float Lradiance = directionalights[0].Intensity;
+      float LightColor = directionalights[0].color.xyz;
       float3 L= -directionalights[0].direction;
       float NdotL = max(0.0, dot(N, L));
-        directLighting = (DLdiffuse + DLspecular) * Lradiance * NdotL;
+       directLighting = (DLdiffuse + DLspecular) * Lradiance * LightColor* NdotL;
 
     }
     //spot light

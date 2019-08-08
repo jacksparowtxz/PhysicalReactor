@@ -34,7 +34,7 @@ public:
 	void MouseButtonUp();
 
 	void BuildScene();
-	void AddStaticMesh(std::string path);
+	void AddStaticMesh(std::string path, XMFLOAT3 position = {0.0f,0.0f,0.0f}, XMFLOAT3 rotation = { 0.0f,0.0f,0.0f }, XMFLOAT3 scale = { 1.0f,1.0f,1.0f });
 
 	void AddLight(LightType lighttype, XMFLOAT3 position, XMFLOAT3 rotation);
 	~GameWorld();

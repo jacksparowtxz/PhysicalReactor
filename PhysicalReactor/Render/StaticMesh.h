@@ -83,6 +83,7 @@ public:
 	DrawKey* drawkey;
 
 	StaticMesh();
+	StaticMesh(XMFLOAT3 pos, XMFLOAT3 rot, XMFLOAT3 scale);
 	~StaticMesh();
 
 	XMVECTOR GetTransInformation(int index);

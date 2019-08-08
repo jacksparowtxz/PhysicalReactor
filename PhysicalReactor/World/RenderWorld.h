@@ -48,11 +48,11 @@ namespace PRE
 		PointLight pointlights[4];//equal 4x4
 		DirectX::XMFLOAT4 EyePos;
 		XMFLOAT3 BaseColorFactor;
-		float NumOfSpotLights;
+		int NumOfSpotLights;
 		float emissive_factor;
 		float metalic_factor;
 		float Roughness_factor;
-		float NumOfPointLights;
+		int NumOfPointLights;
 		DirectX::XMFLOAT4 padding3;
 		
 
@@ -108,7 +108,7 @@ namespace PRE
 		Sky* sky;
 		Sampler* SpLutSampler;
 		Sampler* tonemappingsampler;
-
+		GPUResource* Nullresource;
 
 	};
 }
