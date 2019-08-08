@@ -1,5 +1,6 @@
 #pragma once
 #include "Light.h"
+#include "MISC/Mathhelper.h"
 struct SpotLight
 {
 
@@ -13,11 +14,16 @@ struct SpotLight
 	XMFLOAT3 Rotaion;
 	float OuterConeAngle;
 	float attenuationradius;
-	float sourceradius;
+	//float sourceradius;
 	float softsourceradius;
-	float sourcelengh;
+	//float sourcelengh;
 	float lightAngleScale; //lightAngleScale=1.0f/max(0.001f,(cosInner-cosOuter));
 	float lightAngleOffset; //lightAngleOffset=-cosOuter*angleScale;
+	/*XMFLOAT4 PAD;
+	XMFLOAT4 PAD1;
+	XMFLOAT4 PAD2;
+	float PAD3;
+	float PAD4;*/
 	void SetPostion(XMFLOAT3 position);
 	void SetRotation(XMFLOAT3 rotation);
 	
@@ -33,4 +39,4 @@ struct SpotLight
 
 };
 
-int i = sizeof(SpotLight);
+//int i = sizeof(SpotLight);

@@ -38,4 +38,4 @@ struct PointLight
 };
 
 
-//int i = sizeof(PointLight);64
+//int i = sizeof(PointLight);

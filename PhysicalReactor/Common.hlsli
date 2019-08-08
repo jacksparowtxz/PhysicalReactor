@@ -35,11 +35,16 @@ struct SpotLight
     float3 rotation;
     float OuterConeAngle;
     float attenuationradius;
-    float sourceradius;
+   // float sourceradius;
     float softsourceradius;
-    float sourcelengh;
+   // float sourcelengh;
     float lightAngleScale; //lightAngleScale=1.0f/max(0.001f,(cosInner-cosOuter));
     float lightAngleOffset; //lightAngleOffset=-cosOuter*angleScale;
+  /* float4 pad;
+     float4 pad1;
+     float4 pad2;
+     float pad3;
+     float pad4;*/
 };
 
 

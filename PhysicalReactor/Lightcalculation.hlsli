@@ -99,7 +99,7 @@ float3 CalculationSpotlight(SpotLight spotlight, float3 WorldPos,float3 N,float3
     
 
 
-    float3 luminace = (BRDF * spotlight.Intensity * att * NdotL) * spotlight.color.xyz / (PI);
+    float3 luminace = (BRDF * spotlight.colorAndIntensity.w * att * NdotL) * spotlight.colorAndIntensity.xyz / (PI);
     return luminace;
 
 }

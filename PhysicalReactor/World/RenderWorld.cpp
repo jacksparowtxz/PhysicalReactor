@@ -65,6 +65,7 @@ namespace PRE
 			PSO.desc.rs = rasterizerstate;
 			//PSO.desc.dss = defalutDSS;
 			Renderer::GetDevice()->BindGraphicsPSO(&PSO);
+			Renderer::GetDevice()->UpdateBuffer(constbuffer, m_constantBufferData[ThreadID]);
 			UINT pFisrtConstant1 = 0;
 			UINT pNumberConstant1 = 64;
 			Renderer::GetDevice()->BindConstantBuffer(VS_STAGE, constbuffer, 0, &pFisrtConstant1, &pNumberConstant1);
@@ -89,11 +90,12 @@ namespace PRE
 			Renderer::GetDevice()->BindResource(PS_STAGE, sky->IradMap, 17);
 			for (int i = 0; i < size; i++)
 			{
+				m_constantBufferData[ThreadID]->model = *sm[i]->Transformation;
+				DirectX::XMStoreFloat4x4(&m_constantBufferData[ThreadID]->worldinvtranspose, MathHelper::InverseTranspose(std::move(XMMatrixTranspose(XMMatrixRotationX(0.0)))));
+			
 				for (SubMesh* submesh : sm[i]->Meshs)
 				{
-				    m_constantBufferData[ThreadID]->model= *sm[i]->Transformation;
-					DirectX::XMStoreFloat4x4(&m_constantBufferData[ThreadID]->worldinvtranspose, MathHelper::InverseTranspose(std::move(XMMatrixTranspose(XMMatrixRotationX(0.0)))));
-					Renderer::GetDevice()->UpdateBuffer(constbuffer, m_constantBufferData[ThreadID]);
+				    
 					UINT stride = sizeof(Vertex);
 					UINT offset = 0;
 					RenderMaterial(PS_STAGE, submesh);

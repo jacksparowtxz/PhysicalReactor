@@ -58,9 +58,9 @@ void GameWorld::BuildScene()
 {
 	
 	AddLight(LightType::DIRECTIONALLIGHT, { 0.57735f, -0.57735f, 0.57735f }, { 1.0f,1.0f,1.0f });
-	AddLight(LightType::SPOTLIGHT, { 0.0f, -3.0f, 0.0f }, { 0.0f,0.0f,0.0f });
+	AddLight(LightType::SPOTLIGHT, { 0.0f, -3.0f, 0.0f }, { -90.0f,0.0f,0.0f });
 	
-	AddStaticMesh("Re/DamagedHelmet.gltf",XMFLOAT3(0.0f,0.0f,0.0f)); 
+	//AddStaticMesh("Re/DamagedHelmet.gltf",XMFLOAT3(0.0f,0.0f,0.0f)); 
 	AddStaticMesh("Re/TwoSidedPlane.gltf", XMFLOAT3(0.0f, -5.0f, 0.0f), XMFLOAT3(0.0f, 00.0f, 0.0f), XMFLOAT3(1.0f, 1.0f, 1.0f));
 	renderworld->UpdateScene(level);
 }

@@ -44,8 +44,8 @@ namespace PRE
 		DirectX::XMFLOAT4X4 pading5;
 
 		DirectionalLight directionallights[4];//equal4x4
-		SpotLight spotlights[4];//equal 4x4
 		PointLight pointlights[4];//equal 4x4
+		SpotLight spotlights[4];//equal 4x4
 		DirectX::XMFLOAT4 EyePos;
 		XMFLOAT3 BaseColorFactor;
 		int NumOfSpotLights;
@@ -55,7 +55,7 @@ namespace PRE
 		int NumOfPointLights;
 		DirectX::XMFLOAT4 padding3;
 		
-
+		
 	};
 
 

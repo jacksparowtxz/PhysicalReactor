@@ -119,7 +119,7 @@ float4 main(PixelShaderInput input) : SV_TARGET
       float LightColor = directionalights[0].color.xyz;
       float3 L= -directionalights[0].direction;
       float NdotL = max(0.0, dot(N, L));
-       directLighting = (DLdiffuse + DLspecular) * Lradiance * LightColor* NdotL;
+      // directLighting = (DLdiffuse + DLspecular) * Lradiance * LightColor* NdotL;
 
     }
     //spot light
@@ -204,7 +204,7 @@ float4 main(PixelShaderInput input) : SV_TARGET
  
 
     
-    return float4(totallightingWithAo, 1.0);
+    return float4(directLighting, 1.0);
    // return float4(test, 1.0);
 
   /*  float3 albedo = BaseColorMap.Sample(BaseColorSampler, input.Tex).rgb;
