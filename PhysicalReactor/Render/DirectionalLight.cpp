@@ -23,7 +23,7 @@ DirectionalLight::~DirectionalLight()
 DirectionalLight::DirectionalLight(XMFLOAT3 direction):Direction(direction)
 {
 	color = { 1.0f,1.0f,1.0f,1.0f };
-    Intensity=1.0f;
+    Intensity=0.0f;
 	pading={ 0.0f,0.0f,0.0f,0.0f };
 	pading1={0.0f,0.0f,0.0f,0.0f };
 }

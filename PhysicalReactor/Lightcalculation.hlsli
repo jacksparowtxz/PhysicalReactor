@@ -49,7 +49,7 @@ float3 CalculationDirectionalLightSpecular(DirectionalLight dl, float3 V, float 
 
     float3 fresnel = Fresnel_Schlick1(F0, LdotH);
     float geo = gaSchlickGGX_IBL(NdotL, NdotV, roughness*roughness);
-    float ndf = GGX_NDF1(NdotH, roughness);
+    float ndf = GGX_NDF1(NdotH, roughness * roughness);
     float3 specularBRDF1 = fresnel * ndf * geo / PI;
     return specularBRDF1;
 
@@ -94,7 +94,7 @@ float3 CalculationSpotlight(SpotLight spotlight, float3 WorldPos,float3 N,float3
     float att = 1;
     float lightinvsqrattradius = 1.0f / (spotlight.attenuationradius * spotlight.attenuationradius);
     att *= getDistanceAtt(unnormalizedLightVector, lightinvsqrattradius);
-    att *= getAngleAtt(L, spotlight.rotation, spotlight.lightAngleScale, spotlight.lightAngleOffset);
+    att *= getAngleAtt(L, -spotlight.rotation, spotlight.lightAngleScale, spotlight.lightAngleOffset);
 
     
 
@@ -117,8 +117,8 @@ float3 CalculationPointlight(PointLight pointlight, float3 WorldPos, float3 N, f
     const float NdotL = saturate(dot(N, L));
 
     float3 fresnel = Fresnel_Schlick1(F0, LdotH);
-    float geo = gaSchlickGGX_IBL(NdotL, NdotV, roughness);
-    float ndf = GGX_NDF1(NdotH, roughness);
+    float geo = gaSchlickGGX_IBL(NdotL, NdotV, roughness * roughness);
+    float ndf = GGX_NDF1(NdotH, roughness * roughness);
 
     float3 kd = lerp(float3(1, 1, 1) - fresnel, float3(0, 0, 0), metalness);
     float3 BRDF = (fresnel * geo * ndf / PI) + LambertDiffuse1(diffusecolor) * kd;

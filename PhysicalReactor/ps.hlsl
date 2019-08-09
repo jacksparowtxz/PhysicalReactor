@@ -97,36 +97,26 @@ float4 main(PixelShaderInput input) : SV_TARGET
 
     const float NdotV = abs(dot(N, V)) + 1e-5f;
 
-
-    float3 diffusecolor = albedo.rbg * (float3(1.0, 1.0, 1.0) - Fdielectirc);
-
-    diffusecolor *= 1 - metalness;
-
-    float3 specularColor = lerp(Fdielectirc, albedo.rgb, metalness);
-    float reflectance = max(max(specularColor.r, specularColor.g), specularColor.b);
-
-    float reflectance90 = clamp(reflectance * 25.0, 0.0, 1.0);
-    float3 specularEnvironmentR0 = specularColor.rgb;
-    float3 specularEnvironmentR90 = float3(1.0, 1.0, 1.0) * reflectance90;
+    float3 specularEnvironmentR0 = lerp(Fdielectirc, albedo, metalness);
 
     float3 directLighting;
     ///Directional light
     {
 
-        float3 DLdiffuse = CalculationDirectionalLightDiffuse(directionalights[0], V, specularEnvironmentR0, NdotV, N, metalness) * LambertDiffuse1(diffusecolor);
+        float3 DLdiffuse = CalculationDirectionalLightDiffuse(directionalights[0], V, specularEnvironmentR0, NdotV, N, metalness) * LambertDiffuse1(albedo);
         float3 DLspecular = CalculationDirectionalLightSpecular(directionalights[0], V, roughness,NdotV,specularEnvironmentR0, N);
-      float Lradiance = directionalights[0].Intensity;
-      float LightColor = directionalights[0].color.xyz;
-      float3 L= -directionalights[0].direction;
-      float NdotL = max(0.0, dot(N, L));
-      // directLighting = (DLdiffuse + DLspecular) * Lradiance * LightColor* NdotL;
+        float Lradiance = directionalights[0].Intensity;
+        float LightColor = directionalights[0].color.xyz;
+        float3 L= -directionalights[0].direction;
+        float NdotL = max(0.0, dot(N, L));
+        directLighting = (DLdiffuse + DLspecular) * Lradiance * LightColor* NdotL;
 
     }
     //spot light
     {
         for (int i = 0; i < NumOfSpotLights;i++)
         {
-            directLighting += CalculationSpotlight(spotlights[i], input.PosW, N, V, NdotV, specularEnvironmentR0, roughness, diffusecolor, metalness);
+            directLighting += CalculationSpotlight(spotlights[i], input.PosW, N, V, NdotV, specularEnvironmentR0, roughness, albedo, metalness);
         }
     }
 
@@ -134,7 +124,7 @@ float4 main(PixelShaderInput input) : SV_TARGET
     {
         for (int i = 0; i < NumOfPointLights;i++)
         {
-            directLighting += CalculationPointlight(pointlights[i], input.PosW, N, V, NdotV, specularEnvironmentR0, roughness, diffusecolor, metalness);
+            directLighting += CalculationPointlight(pointlights[i], input.PosW, N, V, NdotV, specularEnvironmentR0, roughness, albedo, metalness);
         }
     }
 
@@ -142,7 +132,7 @@ float4 main(PixelShaderInput input) : SV_TARGET
     float ambient = AmbientMap.Sample(AmbientSampler, input.Tex).r;
 	// Ambient lighting (IBL).
     float3 ambientLighting;
-    float3 test;
+    
 	{
 
 
@@ -180,7 +170,7 @@ float4 main(PixelShaderInput input) : SV_TARGET
 		// Total ambient lighting contribution.
         ambientLighting = diffuseIBL + specularIBL;
       
-        test = specularIrradiance;
+     
 
     }
 
@@ -204,10 +194,10 @@ float4 main(PixelShaderInput input) : SV_TARGET
  
 
     
-    return float4(directLighting, 1.0);
+    return float4(totallightingWithAo, 1.0);
    // return float4(test, 1.0);
 
-  /*  float3 albedo = BaseColorMap.Sample(BaseColorSampler, input.Tex).rgb;
+   /* float3 albedo = BaseColorMap.Sample(BaseColorSampler, input.Tex).rgb;
     float metalness = MetalicMap.Sample(MetalicSampler, input.Tex).b;
     float roughness = MetalicMap.Sample(MetalicSampler, input.Tex).g;
     metalness = clamp(metalness, 0.0, 1.0);
@@ -240,19 +230,19 @@ float4 main(PixelShaderInput input) : SV_TARGET
 
 		// Calculate angles between surface normal and various light vectors.
     float cosLi = max(0.0, dot(N, Li));
-  //  float cosLh = max(0.0, dot(N, Lh));///OLD VERSION
+    float cosLh = max(0.0, dot(N, Lh));///OLD VERSION
 
 		// Calculate Fresnel term for direct lighting. 
-  ///  float3 F = Fresnel_Schlick1(F0, max(0.0, dot(Lh, Lo)));///OLD VERSION
+    float3 F = Fresnel_Schlick1(F0, max(0.0, dot(Lh, Lo)));///OLD VERSION
 		// Calculate normal distribution for specular BRDF.
-   // float D = GGX_NDF1(cosLh, roughness);///OLD VERSION
+   float D = GGX_NDF1(cosLh, roughness);///OLD VERSION
 		// Calculate geometric attenuation for specular BRDF.
- //   float G = gaSchlickGGX_IBL(cosLi, cosLo, roughness);///OLD VERSION
+   float G = gaSchlickGGX_IBL(cosLi, cosLo, roughness);///OLD VERSION
 
 		// Diffuse scattering happens due to light being refracted multiple times by a dielectric medium.
 		// Metals on the other hand either reflect or absorb energy, so diffuse contribution is always zero.
 		// To be energy conserving we must scale diffuse BRDF contribution based on Fresnel factor & metalness.
-    float3 kd = CalculationDirectionalLightDiffuse(directionalights[0], Lo, metalness, F0, N);   //lerp(float3(1, 1, 1) - F, float3(0, 0, 0), metalness);///OLD VERSION
+    float3 kd =lerp(float3(1, 1, 1) - F, float3(0, 0, 0), metalness);///OLD VERSION
 
 		// Lambert diffuse BRDF.
 		// We don't scale by 1/PI for lighting & material units to be more convenient.
@@ -260,7 +250,7 @@ float4 main(PixelShaderInput input) : SV_TARGET
     float3 diffuseBRDF = kd * albedo;
 
 		// Cook-Torrance specular microfacet BRDF.
-    float3 specularBRDF = CalculationDirectionalLightSpecular(directionalights[0], Lo, roughness, F0, N);    //(F * D * G) / max(epsilon, 4.0 * cosLi * cosLo);///OLD VERSION
+    float3 specularBRDF =(F * D * G) / max(epsilon, 4.0 * cosLi * cosLo);///OLD VERSION
 
 		// Total contribution for this light.
     directLighting += (diffuseBRDF + specularBRDF) * Lradiance * cosLi;

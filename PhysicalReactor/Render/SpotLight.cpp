@@ -18,7 +18,7 @@ SpotLight::~SpotLight()
 SpotLight::SpotLight(XMFLOAT3 position, XMFLOAT3 rotaion) :Position(position), Rotaion(rotaion)
 {
 	colorAndIntensity = { 1.0f,1.0f,1.0f,100.0f };
-	OuterConeAngle = 58.0f;
+	OuterConeAngle = 22.0f;
 	
 	InnerConeAngle = 0.0f;
 
