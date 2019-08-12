@@ -13,20 +13,20 @@ float3 LambertDiffuse1(float3 diffuseColor)
 
 
 ////////////////////////////////https://blog.selfshadow.com/publications/s2012-shading-course/burley/s2012_pbs_disney_brdf_notes_v3.pdf
-float3 BurleyDiffuse(float3 diffusecolor,float roughness,float3 v,float3 h,float3 n)
+float3 BurleyDiffuse(float3 diffusecolor, float roughness, float3 v, float3 h, float3 n)
 {
     float VoN = dot(v, n);
     float LoN = dot(h, n);
     float d = VoN - LoN;
 
     float FD90 = 0.5 + 2 * d * d * roughness;
-    float FdV = 1 + (FD90 - 1) * pow(1 - VoN,5);
-    float FdL = 1 + (FD90 - 1) * pow(1 - LoN,5);
+    float FdV = 1 + (FD90 - 1) * pow(1 - VoN, 5);
+    float FdL = 1 + (FD90 - 1) * pow(1 - LoN, 5);
     return diffusecolor * ((1 / PI) * FdV * FdL);
 }
 
 //////////////////////////http://www1.cs.columbia.edu/~bosun/images/research/egnp06/download/appendix.pdf
-float OrenNayarDiffuseColor(float3 diffusecolor, float roughness, float3 v, float3 l,float3 n)
+float OrenNayarDiffuseColor(float3 diffusecolor, float roughness, float3 v, float3 l, float3 n)
 {
     float LdotV = dot(l, v);
     float NdotL = dot(l, n);
@@ -46,16 +46,16 @@ float OrenNayarDiffuseColor(float3 diffusecolor, float roughness, float3 v, floa
 //////////////////////////////////////////////http://research.tri-ace.com/Data/DesignReflectanceModel_notes.pdf
 //////////////////////////////////////////////
 /////////////////////////
-float3 Diffuse_Gotanda(float3 diffuseColor, float roughness, float3 V, float3 L, float3 H,float3 N)
+float3 Diffuse_Gotanda(float3 diffuseColor, float roughness, float3 V, float3 L, float3 H, float3 N)
 {
     float a = roughness * roughness;
     float a2 = a * a;
     float F0 = 0.04;
     float VoL = 2 * dot(V, H) * dot(V, H) - 1; // double angle identity
-    float Cosri = VoL - dot(N, V) * dot(N,L);
+    float Cosri = VoL - dot(N, V) * dot(N, L);
 #if 1
     float a2_13 = a2 + 1.36053;
-    float Fr = (1 - (0.542026 * a2 + 0.303573 * a) / a2_13) * (1 - pow(1 - dot(N, V), 5 - 4 * a2) / a2_13) * ((-0.733996 * a2 * a + 1.50912 * a2 - 1.16402 * a) * pow(1 - dot(N,V), 1 + rcp(39 * a2 * a2 + 1))+1);
+    float Fr = (1 - (0.542026 * a2 + 0.303573 * a) / a2_13) * (1 - pow(1 - dot(N, V), 5 - 4 * a2) / a2_13) * ((-0.733996 * a2 * a + 1.50912 * a2 - 1.16402 * a) * pow(1 - dot(N, V), 1 + rcp(39 * a2 * a2 + 1)) + 1);
 	//float Fr = ( 1 - 0.36 * a ) * ( 1 - pow( 1 - NoV, 5 - 4*a2 ) / a2_13 ) * ( -2.5 * Roughness * ( 1 - NoV ) + 1 );
     float Lm = (max(1 - 2 * a, 0) * (1 - pow(1 - dot(N, L), 5)) + min(2 * a, 1)) * (1 - 0.5 * a * (dot(N, L) - 1)) * dot(N, L);
     float Vd = (a2 / ((a2 + 0.09) * (1.31072 + 0.995584 * dot(N, V)))) * (1 - pow(1 - dot(N, L), (1 - 0.3726732 * dot(N, V) * dot(N, V)) / (0.188566 + 0.38841 * dot(N, V))));
@@ -139,7 +139,7 @@ float Vis_Implict()
 ///////////////////////////////////////////////////
 ///////////////////////////////
 ///////////////////////////////////////http://sirkan.iit.bme.hu/~szirmay/brdf6.pdf
-float Vis_Neumann(float3 n,float3 v,float3 l)
+float Vis_Neumann(float3 n, float3 v, float3 l)
 {
     return 1 / (4 * max(dot(n, l), dot(n, l)));
 }
@@ -147,7 +147,7 @@ float Vis_Neumann(float3 n,float3 v,float3 l)
 /////////////////////////////////////////
 //////////////////////////////////////////
 ////////////////////////////////////////////////http://sirkan.iit.bme.hu/~szirmay/scook.pdf
-float Vis_Kelemen(float3 v,float3 h)
+float Vis_Kelemen(float3 v, float3 h)
 {
     return rcp(4 * dot(v, h) * dot(v, h) + 1e-5);
 }
@@ -156,7 +156,7 @@ float Vis_Kelemen(float3 v,float3 h)
 ////////////////////////////////////////////
 //////////////////////////////////////////
 //////////////////////////////////////////////////////
-float Vis_Simth(float a,float3 n,float3 l,float3 v)
+float Vis_Simth(float a, float3 n, float3 l, float3 v)
 {
     float Vis_SimthV = dot(n, v) + sqrt(dot(n, v) * (dot(n, v) - dot(n, v) * a * a) + a * a);
     float Vis_SimthL = dot(n, l) + sqrt(dot(n, l) * (dot(n, l) - dot(n, l) * a * a) + a * a);
@@ -167,7 +167,7 @@ float Vis_Simth(float a,float3 n,float3 l,float3 v)
 ////////////////////////////////////
 ///////////////////////////////////
 ///////////////////////////////////////http://jcgt.org/published/0003/02/03/paper.pdf
-float Vis_SmithJointApprox(float a,float nov,float nol)
+float Vis_SmithJointApprox(float a, float nov, float nol)
 {
     float a2 = sqrt(a);
     float Vis_SimthV = nol * (nov) * (1 - a2) + a2;
@@ -184,7 +184,7 @@ float gaSchlickG1(float cosTheta, float k)
 // Schlick-GGX approximation of geometric attenuation function using Smith's method (IBL version).
 float gaSchlickGGX_IBL(float cosLi, float cosLo, float roughness)
 {
-    float r = roughness+1.0;
+    float r = roughness + 1.0;
     float k = (r * r) / 8.0; // Epic suggests using this roughness remapping for IBL lighting.
     return gaSchlickG1(cosLi, k) * gaSchlickG1(cosLo, k);
 }
@@ -198,10 +198,10 @@ float3 F_Simple(float SpecularColor)
 
 //////////////////////////////////
 ///////////////////////http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.50.2297&rep=rep1&type=pdf
-float3 Fresnel_Schlick(float3 reflectance0, float reflectance90,float VdotH)
+float3 Fresnel_Schlick(float3 F0, float NdotV, float roughness)
 {
-    return reflectance0 + (reflectance90 - reflectance0) * pow(clamp(1.0 - VdotH, 0.0, 1.0), 5.0); ////////////////saturate(50.0f * specularcolor.g) * Fc + (1 - Fc) * specularcolor;
-
+   // return reflectance0 + (reflectance90 - reflectance0) * pow(clamp(1.0 - VdotH, 0.0, 1.0), 5.0); ////////////////saturate(50.0f * specularcolor.g) * Fc + (1 - Fc) * specularcolor;
+    return F0 + (max(float3(1.0 - roughness, 1.0 - roughness, 1.0 - roughness), F0) - F0) * pow(1.0 - NdotV, 5.0);
 }
 
 float3 Fresnel_Schlick1(float3 F0, float cosTheta)
@@ -210,7 +210,7 @@ float3 Fresnel_Schlick1(float3 F0, float cosTheta)
 
 }
 
-float3 Fresnel(float3 SpecularColor, float3 V,float3 H)
+float3 Fresnel(float3 SpecularColor, float3 V, float3 H)
 {
     float3 SpecularColorSqrt = sqrt(clamp(float3(0, 0, 0), float3(0.99, 0.99, 0.99), SpecularColor));
     float3 n = (1 + SpecularColorSqrt) / (1 - SpecularColorSqrt);
@@ -225,7 +225,7 @@ SamplerState PreIntergrateGFSampler;
 
 half3 EnvBRDF(half3 Specularcolor, half rougness, float3 n, float3 v)
 {
-    float2 AB = PreIntergrateGF.SampleLevel(PreIntergrateGFSampler, float2(dot(n,v),rougness),0).rg;
+    float2 AB = PreIntergrateGF.SampleLevel(PreIntergrateGFSampler, float2(dot(n, v), rougness), 0).rg;
     float3 GF = Specularcolor * AB.x + saturate(50.0f * Specularcolor.g) * AB.y;
 
     return GF;
@@ -244,7 +244,7 @@ half3 EnvBRDFApprox(half3 Specularcolor, half rougness, float3 n, float3 v)
     float a004 = min(r.x * r.x, exp(-9.28 * dot(n, v))) * r.x + r.y;
     float2 AB = float2(-1.04, 1.04) * a004 + r.zw;
 
-    AB.y = saturate(50.0*Specularcolor.g);
+    AB.y = saturate(50.0 * Specularcolor.g);
 
     return Specularcolor * AB.x + AB.y;
 }
@@ -264,16 +264,16 @@ half EnvBRDFApproxNometal(half rougness, float3 n, float3 v)
 /////////////////////////////////////F0= specular reflectance at normal incidence;
 
 
-float GGX_SGA(float F0,float3 v,float3 n)
+float GGX_SGA(float F0, float3 v, float3 n)
 {
-    return F0 + (1.0f - F0) * pow(1.0f - dot(v,n), 5.0f);
+    return F0 + (1.0f - F0) * pow(1.0f - dot(v, n), 5.0f);
 }
 
 ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////  H for the half-vector, N for the normal, \alpha for roughness, X for the tangent and Y for the bi-tangent (in my case these are simply aligned with the x and y axes respectively).
 ////////////////////////////////////////////\ax and \ay represent roughness in the corresponding directions
 /////////////////////////////http://graphicrants.blogspot.com/2013/08/specular-brdf-reference.html
-float GGXAniso_NDF(float ax,float ay,float3 n,float3 h,float3 x,float y)
+float GGXAniso_NDF(float ax, float ay, float3 n, float3 h, float3 x, float y)
 {
     float XOH = dot(x, h);
     float YOH = dot(y, h);

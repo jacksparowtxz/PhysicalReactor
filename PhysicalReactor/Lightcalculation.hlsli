@@ -86,8 +86,10 @@ float3 CalculationSpotlight(SpotLight spotlight, float3 WorldPos,float3 N,float3
     float geo = gaSchlickGGX_IBL(NdotL, NdotV, roughness*roughness);
     float ndf = GGX_NDF1(NdotH, roughness * roughness);
     
-   
-    float3 kd = lerp(float3(1, 1, 1) - fresnel, float3(0, 0, 0), metalness);
+    float3 kS = fresnel;
+    float3 kd = 1.0 - kS;
+    kd *= 1.0 - metalness;
+    //float3 kd = lerp(float3(1, 1, 1) - fresnel, float3(0, 0, 0), metalness);
 
     float3 BRDF = (fresnel * geo * ndf / PI) + LambertDiffuse1(diffusecolor)*kd;
 
@@ -119,8 +121,10 @@ float3 CalculationPointlight(PointLight pointlight, float3 WorldPos, float3 N, f
     float3 fresnel = Fresnel_Schlick1(F0, LdotH);
     float geo = gaSchlickGGX_IBL(NdotL, NdotV, roughness * roughness);
     float ndf = GGX_NDF1(NdotH, roughness * roughness);
-
-    float3 kd = lerp(float3(1, 1, 1) - fresnel, float3(0, 0, 0), metalness);
+    float3 kS = fresnel;
+    float3 kd = 1.0 - kS;
+    kd *= 1.0 - metalness;
+   // float3 kd = lerp(float3(1, 1, 1) - fresnel, float3(0, 0, 0), metalness);
     float3 BRDF = (fresnel * geo * ndf / PI) + LambertDiffuse1(diffusecolor) * kd;
 
     float att = 1;

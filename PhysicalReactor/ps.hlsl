@@ -104,17 +104,17 @@ float4 main(PixelShaderInput input) : SV_TARGET
     {
 
         float3 DLdiffuse = CalculationDirectionalLightDiffuse(directionalights[0], V, specularEnvironmentR0, NdotV, N, metalness) * LambertDiffuse1(albedo);
-        float3 DLspecular = CalculationDirectionalLightSpecular(directionalights[0], V, roughness,NdotV,specularEnvironmentR0, N);
+        float3 DLspecular = CalculationDirectionalLightSpecular(directionalights[0], V, roughness, NdotV, specularEnvironmentR0, N);
         float Lradiance = directionalights[0].Intensity;
         float LightColor = directionalights[0].color.xyz;
-        float3 L= -directionalights[0].direction;
+        float3 L = -directionalights[0].direction;
         float NdotL = max(0.0, dot(N, L));
-        directLighting = (DLdiffuse + DLspecular) * Lradiance * LightColor* NdotL;
+        directLighting = (DLdiffuse + DLspecular) * Lradiance * LightColor * NdotL;
 
     }
     //spot light
     {
-        for (int i = 0; i < NumOfSpotLights;i++)
+        for (int i = 0; i < NumOfSpotLights; i++)
         {
             directLighting += CalculationSpotlight(spotlights[i], input.PosW, N, V, NdotV, specularEnvironmentR0, roughness, albedo, metalness);
         }
@@ -122,7 +122,7 @@ float4 main(PixelShaderInput input) : SV_TARGET
 
     //point light
     {
-        for (int i = 0; i < NumOfPointLights;i++)
+        for (int i = 0; i < NumOfPointLights; i++)
         {
             directLighting += CalculationPointlight(pointlights[i], input.PosW, N, V, NdotV, specularEnvironmentR0, roughness, albedo, metalness);
         }
@@ -132,7 +132,7 @@ float4 main(PixelShaderInput input) : SV_TARGET
     float ambient = AmbientMap.Sample(AmbientSampler, input.Tex).r;
 	// Ambient lighting (IBL).
     float3 ambientLighting;
-    
+    float3 test;
 	{
 
 
@@ -143,10 +143,12 @@ float4 main(PixelShaderInput input) : SV_TARGET
 		// Since we use pre-filtered cubemap(s) and irradiance is coming from many directions
 		// use cosLo instead of angle with light's half-vector (cosLh above).
 		// See: https://seblagarde.wordpress.com/2011/08/17/hello-world/
-        float3 F = Fresnel_Schlick1(specularEnvironmentR0, NdotV);
-
+        float3 F = Fresnel_Schlick(specularEnvironmentR0, NdotV, roughness);
+        float3 kS = F;
+        float3 kd = 1.0 - kS;
+        kd *= 1.0 - metalness;
 		// Get diffuse contribution factor (as with direct lighting).
-        float3 kd = lerp(1.0 - F, 0.0, metalness);
+        //float3 kd = lerp(1.0 - F, 0.0, metalness);
 
 		// Irradiance map contains exitant radiance assuming Lambertian BRDF, no need to scale by 1/PI here either.
         float3 diffuseIBL = kd * albedo * irradiance;
@@ -154,7 +156,7 @@ float4 main(PixelShaderInput input) : SV_TARGET
 		// Sample pre-filtered specular reflection environment at correct mipmap level., roughness * specularTextureLevels
 
 	  // Specular reflection vector.
-        float3 Lr = 2.0 *NdotV * N - V;
+        float3 Lr = 2.0 * NdotV * N - V;
 
 
         uint specularTextureLevels = querySpecularTextureLevels(specularTexture);
@@ -170,12 +172,12 @@ float4 main(PixelShaderInput input) : SV_TARGET
 		// Total ambient lighting contribution.
         ambientLighting = diffuseIBL + specularIBL;
       
-     
+        test = diffuseIBL;
 
     }
 
     
-    float3 totallighting = (ambientLighting + directLighting);
+    float3 totallighting = ambientLighting + directLighting;
    
     float3 totallightingWithAo = 0;
     if (ambient > 0)
@@ -194,8 +196,8 @@ float4 main(PixelShaderInput input) : SV_TARGET
  
 
     
+    //return float4(totallightingWithAo, 1.0);
     return float4(totallightingWithAo, 1.0);
-   // return float4(test, 1.0);
 
    /* float3 albedo = BaseColorMap.Sample(BaseColorSampler, input.Tex).rgb;
     float metalness = MetalicMap.Sample(MetalicSampler, input.Tex).b;

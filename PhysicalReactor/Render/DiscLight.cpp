@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "DiscLight.h"
 
 DiscLight::DiscLight() :color({ 1.0f,1.0f,1.0f,1.0f }), Position({ 1.0f,1.0f,1.0f }), Intensity(10.f), Rotaion({ 0.f,0.f,0.f }),
@@ -9,7 +10,7 @@ DiscLight::~DiscLight()
 {
 }
 
-DiscLight::DiscLight(XMFLOAT3 position, XMFLOAT3 rotaion) :Position(std::move(position)), Rotaion(std::move(rotation))
+DiscLight::DiscLight(XMFLOAT3 position, XMFLOAT3 rotation) :Position(std::move(position)), Rotaion(std::move(rotation))
 {
 	color = { 1.0f,1.0f,1.0f,1.0f };
 	Intensity = 8.0f;
