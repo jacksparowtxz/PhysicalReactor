@@ -181,6 +181,7 @@
     <ClInclude Include="Render\Camera.h" />
     <ClInclude Include="Render\DepthStencilTarget.h" />
     <ClInclude Include="Render\DirectionalLight.h" />
+    <ClInclude Include="Render\DiscLight.h" />
     <ClInclude Include="Render\DrawKey.h" />
     <ClInclude Include="Render\GraphicEnum.h" />
     <ClInclude Include="Render\GraphicsDescriptors.h" />
@@ -188,6 +189,7 @@
     <ClInclude Include="Render\Light.h" />
     <ClInclude Include="Render\Material.h" />
     <ClInclude Include="Render\PointLight.h" />
+    <ClInclude Include="Render\RectangleLight.h" />
     <ClInclude Include="Render\Renderable.h" />
     <ClInclude Include="Render\RenderDevice.h" />
     <ClInclude Include="Render\RenderDevice_DX11.h" />
@@ -197,8 +199,10 @@
     <ClInclude Include="Render\ShaderManager.h" />
     <ClInclude Include="Render\Sky.h" />
     <ClInclude Include="Render\SkyLight.h" />
+    <ClInclude Include="Render\SpereAreaLight.h" />
     <ClInclude Include="Render\SpotLight.h" />
     <ClInclude Include="Render\StaticMesh.h" />
+    <ClInclude Include="Render\TubeLight.h" />
     <ClInclude Include="Render\Vertex.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -255,12 +259,14 @@
     </ClCompile>
     <ClCompile Include="Render\DepthStencilTarget.cpp" />
     <ClCompile Include="Render\DirectionalLight.cpp" />
+    <ClCompile Include="Render\DiscLight.cpp" />
     <ClCompile Include="Render\GraphicsResource.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Render\Material.cpp" />
     <ClCompile Include="Render\PointLight.cpp" />
+    <ClCompile Include="Render\RectangleLight.cpp" />
     <ClCompile Include="Render\RenderDevice.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
@@ -279,8 +285,10 @@
     </ClCompile>
     <ClCompile Include="Render\Sky.cpp" />
     <ClCompile Include="Render\SkyLight.cpp" />
+    <ClCompile Include="Render\SpereAreaLight.cpp" />
     <ClCompile Include="Render\SpotLight.cpp" />
     <ClCompile Include="Render\StaticMesh.cpp" />
+    <ClCompile Include="Render\TubeLight.cpp" />
     <ClCompile Include="Render\Vertex.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

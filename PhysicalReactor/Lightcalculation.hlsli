@@ -126,7 +126,7 @@ float3 CalculationPointlight(PointLight pointlight, float3 WorldPos, float3 N, f
     float att = 1;
     float lightinvsqrattradius = 1.0f / (pointlight.attenuationraduis * pointlight.attenuationraduis);
     att *= getDistanceAtt(unnormalizedLightVector, lightinvsqrattradius);
-    att *= getAngleAtt(L, pointlight.rotation, 1, 0);
+   // att *= getAngleAtt(L, pointlight.rotation, 1, 0);
     float3 luminace = (BRDF * pointlight.Intensity * att * NdotL) * pointlight.color.xyz / (4 * PI);
     return luminace;
 }

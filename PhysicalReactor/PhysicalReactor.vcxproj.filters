@@ -189,6 +189,18 @@
     <ClInclude Include="Render\DepthStencilTarget.h">
       <Filter>头文件\Render</Filter>
     </ClInclude>
+    <ClInclude Include="Render\SpereAreaLight.h">
+      <Filter>头文件\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DiscLight.h">
+      <Filter>头文件\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\TubeLight.h">
+      <Filter>头文件\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\RectangleLight.h">
+      <Filter>头文件\Render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -294,6 +306,18 @@
       <Filter>头文件\Render</Filter>
     </ClCompile>
     <ClCompile Include="Render\DepthStencilTarget.cpp">
+      <Filter>头文件\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\SpereAreaLight.cpp">
+      <Filter>头文件\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DiscLight.cpp">
+      <Filter>头文件\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\TubeLight.cpp">
+      <Filter>头文件\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\RectangleLight.cpp">
       <Filter>头文件\Render</Filter>
     </ClCompile>
   </ItemGroup>

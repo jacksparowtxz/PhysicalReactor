@@ -47,6 +47,65 @@ struct SpotLight
      float pad4;*/
 };
 
+struct SphereAreaLight
+{
+    float4 color;
+    float4 Position;
+    float Intensity;
+    float4 Rotaion;
+    float attenuationradius;
+    float sourceradius;
+    float softsourceradius;
+    float sourcelengh;
+    float pad;
+
+};
+
+struct TubeLight
+{
+    float4 color;
+    float3 Position;
+    float Intensity;
+    float3 Rotaion;
+    float attenuationradius;
+    float sourceradius;
+    float sourcewidth;
+    float sourcelengh;
+    float pad;
+};
+
+struct DiscLight
+{
+    float4 color;
+    float3 Position;
+    float Intensity;
+    float3 Rotaion;
+    float attenuationradius;
+    float sourceradius;
+    float softsourceradius;
+    float sourcelengh;
+    float pad;
+};
+
+
+struct RectangleLight
+{
+    float4 color;
+    float3 Position;
+    float Intensity;
+    float3 Rotaion;
+    float LightWidth;
+    float3 LightFront;
+    float LightHeight;
+    float3 LightRight;
+    float pad;
+    float3 LightUp;
+    float pad1;
+    float4 pad2;
+    float4 pad3;
+
+};
+
 
 
 struct PBRInfo

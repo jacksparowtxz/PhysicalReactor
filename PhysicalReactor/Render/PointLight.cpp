@@ -10,7 +10,7 @@ PointLight::PointLight() :color({ 1.0f,1.0f,1.0f,1.0f }), Position({ 1.0f,1.0f,1
 	
 }
 
-PointLight::PointLight(XMFLOAT3 position, XMFLOAT3 rotaion) :Position(std::move(position)), Rotaion(std::move(rotaion))
+PointLight::PointLight(XMFLOAT3 position, XMFLOAT3 rotation) :Position(std::move(position)), Rotaion(std::move(rotation))
 {
 	color = { 1.0f,1.0f,1.0f,1.0f };
 	Intensity = 8.0f;

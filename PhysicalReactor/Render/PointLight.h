@@ -13,10 +13,10 @@ struct PointLight
 	XMFLOAT3 Position;
 	float Intensity;
 	XMFLOAT3 Rotaion;
+	float attenuationradius;
 	float sourceradius;
 	float softsourceradius;
 	float sourcelengh;
-	float attenuationradius;
 	float pad;
 	void SetPostion(XMFLOAT3 position);
 	void SetRotation(XMFLOAT3 rotation);
