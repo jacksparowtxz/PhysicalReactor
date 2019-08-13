@@ -13,9 +13,7 @@ struct DiscLight
 	float Intensity;
 	XMFLOAT3 Rotaion;
 	float attenuationradius;
-	float sourceradius;
-	float softsourceradius;
-	float sourcelengh;
+	XMFLOAT3 Front;
 	float pad;
 	void SetPostion(XMFLOAT3 position);
 	void SetRotation(XMFLOAT3 rotation);

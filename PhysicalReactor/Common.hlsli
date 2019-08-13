@@ -68,10 +68,9 @@ struct TubeLight
     float Intensity;
     float3 Rotaion;
     float attenuationradius;
-    float sourceradius;
+    float3 LightRight;
     float sourcewidth;
-    float sourcelengh;
-    float pad;
+
 };
 
 struct DiscLight
@@ -81,9 +80,7 @@ struct DiscLight
     float Intensity;
     float3 Rotaion;
     float attenuationradius;
-    float sourceradius;
-    float softsourceradius;
-    float sourcelengh;
+    float3 Front;
     float pad;
 };
 
@@ -101,7 +98,7 @@ struct RectangleLight
     float pad;
     float3 LightUp;
     float pad1;
-    float4 pad2;
+    float4 direction;
     float4 pad3;
 
 };
