@@ -25,8 +25,34 @@ cbuffer EyePostionCB : register(b3)
     float metalic_factor;
     float rouhgness_factor;
     int NumOfPointLights;
-    float4 padingf3;
+    int NumOfSphereLights;
+    int NumOfDiscLights;
+    int NumOfTubeLights;
+    int NumOfRectangleLights;
+
 };
+
+
+cbuffer SphereLightsCB : register(b4)
+{
+    SphereAreaLight spherearealight[4];
+}
+
+cbuffer DiscLightsCB : register(b5)
+{
+    DiscLight disclight[4];
+}
+
+cbuffer TubeLightsCB : register(b6)
+{
+    TubeLight tubelights[4];
+}
+
+cbuffer RectangleLightCB : register(b7)
+{
+    RectangleLight rectanglelight[2];
+}
+
 
 
 
@@ -128,7 +154,33 @@ float4 main(PixelShaderInput input) : SV_TARGET
         }
     }
 
-   
+   {
+        for (int i = 0; i < NumOfSphereLights;i++)
+        {
+            directLighting += CalculationSphereArealight(spherearealight[i], input.PosW, N, V, NdotV, specularEnvironmentR0, roughness, albedo, metalness);
+        }
+    }
+
+    {
+        for (int i = 0; i <NumOfDiscLights;i++)
+        {
+            directLighting += CalculationDiscLight(disclight[i], input.PosW, N, V, NdotV, specularEnvironmentR0, roughness, albedo, metalness);
+        }
+    }
+
+    {
+        for (int i = 0; i < NumOfTubeLights; i++)
+        {
+            directLighting += CalculationTubeLight(tubelights[i], input.PosW, N, V, NdotV, specularEnvironmentR0, roughness, albedo, metalness);
+        }
+    }
+
+    {
+        for (int i = 0; i < NumOfRectangleLights; i++)
+        {
+            directLighting += CalculationRectangleLight(rectanglelight[i], input.PosW, N, V, NdotV, specularEnvironmentR0, roughness, albedo, metalness);
+        }
+    }
     float ambient = AmbientMap.Sample(AmbientSampler, input.Tex).r;
 	// Ambient lighting (IBL).
     float3 ambientLighting;

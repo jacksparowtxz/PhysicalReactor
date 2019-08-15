@@ -53,8 +53,14 @@ namespace PRE
 		float metalic_factor;
 		float Roughness_factor;
 		int NumOfPointLights;
-		DirectX::XMFLOAT4 padding3;
-		
+		int NumOfSphereLights;
+		int NumOfDiscLights;
+		int NumOfTubeLights;
+		int NumOfRectangleLights;
+		SphereAreaLight spherearealight[4];
+		DiscLight disclight[4];
+		TubeLight tubelight[4];
+		RectangleLight rectanglelight[2];
 		
 	};
 

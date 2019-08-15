@@ -17,7 +17,10 @@ public:
 	vector<SpotLight*> SpotLightList;
 	vector<PointLight*> PointLightList;
 	vector<SkyLight*> SkyLightList;
-
+	vector<SphereAreaLight*> SphereLightList;
+	vector<TubeLight*> TubeLightList;
+	vector<DiscLight*> DiscLightList;
+	vector<RectangleLight*> RectangleLightList;
 	Sky* sky;
 
 

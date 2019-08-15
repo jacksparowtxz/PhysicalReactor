@@ -23,12 +23,12 @@ DiscLight::DiscLight(XMFLOAT3 position, XMFLOAT3 rotation) :Position(std::move(p
 	XMVECTOR vScale = DirectX::XMLoadFloat3(&scale);
 
 	XMMATRIX W = XMMatrixTransformation(vZero, qId, vScale, vZero, qRot, vPos);
-	W = XMMatrixTranspose(W);
+	//W = XMMatrixTranspose(W);
 
 	color = { 1.0f,1.0f,1.0f,1.0f };
 	Intensity = 8.0f;
 	XMStoreFloat3(&Front, XMVector3TransformNormal(XMVectorSet(0, 0, -1, 0), W));
-	attenuationradius = 1000.0f;
+	attenuationradius = 5.0f;
 	pad = 0.0f;
 }
 

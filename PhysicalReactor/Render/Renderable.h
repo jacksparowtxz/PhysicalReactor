@@ -7,4 +7,8 @@
 #include"Render/DirectionalLight.h"
 #include"Render/RenderTarget.h"
 #include"Render/DepthStencilTarget.h"
+#include"Render/SpereAreaLight.h"
+#include"Render/DiscLight.h"
+#include"Render/TubeLight.h"
+#include"Render/RectangleLight.h"
 

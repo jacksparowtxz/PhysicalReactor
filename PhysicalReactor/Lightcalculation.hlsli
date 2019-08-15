@@ -351,7 +351,7 @@ float3 CalculationRectangleLight(RectangleLight rl, float3 WorldPos, float3 N, f
     {
         float3 lightPlaneNormal = rl.LightFront;
         float3 lightLeft = rl.LightRight;
-        float3 lightUp = rl.LightUp;
+        float3 lightUp = rl.direction;
         float lightwidth = rl.LightWidth;
         float lightheight = rl.LightHeight;
        
