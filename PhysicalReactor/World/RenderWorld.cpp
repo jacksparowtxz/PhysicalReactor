@@ -84,6 +84,18 @@ namespace PRE
 			UINT pFisrtConstant6 = 96;
 			UINT pNumberConstant6 = 16;
 			Renderer::GetDevice()->BindConstantBuffer(PS_STAGE, constbuffer, 3, &pFisrtConstant6, &pNumberConstant6);
+			UINT pFisrtConstant7 = 112;
+			UINT pNumberConstant7 = 64;
+			Renderer::GetDevice()->BindConstantBuffer(PS_STAGE, constbuffer, 4, &pFisrtConstant7, &pNumberConstant7);
+			UINT pFisrtConstant8 = 128;
+			UINT pNumberConstant8 = 64;
+			Renderer::GetDevice()->BindConstantBuffer(PS_STAGE, constbuffer, 5, &pFisrtConstant8, &pNumberConstant8);
+			UINT pFisrtConstant9 = 144;
+			UINT pNumberConstant9 = 64;
+			Renderer::GetDevice()->BindConstantBuffer(PS_STAGE, constbuffer, 6, &pFisrtConstant9, &pNumberConstant9);
+			UINT pFisrtConstant10 = 160;
+			UINT pNumberConstant10 = 64;
+			Renderer::GetDevice()->BindConstantBuffer(PS_STAGE, constbuffer, 7, &pFisrtConstant10, &pNumberConstant10);
 			Renderer::GetDevice()->BindSampler(PS_STAGE, SpLutSampler, 15, 1);
 			Renderer::GetDevice()->BindResource(PS_STAGE, sky->EnvMap, 15);
 			Renderer::GetDevice()->BindResource(PS_STAGE, sky->SpLutMap, 16);
@@ -500,6 +512,26 @@ namespace PRE
 		{
 			m_constantBufferData[0]->pointlights[j] = *level->PointLightList[j];
 			m_constantBufferData[0]->NumOfPointLights= level->PointLightList.size();
+		}
+		for (uint32_t j = 0; j < level->SphereLightList.size(); j++)
+		{
+			m_constantBufferData[0]->spherearealight[j] = *level->SphereLightList[j];
+			m_constantBufferData[0]->NumOfSphereLights = level->SphereLightList.size();
+		}
+		for (uint32_t j = 0; j < level->DiscLightList.size(); j++)
+		{
+			m_constantBufferData[0]->disclight[j] = *level->DiscLightList[j];
+			m_constantBufferData[0]->NumOfDiscLights = level->DiscLightList.size();
+		}
+		for (uint32_t j = 0; j < level->TubeLightList.size(); j++)
+		{
+			m_constantBufferData[0]->tubelight[j] = *level->TubeLightList[j];
+			m_constantBufferData[0]->NumOfTubeLights = level->TubeLightList.size();
+		}
+		for (uint32_t j = 0; j < level->RectangleLightList.size(); j++)
+		{
+			m_constantBufferData[0]->rectanglelight[j] = *level->RectangleLightList[j];
+			m_constantBufferData[0]->NumOfRectangleLights = level->RectangleLightList.size();
 		}
 		for (uint32_t j = 1; j < 9; j++)
 		{

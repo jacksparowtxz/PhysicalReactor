@@ -18,6 +18,7 @@ struct PointLight
 	float softsourceradius;
 	float sourcelengh;
 	float pad;
+	
 	void SetPostion(XMFLOAT3 position);
 	void SetRotation(XMFLOAT3 rotation);
 /*	float lightfalloffexponent;

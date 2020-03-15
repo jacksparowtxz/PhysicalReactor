@@ -13,10 +13,9 @@ struct TubeLight
 	float Intensity;
 	XMFLOAT3 Rotaion;
 	float attenuationradius;
-	float sourceradius;
+	XMFLOAT3 LightRight;
 	float sourcewidth;
-	float sourcelengh;
-	float pad;
+	
 	void SetPostion(XMFLOAT3 position);
 	void SetRotation(XMFLOAT3 rotation);
 

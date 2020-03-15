@@ -18,9 +18,9 @@ struct RectangleLight
 	float LightHeight;
 	XMFLOAT3 LightRight;
 	float pad;
-	XMFLOAT3 LightUp;
-	float pad1;
-	XMFLOAT4 pad2;
+	XMFLOAT4 pad1;
+	XMFLOAT3 direction;
+	float pad2;
 	XMFLOAT4 pad3;
 	void SetPostion(XMFLOAT3 position);
 	void SetRotation(XMFLOAT3 rotation);

@@ -50,9 +50,9 @@ struct SpotLight
 struct SphereAreaLight
 {
     float4 color;
-    float4 Position;
+    float3 Position;
     float Intensity;
-    float4 Rotaion;
+    float3 Rotaion;
     float attenuationradius;
     float sourceradius;
     float softsourceradius;
@@ -68,10 +68,9 @@ struct TubeLight
     float Intensity;
     float3 Rotaion;
     float attenuationradius;
-    float sourceradius;
+    float3 LightRight;
     float sourcewidth;
-    float sourcelengh;
-    float pad;
+
 };
 
 struct DiscLight
@@ -81,15 +80,14 @@ struct DiscLight
     float Intensity;
     float3 Rotaion;
     float attenuationradius;
-    float sourceradius;
-    float softsourceradius;
-    float sourcelengh;
+    float3 Front;
     float pad;
 };
 
 
 struct RectangleLight
 {
+  
     float4 color;
     float3 Position;
     float Intensity;
@@ -99,9 +97,9 @@ struct RectangleLight
     float LightHeight;
     float3 LightRight;
     float pad;
-    float3 LightUp;
-    float pad1;
-    float4 pad2;
+    float4 pad1;
+    float3 direction;
+    float pad2;
     float4 pad3;
 
 };

@@ -56,6 +56,30 @@ void Level::AddLight(LightType lighttype, XMFLOAT3 position, XMFLOAT3 rotation)
 		SkyLight* skl = new SkyLight;
 		SkyLightList.emplace_back(skl);
 	}
+	break;
+	case SPHERELIGHT:
+	{
+		SphereAreaLight* spl = new SphereAreaLight;
+		SphereLightList.emplace_back(spl);
+	}
+	break;
+	case DISCLIGHT:
+	{
+		DiscLight* dl = new DiscLight;
+		DiscLightList.emplace_back(dl);
+	}
+	break;
+	case TUBELIGHT:
+	{
+		TubeLight* tl = new TubeLight;
+		TubeLightList.emplace_back(tl);
+	}
+	break;
+	case RECTANGLELIGHT:
+	{
+		RectangleLight* rl = new RectangleLight;
+		RectangleLightList.emplace_back(rl);
+	}
 	default:
 		break;
 	}
