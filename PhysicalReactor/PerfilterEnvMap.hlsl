@@ -51,7 +51,7 @@ void main(uint3 ThreadID:SV_DispatchThreadID)
         if(cosLi>0.0)
         {
            float cosLh = max(dot(N, Lh), 0.0);
-           float pdf = GGX_NDF1(cosLh, roughness) * 0.25;
+           float pdf = GGX_NDF1(cosLh, roughness,1.0) * 0.25;
            float ws = 1.0 / (NumSamples * pdf);
            float miplevel = max(0.5 * log2(ws / wt) + 1.0, 0.0);
            color += inputTexture.SampleLevel(defaulteSampler, Li, miplevel).rgb * cosLi;

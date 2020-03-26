@@ -13,7 +13,7 @@ TubeLight::~TubeLight()
 TubeLight::TubeLight(XMFLOAT3 position, XMFLOAT3 rotation) :Position(std::move(position)), Rotaion(std::move(rotation))
 {
 	color = { 1.0f,1.0f,1.0f,1.0f };
-	Intensity = 8.0f;
+	Intensity = 1.0f;
 	
 	sourcewidth = 5.0f;
 

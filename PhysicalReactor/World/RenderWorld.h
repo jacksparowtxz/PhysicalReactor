@@ -46,6 +46,11 @@ namespace PRE
 		DirectionalLight directionallights[4];//equal4x4
 		PointLight pointlights[4];//equal 4x4
 		SpotLight spotlights[4];//equal 4x4
+		
+		SphereAreaLight spherearealight[4];
+		DiscLight disclight[4];
+		TubeLight tubelight[4];
+		RectangleLight rectanglelight[2];
 		DirectX::XMFLOAT4 EyePos;
 		XMFLOAT3 BaseColorFactor;
 		int NumOfSpotLights;
@@ -57,14 +62,9 @@ namespace PRE
 		int NumOfDiscLights;
 		int NumOfTubeLights;
 		int NumOfRectangleLights;
-		SphereAreaLight spherearealight[4];
-		DiscLight disclight[4];
-		TubeLight tubelight[4];
-		RectangleLight rectanglelight[2];
-		
 	};
 
-
+	
 	class RenderWorld
 	{
 	public:

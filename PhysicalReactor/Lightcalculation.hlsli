@@ -3,7 +3,8 @@
 
 ///https://seblagarde.files.wordpress.com/2015/07/course_notes_moving_frostbite_to_pbr_v32.pdf
 
-///Punctual lights
+///Punctual lights
+
 
 float smoothDistanceAtt(float squareDistance,float invSqrAttRadius)
 {
@@ -244,7 +245,7 @@ float3 CalculationSphereArealight(SphereAreaLight sal,float3 WorldPos, float3 N,
     float sqrLightRadius = sal.attenuationradius * sal.attenuationradius;
     float sinSigmaSqr = min(sqrLightRadius / sqrDist, 0.9999f);
     lumanic *= illuminanceSphereOrDisk(cosTheta,sinSigmaSqr);
-    float3 lightcolor;
+    float3 lightcolor = (1.0,1.0,1.0);
     [branch]
     if (lumanic>0)
     {
@@ -263,7 +264,7 @@ float3 CalculationSphereArealight(SphereAreaLight sal,float3 WorldPos, float3 N,
         float HdotV = saturate(dot(H, V));
         float NdotH = saturate(dot(N, H));
 
-        float3 fresnel = Fresnel_Schlick1(F0, NdotL);
+        float3 fresnel = Fresnel_Schlick1(F0, HdotV);
         float geo = gaSchlickGGX_IBL(NdotL, NdotV, roughness * roughness);
 
         float alpha = roughness*roughness;
@@ -273,7 +274,9 @@ float3 CalculationSphereArealight(SphereAreaLight sal,float3 WorldPos, float3 N,
         float3 kS = fresnel;
         float3 kd = 1.0 - kS;
         kd *= 1.0 - metalness;
-        float3 BRDF = (fresnel * geo * ndf / PI) + LambertDiffuse1(diffusecolor) * kd;
+       
+        float3 BRDF = LambertDiffuse1(diffusecolor) * kd+(fresnel * geo * ndf / PI);
+        //+LambertDiffuse1(diffusecolor) * kd;
         lightcolor *= BRDF;
 
     }
@@ -287,7 +290,7 @@ float3 CalculationDiscLight(DiscLight dl, float3 WorldPos, float3 N, float3 V, f
     float3 Lunormalized = dl.Position - WorldPos;
     float dist = length(Lunormalized);
     float3 L = Lunormalized / dist;
-    float lumanic = 1;
+    float lumanic = 1.0f;
 
     float sqrDist = dot(Lunormalized, Lunormalized);
     float3 lightPlaneNormal = dl.Front;
@@ -295,10 +298,10 @@ float3 CalculationDiscLight(DiscLight dl, float3 WorldPos, float3 N, float3 V, f
     float sqrLightRadius = dl.attenuationradius * dl.attenuationradius;
     float sinSigmaSqr = sqrLightRadius / (sqrLightRadius + max(sqrLightRadius, sqrDist));
     lumanic *= illuminanceSphereOrDisk(cosTheta, sinSigmaSqr) * saturate(dot(lightPlaneNormal, -L));
-    float3 lightcolor;
-    [branch]
-    if (lumanic>0)
-    {
+    float3 lightcolor = (1.0, 1.0, 1.0);
+   // [branch]
+    //if (lumanic>0)
+    //{
         float3 R = reflect(-V, N);
         R = getSpecularDominantDirArea(N, R, roughness);
         float specularAttenuation = saturate(abs(dot(lightPlaneNormal, R)));
@@ -321,7 +324,7 @@ float3 CalculationDiscLight(DiscLight dl, float3 WorldPos, float3 N, float3 V, f
         float HdotV = saturate(dot(H, V));
         float NdotH = saturate(dot(N, H));
 
-        float3 fresnel = Fresnel_Schlick1(F0, NdotL);
+        float3 fresnel = Fresnel_Schlick1(F0, HdotV);
         float geo = gaSchlickGGX_IBL(NdotL, NdotV, roughness * roughness);
 
         //float alpha = roughness * roughness;
@@ -331,10 +334,11 @@ float3 CalculationDiscLight(DiscLight dl, float3 WorldPos, float3 N, float3 V, f
         float3 kS = fresnel;
         float3 kd = 1.0 - kS;
         kd *= 1.0 - metalness;
-        float3 BRDF = (fresnel * geo * ndf / PI) + LambertDiffuse1(diffusecolor) * kd;
-        lightcolor *= BRDF;
+        float3 BRDF = (LambertDiffuse1(diffusecolor) * kd + (fresnel * geo * ndf / PI)) * specularAttenuation;
+       
+        lightcolor *= diffusecolor;
 
-    }
+    //}
 
     return lightcolor;
 }
@@ -441,7 +445,7 @@ float3 CalculationRectangleLight(RectangleLight rl, float3 WorldPos, float3 N, f
             float HdotV = saturate(dot(H, V));
             float NdotH = saturate(dot(N, H));
 
-            float3 fresnel = Fresnel_Schlick1(F0, NdotL);
+            float3 fresnel = Fresnel_Schlick1(F0, HdotV);
             float geo = gaSchlickGGX_IBL(NdotL, NdotV, roughness * roughness);
 
             float ndf = GGX_NDF1(NdotH, roughness * roughness, 1.0);
@@ -527,7 +531,7 @@ float3 CalculationTubeLight(TubeLight Tl,float3 WorldPos, float3 N, float3 V, fl
             float HdotV = saturate(dot(H, V));
             float NdotH = saturate(dot(N, H));
 
-            float3 fresnel = Fresnel_Schlick1(F0, NdotL);
+            float3 fresnel = Fresnel_Schlick1(F0, HdotV);
             float geo = gaSchlickGGX_IBL(NdotL, NdotV, roughness * roughness);
 
             float ndf = GGX_NDF1(NdotH, roughness * roughness, 1.0);

@@ -134,7 +134,7 @@ float4 main(PixelShaderInput input) : SV_TARGET
         float Lradiance = directionalights[0].Intensity;
         float LightColor = directionalights[0].color.xyz;
         float3 L = -directionalights[0].direction;
-        float NdotL = max(0.0, dot(N, L));
+        float NdotL = saturate(dot(N, L));
         directLighting = (DLdiffuse + DLspecular) * Lradiance * LightColor * NdotL;
 
     }
@@ -184,7 +184,7 @@ float4 main(PixelShaderInput input) : SV_TARGET
     float ambient = AmbientMap.Sample(AmbientSampler, input.Tex).r;
 	// Ambient lighting (IBL).
     float3 ambientLighting;
-    float3 test;
+   
 	{
 
 
@@ -224,7 +224,7 @@ float4 main(PixelShaderInput input) : SV_TARGET
 		// Total ambient lighting contribution.
         ambientLighting = diffuseIBL + specularIBL;
       
-        test = diffuseIBL;
+       
 
     }
 

@@ -12,11 +12,11 @@ sourceradius(0.0f), softsourceradius(0.0f), sourcelengh(0.0f), attenuationradius
 SphereAreaLight::SphereAreaLight(XMFLOAT3 position, XMFLOAT3 rotation) :Position(std::move(position)), Rotaion(std::move(rotation))
 {
 	color = { 1.0f,1.0f,1.0f,1.0f };
-	Intensity = 8.0f;
+	Intensity = 1.0f;
 	sourceradius = 0.0f;
 	softsourceradius = 0.0f;
 	sourcelengh = 0.0f;
-	attenuationradius = 5.0f;
+	attenuationradius = 2.0f;
 	pad = 0.0f;
 }
 
