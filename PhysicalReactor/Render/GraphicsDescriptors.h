@@ -50,14 +50,14 @@ namespace PRE
 	
 	enum COMPARSION_FUNC
 	{
-		COMPARSION_NEVER,
-		COMPARSION_LESS,
-		COMPARSION_EQUAL,
-		COMPARSION_LESS_EQUAL,
-		COMPARSION_GREATER,
-		COMPARSION_NOT_EQUAL,
-		COMPARSION_GREATER_EQUAL,
-		COMPARSION_ALWAYS,
+		COMPARISON_NEVER,
+		COMPARISON_LESS,
+		COMPARISON_EQUAL,
+		COMPARISON_LESS_EQUAL,
+		COMPARISON_GREATER,
+		COMPARISON_NOT_EQUAL,
+		COMPARISON_GREATER_EQUAL,
+		COMPARISON_ALWAYS,
 	};
 
 	enum DEPTH_WRITE_MASK
@@ -87,16 +87,16 @@ namespace PRE
 		BLEND_SRC_ALPHA,
 		BLEND_INV_SRC_ALPHA,
 		BLEND_DEST_ALPHA,
-		BLNED_INV_DEST_ALPHA,
+		BLEND_INV_DEST_ALPHA,
 		BLEND_DEST_COLOR,
 		BLEND_INV_DEST_COLOR,
-		BLNED_SRC_ALPHA_SAT,
+		BLEND_SRC_ALPHA_SAT,
 		BLEND_BLEND_FACTOR,
-		BLNED_INV_BLNED_COLOR,
-		BLNED_SRC1_COLOR,
+		BLEND_INV_BLEND_COLOR,
+		BLEND_SRC1_COLOR,
 		BLEND_INV_SRC1_COLOR,
-		BLNED_SRC1_ALPHA,
-		BLNED_INV_SRC1_ALPHA,
+		BLEND_SRC1_ALPHA,
+		BLEND_INV_SRC1_ALPHA,
 	};
 	
 	enum COLOR_WRITE_ENABLE
@@ -400,6 +400,35 @@ namespace PRE
 		RESOURCE_STATE_VIDEO_PROCESS_WRITE = 0x80000
 	};
 
+	enum IMAGE_LAYOUT
+	{
+		IMAGE_LAYOUT_UNDEFINED,					// discard contents
+		IMAGE_LAYOUT_GENERAL,					// supports everything
+		IMAGE_LAYOUT_RENDERTARGET,				// render target, write enabled
+		IMAGE_LAYOUT_DEPTHSTENCIL,				// depth stencil, write enabled
+		IMAGE_LAYOUT_DEPTHSTENCIL_READONLY,		// depth stencil, read only
+		IMAGE_LAYOUT_SHADER_RESOURCE,			// shader resource, read only
+		IMAGE_LAYOUT_UNORDERED_ACCESS,			// shader resource, write enabled
+		IMAGE_LAYOUT_COPY_SRC,					// copy from
+		IMAGE_LAYOUT_COPY_DST,
+
+	};
+
+
+	enum BUFFER_STATE
+	{
+		BUFFER_STATE_GENERAL,					// supports everything
+		BUFFER_STATE_VERTEX_BUFFER,				// vertex buffer, read only
+		BUFFER_STATE_INDEX_BUFFER,				// index buffer, read only
+		BUFFER_STATE_CONSTANT_BUFFER,			// constant buffer, read only
+		BUFFER_STATE_INDIRECT_ARGUMENT,			// argument buffer to DrawIndirect() or DispatchIndirect()
+		BUFFER_STATE_SHADER_RESOURCE,			// shader resource, read only
+		BUFFER_STATE_UNORDERED_ACCESS,			// shader resource, write enabled
+		BUFFER_STATE_COPY_SRC,					// copy from
+		BUFFER_STATE_COPY_DST,					// copy to
+	};
+
+
 #define APPEND_ALIGNED_ELEMENT (0xffffffff)
 #define  FLOAT32_MAX ( 3.402823466e+38f )
 #define  DEFAULT_STENCIL_READ_MASK (Oxff)
@@ -475,7 +504,7 @@ namespace PRE
 			AddressW(TEXTURE_ADDRESS_WRAP),
 			MipLODBias(0.0f),
 			MaxAnisotropy(0),
-			ComparsionFunc(COMPARSION_NEVER),
+			ComparsionFunc(COMPARISON_NEVER),
 			BorderColor{0.0f,0.0f,0.0f,0.0f},
 			MinLOD(0.0f),
 			MaxLOD(FLT_MAX){}
@@ -512,7 +541,7 @@ namespace PRE
 			StencilFailOp(STENCIL_OP_KEEP),
 			StencilDepthFailOp(STENCIL_OP_KEEP),
 			StencilPassOp(STENCIL_OP_KEEP),
-			StencilFunc(COMPARSION_NEVER)
+			StencilFunc(COMPARISON_NEVER)
 		{}
 	};
 
@@ -528,7 +557,7 @@ namespace PRE
 		DepthStencilOpDesc BackFace;
 
 
-		DepthStencilStateDesc() :DepthEnable(false), DepthWriteMask(DEPTH_WRITE_MASK_ZERO), DepthFunc(COMPARSION_NEVER),
+		DepthStencilStateDesc() :DepthEnable(false), DepthWriteMask(DEPTH_WRITE_MASK_ZERO), DepthFunc(COMPARISON_NEVER),
 			StencilEnable(false), StencilReadMask(0xff),  StencilWriteMask(0xff) {}
 
 	};

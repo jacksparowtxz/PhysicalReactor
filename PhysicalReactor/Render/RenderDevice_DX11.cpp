@@ -310,28 +310,28 @@ namespace PRE
 	{
 		switch (value)
 		{
-		case PRE::COMPARSION_NEVER:
+		case PRE::COMPARISON_NEVER:
 			return D3D11_COMPARISON_NEVER;
 			break;
-		case PRE::COMPARSION_LESS:
+		case PRE::COMPARISON_LESS:
 			return D3D11_COMPARISON_LESS;
 			break;
-		case PRE::COMPARSION_EQUAL:
+		case PRE::COMPARISON_EQUAL:
 			return D3D11_COMPARISON_EQUAL;
 			break;
-		case PRE::COMPARSION_LESS_EQUAL:
+		case PRE::COMPARISON_LESS_EQUAL:
 			return D3D11_COMPARISON_LESS_EQUAL;
 			break;
-		case PRE::COMPARSION_GREATER:
+		case PRE::COMPARISON_GREATER:
 			return D3D11_COMPARISON_GREATER;
 			break;
-		case PRE::COMPARSION_NOT_EQUAL:
+		case PRE::COMPARISON_NOT_EQUAL:
 			return D3D11_COMPARISON_NOT_EQUAL;
 			break;
-		case PRE::COMPARSION_GREATER_EQUAL:
+		case PRE::COMPARISON_GREATER_EQUAL:
 			return D3D11_COMPARISON_GREATER_EQUAL;
 			break;
-		case PRE::COMPARSION_ALWAYS:
+		case PRE::COMPARISON_ALWAYS:
 			return D3D11_COMPARISON_ALWAYS;
 			break;
 		default:
@@ -452,7 +452,7 @@ namespace PRE
 		case PRE::BLEND_DEST_ALPHA:
 			return D3D11_BLEND_DEST_ALPHA;
 			break;
-		case PRE::BLNED_INV_DEST_ALPHA:
+		case PRE::BLEND_INV_DEST_ALPHA:
 			return D3D11_BLEND_INV_DEST_ALPHA;
 			break;
 		case PRE::BLEND_DEST_COLOR:
@@ -461,25 +461,25 @@ namespace PRE
 		case PRE::BLEND_INV_DEST_COLOR:
 			return D3D11_BLEND_INV_DEST_COLOR;
 			break;
-		case PRE::BLNED_SRC_ALPHA_SAT:
+		case PRE::BLEND_SRC_ALPHA_SAT:
 			return D3D11_BLEND_SRC_ALPHA_SAT;
 			break;
 		case PRE::BLEND_BLEND_FACTOR:
 			return D3D11_BLEND_BLEND_FACTOR;
 			break;
-		case PRE::BLNED_INV_BLNED_COLOR:
+		case PRE::BLEND_INV_BLEND_COLOR:
 			return D3D11_BLEND_INV_BLEND_FACTOR;
 			break;
-		case PRE::BLNED_SRC1_COLOR:
+		case PRE::BLEND_SRC1_COLOR:
 			return D3D11_BLEND_SRC1_COLOR;
 			break;
 		case PRE::BLEND_INV_SRC1_COLOR:
 			return D3D11_BLEND_INV_SRC1_COLOR;
 			break;
-		case PRE::BLNED_SRC1_ALPHA:
+		case PRE::BLEND_SRC1_ALPHA:
 			return D3D11_BLEND_SRC1_ALPHA;
 			break;
-		case PRE::BLNED_INV_SRC1_ALPHA:
+		case PRE::BLEND_INV_SRC1_ALPHA:
 			return D3D11_BLEND_INV_SRC1_ALPHA;
 			break;
 		default:

@@ -201,6 +201,9 @@
     <ClInclude Include="Render\RectangleLight.h">
       <Filter>头文件\Render</Filter>
     </ClInclude>
+    <ClInclude Include="RenderDevice_Vulkan.h">
+      <Filter>头文件\Render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -318,6 +321,9 @@
       <Filter>头文件\Render</Filter>
     </ClCompile>
     <ClCompile Include="Render\RectangleLight.cpp">
+      <Filter>头文件\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderDevice_Vulkan.cpp">
       <Filter>头文件\Render</Filter>
     </ClCompile>
   </ItemGroup>

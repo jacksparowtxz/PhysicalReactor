@@ -75,9 +75,9 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>D:\PR\PhysicalReactor;D:\PR\PhysicalReactor\assimp;C:\Program Files %28x86%29\Visual Leak Detector\include;$(IncludePath)</IncludePath>
-    <ReferencePath>D:\PR\PhysicalReactor;D:\PR\PhysicalReactor\assimp;$(ReferencePath)</ReferencePath>
-    <LibraryPath>D:\PR\PhysicalReactor\assimp;C:\Program Files %28x86%29\Visual Leak Detector\lib\Win64;$(LibraryPath)</LibraryPath>
+    <IncludePath>D:\PR\PhysicalReactor\assimp;C:\Program Files %28x86%29\Visual Leak Detector\include;D:\VulkanSDK\1.2.135.0\Include;D:\PR\PhysicalReactor;$(IncludePath)</IncludePath>
+    <ReferencePath>D:\PR\PhysicalReactor\assimp;D:\VulkanSDK\1.2.135.0\Include;D:\PR\PhysicalReactor;$(ReferencePath)</ReferencePath>
+    <LibraryPath>D:\PR\PhysicalReactor\assimp;C:\Program Files %28x86%29\Visual Leak Detector\lib\Win64;D:\VulkanSDK\1.2.135.0\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -109,11 +109,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d11.lib;D3DCompiler.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;D3DCompiler.lib;assimp-vc140-mt.lib;vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -178,6 +179,7 @@
     <ClInclude Include="MISC\Timer.h" />
     <ClInclude Include="MISC\tinyxml2.h" />
     <ClInclude Include="PhysicalReactor.h" />
+    <ClInclude Include="RenderDevice_Vulkan.h" />
     <ClInclude Include="Render\Camera.h" />
     <ClInclude Include="Render\DepthStencilTarget.h" />
     <ClInclude Include="Render\DirectionalLight.h" />
@@ -254,6 +256,7 @@
     <ClCompile Include="PhysicalReactor.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="RenderDevice_Vulkan.cpp" />
     <ClCompile Include="Render\Camera.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>

@@ -11,9 +11,9 @@
 #endif // WINSTORE_SUPPORT
 
 
-/*
-#if __has_include("vulkan/vulkan.h")
-#define WICKEDENGINE_BUILD_VULKAN
+
+/*#if __has_include("vulkan/vulkan.h")
+#define PRE_BUILD_VULKAN
 #endif // HAS VULKAN*/
 
 
