@@ -4,16 +4,13 @@
 
 namespace PRE
 {
-	struct VertexShader;
-	struct PixelShader;
-	struct HullShader;
-	struct DomainShader;
-	struct GeometryShader;
-	struct ComputerShader;
+	struct Shader;
 	struct BlendState;
 	struct RasterizerState;
 	struct DepthStencilState;
 	struct VertexLayout;
+	struct GPUResource;
+	struct GPUBuffer;
 	struct Texture;
 
 	enum SHADERSTAGE
@@ -34,6 +31,7 @@ namespace PRE
 		TRIANGESTRIP,
 		POINTLIST,
 		LINELIST,
+		LINESTRIP,
 		PATCHLIST,
 	};
 	
@@ -317,6 +315,8 @@ namespace PRE
 
 	enum GPU_QUERY_TYPE
 	{
+		GPU_QUERY_TYPE_INVALID,
+		GPU_QUERY_TYPE_EVENT,
 		GPU_QUERY_TYPE_OCCLUSION,
 		GPU_QUERY_TYPE_OCCLUSION_PREDICATE,
 		GPU_QUERY_TYPE_TIMESTAMP,
@@ -327,6 +327,43 @@ namespace PRE
 	{
 		INDEXBUFFER_16BIT,
 		INDEXBUFFER_32BIT,
+	};
+
+
+	enum SUBRESOURCE_TYPE
+	{
+		SRV,
+		UAV,
+		RTV,
+		DSV,
+	};
+
+	enum IMAGE_LAYOUT
+	{
+	   IMAGE_LAYOUT_UNDEFINED,
+	   IMAGE_LAYOUT_GENERAL,
+	   IMAGE_LAYOUT_RENDERTRGET,
+	   IMAGE_LAYOUT_DEPTHSTENCIL,
+	   IMAGE_LAYOUT_DEPTHSTENCIL_READONLY,
+	   IMAGE_LAYOUT_SHADER_RESOURCE,
+	   IMAGE_LAYOUT_UNORDERED_ACCESS,
+	   IMAGE_LAYOUT_COPY_SRC,
+	   IMAGE_LAYOUT_COPY_DEST,
+	
+	};
+
+	enum BUFFER_STATE
+	{
+		BUFFER_STATE_GENERAL,
+		BUFFER_STATE_VERTEX_BUFFER,
+		BUFFER_STATE_INDEX_BUFFER,
+		BUFFER_STATE_CONSTANT_BUFFER,
+		BUFFER_STATE_INDIRECT_ARGUMENT,
+		BUFFER_STATE_SHADER_RESOURCE,
+		BUFFER_STATE_UNORDERED_ACCESS,
+		BUFFER_STATE_COPY_SRC,
+		BUFFER_STATE_COPY_DST,
+
 	};
 
 	enum CLEAR_FLAG
@@ -400,33 +437,9 @@ namespace PRE
 		RESOURCE_STATE_VIDEO_PROCESS_WRITE = 0x80000
 	};
 
-	enum IMAGE_LAYOUT
-	{
-		IMAGE_LAYOUT_UNDEFINED,					// discard contents
-		IMAGE_LAYOUT_GENERAL,					// supports everything
-		IMAGE_LAYOUT_RENDERTARGET,				// render target, write enabled
-		IMAGE_LAYOUT_DEPTHSTENCIL,				// depth stencil, write enabled
-		IMAGE_LAYOUT_DEPTHSTENCIL_READONLY,		// depth stencil, read only
-		IMAGE_LAYOUT_SHADER_RESOURCE,			// shader resource, read only
-		IMAGE_LAYOUT_UNORDERED_ACCESS,			// shader resource, write enabled
-		IMAGE_LAYOUT_COPY_SRC,					// copy from
-		IMAGE_LAYOUT_COPY_DST,
-
-	};
 
 
-	enum BUFFER_STATE
-	{
-		BUFFER_STATE_GENERAL,					// supports everything
-		BUFFER_STATE_VERTEX_BUFFER,				// vertex buffer, read only
-		BUFFER_STATE_INDEX_BUFFER,				// index buffer, read only
-		BUFFER_STATE_CONSTANT_BUFFER,			// constant buffer, read only
-		BUFFER_STATE_INDIRECT_ARGUMENT,			// argument buffer to DrawIndirect() or DispatchIndirect()
-		BUFFER_STATE_SHADER_RESOURCE,			// shader resource, read only
-		BUFFER_STATE_UNORDERED_ACCESS,			// shader resource, write enabled
-		BUFFER_STATE_COPY_SRC,					// copy from
-		BUFFER_STATE_COPY_DST,					// copy to
-	};
+
 
 
 #define APPEND_ALIGNED_ELEMENT (0xffffffff)
@@ -467,20 +480,25 @@ namespace PRE
 
 	struct TextureDesc
 	{
-		UINT Width;
-		UINT Height;
-		UINT Depth;
-		UINT ArraySize;
-		UINT MipLevels;
-		FORMAT Format;
-		SampleDesc SampleDesc;
-		USAGE Usage;
-		UINT BindFlags;
-		UINT CPUAccessFlags;
-		UINT MiscFlags;
-
-		TextureDesc() :Width(0), Height(0), Depth(1), ArraySize(1), MipLevels(1), Format(FORMAT_UNKNOWN),
-			Usage(USAGE_DEFAULT), BindFlags(0), CPUAccessFlags(0), MiscFlags(0) {}
+		enum TEXTURE_TYPE
+		{
+			TEXTURE_1D,
+			TEXTURE_2D,
+			TEXTURE_3D,
+		} type = TEXTURE_2D;
+		uint32_t Width = 0;
+		uint32_t Height = 0;
+		uint32_t Depth = 0;
+		uint32_t ArraySize = 1;
+		uint32_t MipLevels = 1;
+		FORMAT Format = FORMAT_UNKNOWN;
+		uint32_t SampleCount = 1;
+		USAGE Usage = USAGE_DEFAULT;
+		uint32_t BindFlags = 0;
+		uint32_t CPUAccessFlags = 0;
+		uint32_t MiscFlags = 0;
+		ClearValue clear = {};
+		IMAGE_LAYOUT layout = IMAGE_LAYOUT_GENERAL;
 	};
 
 	struct SamplerDesc
@@ -608,16 +626,39 @@ namespace PRE
 	struct GPUQueryDesc
 	{
 		GPU_QUERY_TYPE Type;
-		UINT MiscFlags;
-		UINT async_Latnce;
+		
 
-		GPUQueryDesc() :Type(GPU_QUERY_TYPE_OCCLUSION_PREDICATE),
-			MiscFlags(0),
-			async_Latnce(0)
+		GPUQueryDesc() :Type(GPU_QUERY_TYPE_INVALID)
+
 		{}
 	};
 
-	struct GraphicsShaderDesc
+	struct GPUQueryResult
+	{
+		uint64_t result_passed_sample_coount;
+		uint64_t result_timestamp;
+		uint64_t result_timestamp_frequency;
+
+		GPUQueryResult() :result_passed_sample_coount(0), result_timestamp(0), result_timestamp_frequency(0) {}
+	};
+
+	struct PipelineStateDesc
+	{
+		const Shader*				vs = nullptr;
+		const Shader*				ps = nullptr;
+		const Shader*				hs = nullptr;
+		const Shader*				ds = nullptr;
+		const Shader*				gs = nullptr;
+		const BlendState*			bs = nullptr;
+		const RasterizerState*		rs = nullptr;
+		const DepthStencilState*	dss = nullptr;
+		const VertexLayout*			il = nullptr;
+		PRIMITIVEOPOLOGY			pt = TRIANGELIST;
+		uint32_t					sampleMask = 0xFFFFFFFF;
+
+
+	};
+	/*struct GraphicsShaderDesc
 	{
 		VertexShader* vs;
 		PixelShader* ps;
@@ -658,16 +699,16 @@ namespace PRE
 			sampleDesc.Quality = 0;
 			sampleMask = 0xFFFFFFFF;
 		}
-	};
+	};*/
 
-	struct ComputerPSODesc
+	/*struct ComputerPSODesc
 	{
 		ComputerShader *cs;
 		ComputerPSODesc()
 		{
 			SAFE_INITIL(cs);
 		}
-	};
+	};*/
 
 	struct IndirectDrawArgsInstanced
 	{
@@ -744,4 +785,118 @@ namespace PRE
 		Rect():left(0),top(0),right(0),bottom(0)
 		{}
 	};
+
+	struct GPUBarrier
+	{
+		enum TYPE
+		{
+			MEMORY_BARRIER,
+			IMAGE_BARRIER,
+			BUFFER_BARRIER,
+		}type = MEMORY_BARRIER;
+		union 
+		{
+			struct Memory
+			{
+				const GPUResource* resource;
+			}memory;
+			struct Image
+			{
+
+				const Texture* texture;
+				IMAGE_LAYOUT layout_before;
+				IMAGE_LAYOUT layout_after;
+			}image;
+			struct Buffer
+			{
+				const GPUBuffer* buffer;
+				BUFFER_STATE state_before;
+				BUFFER_STATE state_after;
+
+			}buffer;
+
+		};
+		static GPUBarrier Memory(const GPUResource* resource = nullptr)
+		{
+			GPUBarrier barrier;
+			barrier.type = MEMORY_BARRIER;
+			barrier.memory.resource = resource;
+			return barrier;
+		}
+
+		static GPUBarrier Image(const Texture* texture, IMAGE_LAYOUT before, IMAGE_LAYOUT after)
+		{
+			GPUBarrier barrier;
+			barrier.type = IMAGE_BARRIER;
+			barrier.image.texture = texture;
+			barrier.Image.layout_before = before;
+			barrier.image.layout_after = after;
+			return barrier;
+		
+		}
+		static GPUBarrier Buffer(const GPUBuffer* buffer, BUFFER_STATE before, BUFFER_STATE after)
+		{
+			GPUBarrier barrier;
+			barrier.type = BUFFER_BARRIER;
+			barrier.buffer.buffer = buffer;
+			barrier.buffer.state_before = before;
+			barrier.buffer.state_after = after;
+			return barrier;
+		
+		}
+	};
+
+
+	struct RenderPassAttachment
+	{
+
+		enum TYPE
+		{
+			RENDERTARGET,
+			DEPTH_STENCIL,
+		}type = RENDERTARGET;
+		enum LOAD_OPERATION
+		{
+			LOADOP_LOAD,
+			LOADOP_CLEAR,
+			LOADOP_DONTCARE,
+		}loadop = LOADOP_LOAD;
+		const Texture* texture = nullptr;
+		int subresource = -1;
+		enum STORE_OPERATION
+		{
+			STOREOP_STORE,
+			STOREOP_DONTCARE,
+
+		}storeop = STOREOP_STORE;
+		IMAGE_LAYOUT initial_layout = IMAGE_LAYOUT_GENERAL;
+		IMAGE_LAYOUT final_layout = IMAGE_LAYOUT_GENERAL;
+
+
+	};
+
+	struct RenderPassDesc
+	{
+		uint32_t numAttachments = 0;
+		RenderPassAttachment attachments[9] = {};
+	};
+
+	struct IndirectDrawArgsInstanced
+	{
+		uint32_t VertexCountPerInstance = 0;
+		uint32_t InstanceCount = 0;
+		uint32_t StartVertexLocation = 0;
+		uint32_t StartInstanceLocation = 0;
+	};
+
+	struct IndirectDispatchArgs
+	{
+		uint32_t ThreadGroupCountX = 0;
+		uint32_t ThreadGroupCountY = 0;
+		uint32_t ThreadGroupCountZ = 0;
+	};
+
+
+
+	
 }

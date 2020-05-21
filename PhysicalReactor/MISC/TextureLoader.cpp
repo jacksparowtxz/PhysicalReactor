@@ -6,6 +6,7 @@
 
 #include"Render/ShaderManager.h"
 #include"MISC/Mathhelper.h"
+#include<algorithm>
 using namespace PRE;
 
 
@@ -178,7 +179,7 @@ void TextureLoader::LoadTexture(const string & TexturefileName, Texture2D* LoadM
 		 {
 			 InitData[mip].pSysMem = data;
 			 InitData[mip].SysMemPitch = static_cast<UINT>(mipwidth*(channelcount));
-			 mipwidth = max(1, mipwidth / 2);
+			 mipwidth =std::max(1u, mipwidth / 2);
 		 }
 		 LoadMap->RequestIndepentShaderReourcesForMIPs(true);
 		 LoadMap->RequesIndenpentUnorderedAccessResoucesForMips(true);

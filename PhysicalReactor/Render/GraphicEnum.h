@@ -411,3 +411,19 @@ enum OBJECTTYPE
 	TYPE_STATICMESH,
 	TYPE_TONEMAPPING
 };
+
+
+union ClearValue
+{
+	float color[4];
+	struct ClearDepthStencil
+	{
+		float depth;
+		uint32_t stencil;
+	} depthstencil;
+};
+
+#define GPU_RESOURCE_HEAP_CBV_COUNT 12
+#define GPU_RESOURCE_HEAP_SRV_COUNT 48
+#define GPU_RESOURCE_HEAP_UAV_COUNT 8
+#define GPU_SAMPLER_HEAP_COUNT 16

@@ -31,6 +31,9 @@
     <Filter Include="头文件\Container">
       <UniqueIdentifier>{0b05e315-c3c2-4957-ac18-fdd3e419c282}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Container">
+      <UniqueIdentifier>{d1202fd2-a750-42ca-b914-4f4eee4979c3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -79,9 +82,6 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Render\RenderDevice.h">
-      <Filter>头文件\Render</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\RenderDevice_DX11.h">
       <Filter>头文件\Render</Filter>
     </ClInclude>
     <ClInclude Include="Render\ResourceMapping.h">
@@ -204,6 +204,21 @@
     <ClInclude Include="RenderDevice_Vulkan.h">
       <Filter>头文件\Render</Filter>
     </ClInclude>
+    <ClInclude Include="Render\RenderDevice_DX12.h">
+      <Filter>头文件\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="MISC\D3D12MemAlloc.h">
+      <Filter>头文件\MISC</Filter>
+    </ClInclude>
+    <ClInclude Include="MISC\vk_mem_alloc.h">
+      <Filter>头文件\MISC</Filter>
+    </ClInclude>
+    <ClInclude Include="SpinLock.h">
+      <Filter>头文件\Jobsystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Containers.h">
+      <Filter>Container</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -225,9 +240,6 @@
       <Filter>头文件\Render</Filter>
     </ClCompile>
     <ClCompile Include="Render\RenderDevice.cpp">
-      <Filter>头文件\Render</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\RenderDevice_DX11.cpp">
       <Filter>头文件\Render</Filter>
     </ClCompile>
     <ClCompile Include="Render\Renderer.cpp">
@@ -325,6 +337,12 @@
     </ClCompile>
     <ClCompile Include="RenderDevice_Vulkan.cpp">
       <Filter>头文件\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\RenderDevice_DX12.cpp">
+      <Filter>头文件\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="MISC\D3D12MemAlloc.cpp">
+      <Filter>头文件\MISC</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -23,7 +23,7 @@
     <ProjectGuid>{57AF9009-D00E-4FD7-A8C5-5A5159BC4857}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>PhysicalReactor</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -107,7 +107,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_WINDOWS;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
@@ -156,6 +156,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="CommonInclude.h" />
+    <ClInclude Include="Containers.h" />
     <ClInclude Include="Container\GameType.h" />
     <ClInclude Include="JobSystem\Delegate.h" />
     <ClInclude Include="JobSystem\JobScheduler.h" />
@@ -165,6 +166,7 @@
     <ClInclude Include="JobSystem\ThreadGroup.h" />
     <ClInclude Include="JobSystem\WorkStealingQueue.h" />
     <ClInclude Include="MISC\AssetManager.h" />
+    <ClInclude Include="MISC\D3D12MemAlloc.h" />
     <ClInclude Include="MISC\DDSTextureLoader.h" />
     <ClInclude Include="MISC\Frustum.h" />
     <ClInclude Include="MISC\Intersectables.h" />
@@ -178,6 +180,7 @@
     <ClInclude Include="MISC\TextureManager.h" />
     <ClInclude Include="MISC\Timer.h" />
     <ClInclude Include="MISC\tinyxml2.h" />
+    <ClInclude Include="MISC\vk_mem_alloc.h" />
     <ClInclude Include="PhysicalReactor.h" />
     <ClInclude Include="RenderDevice_Vulkan.h" />
     <ClInclude Include="Render\Camera.h" />
@@ -194,7 +197,7 @@
     <ClInclude Include="Render\RectangleLight.h" />
     <ClInclude Include="Render\Renderable.h" />
     <ClInclude Include="Render\RenderDevice.h" />
-    <ClInclude Include="Render\RenderDevice_DX11.h" />
+    <ClInclude Include="Render\RenderDevice_DX12.h" />
     <ClInclude Include="Render\Renderer.h" />
     <ClInclude Include="Render\RenderTarget.h" />
     <ClInclude Include="Render\ResourceMapping.h" />
@@ -207,6 +210,7 @@
     <ClInclude Include="Render\TubeLight.h" />
     <ClInclude Include="Render\Vertex.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="SpinLock.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="World\GameWorld.h" />
@@ -227,6 +231,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="MISC\AssetManager.cpp" />
+    <ClCompile Include="MISC\D3D12MemAlloc.cpp" />
     <ClCompile Include="MISC\DDSTextureLoader.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -274,7 +279,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Render\RenderDevice_DX11.cpp">
+    <ClCompile Include="Render\RenderDevice_DX12.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>

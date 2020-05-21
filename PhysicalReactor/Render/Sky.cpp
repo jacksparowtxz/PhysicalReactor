@@ -18,7 +18,7 @@ Sky::Sky()
 	
 	DepthStencilStateDesc dsdesc;
 	dsdesc.DepthEnable = true;
-	dsdesc.DepthFunc = COMPARSION_LESS_EQUAL;
+	dsdesc.DepthFunc = COMPARISON_LESS_EQUAL;
 	dsdesc.DepthWriteMask = DEPTH_WRITE_MASK_ALL;
 	Skymaterial->EmissiveMap = std::move(SkyCubeMap);
 	Skymaterial->SetDepthStencilState(dsdesc);
